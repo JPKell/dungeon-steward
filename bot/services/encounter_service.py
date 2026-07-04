@@ -50,12 +50,12 @@ class EncounterService:
     def encounters(self) -> list[Encounter]:
         return self._encounters
 
-    def select(self, *, player_level: int = 1, rng: random.Random | None = None) -> Encounter:
+    def select(self, *, explore_level: int = 1, rng: random.Random | None = None) -> Encounter:
         rng = rng or random
         choices = [
             encounter
             for encounter in self._encounters
-            if encounter.enabled and encounter.min_level <= player_level
+            if encounter.enabled and encounter.min_level <= explore_level
         ]
         if not choices:
             raise ContentValidationError("No enabled encounters are available")
@@ -120,4 +120,3 @@ def _required_str(item: dict[str, Any], key: str) -> str:
     if not isinstance(value, str) or not value.strip():
         raise ContentValidationError(f"Missing required string field: {key}")
     return value
-

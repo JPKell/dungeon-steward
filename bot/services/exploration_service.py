@@ -15,6 +15,11 @@ from bot.services.encounter_service import Choice, Encounter, EncounterService
 from bot.services.energy_service import EnergyService, EnergyState
 from bot.services.guild_dungeon_service import GuildDungeonService
 from bot.services.player_service import PlayerService
+from bot.services.progression_service import (
+    calculate_explore_level,
+    scale_exploration_gold,
+    scale_exploration_xp,
+)
 from bot.services.weekly_objective_service import WeeklyObjectiveService
 from bot.utils.time import ensure_utc, is_before_or_equal, utc_now
 
@@ -88,7 +93,7 @@ class ExplorationService:
         )
         self.players.get_or_create_guild(session, guild_id=guild_id)
         energy_state = self.energy.spend(player, now=now)
-        encounter = self.encounters.select(player_level=player.level)
+        encounter = self.encounters.select(explore_level=player.explore_level)
         exploration = ExplorationSession(
             resolution_key=secrets.token_urlsafe(24),
             player_id=player.id,
@@ -131,8 +136,11 @@ class ExplorationService:
         if choice is None:
             raise ExplorationError("Invalid choice")
 
-        gold = rng.randint(choice.gold_min, choice.gold_max)
-        experience = rng.randint(choice.xp_min, choice.xp_max)
+        reward_explore_level = player.explore_level
+        base_gold = rng.randint(choice.gold_min, choice.gold_max)
+        base_experience = rng.randint(choice.xp_min, choice.xp_max)
+        gold = scale_exploration_gold(base_gold, reward_explore_level)
+        experience = scale_exploration_xp(base_experience, reward_explore_level)
         exploration.selected_choice_key = choice.key
         exploration.resolved_at = now
         player.gold += gold
@@ -145,8 +153,8 @@ class ExplorationService:
             player.successful_explorations += 1
         else:
             player.failed_explorations += 1
-        old_level = player.level
-        player.level = max(1, (player.experience // 100) + 1)
+        old_explore_level = player.explore_level
+        player.explore_level = calculate_explore_level(player.experience)
 
         discovery, is_new = self.discoveries.award(session, player, choice.discovery_key)
         dungeon = self.players.get_or_create_guild(session, guild_id=exploration.guild_id)
@@ -181,9 +189,8 @@ class ExplorationService:
             choice=choice,
             gold=gold,
             experience=experience,
-            leveled_up=player.level > old_level,
+            leveled_up=player.explore_level > old_explore_level,
             discovery_name=discovery.name if discovery else None,
             new_discovery=is_new,
             energy_state=self.energy.state(player, now=now),
         )
-

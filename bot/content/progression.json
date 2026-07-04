@@ -1,0 +1,109 @@
+{
+  "exploration": {
+    "base_cooldown_minutes": 120,
+    "min_cooldown_minutes": 30,
+    "leveling": {
+      "curve": "linear",
+      "base_xp": 100,
+      "linear_growth": 0,
+      "quadratic_growth": 0,
+      "exponential_growth": 1.15,
+      "max_level": 0
+    },
+    "reward_scaling": {
+      "gold_multiplier": {
+        "curve": "linear",
+        "base": 1.0,
+        "linear_growth": 0.0,
+        "quadratic_growth": 0.0,
+        "exponential_growth": 1.0,
+        "minimum": 0.0
+      },
+      "xp_multiplier": {
+        "curve": "linear",
+        "base": 1.0,
+        "linear_growth": 0.0,
+        "quadratic_growth": 0.0,
+        "exponential_growth": 1.0,
+        "minimum": 0.0
+      }
+    }
+  },
+  "new_player": {
+    "base_hp": 50,
+    "attack": 5,
+    "defense": 5,
+    "speed": 5
+  },
+  "combat_leveling": {
+    "xp_to_next_level": {
+      "curve": "linear",
+      "base": 100,
+      "linear_growth": 35,
+      "quadratic_growth": 0,
+      "exponential_growth": 1.15,
+      "minimum": 1
+    },
+    "hp_per_level": {
+      "curve": "linear",
+      "base": 5,
+      "linear_growth": 0,
+      "quadratic_growth": 0,
+      "exponential_growth": 1.05,
+      "minimum": 1
+    },
+    "stat_points_per_level": {
+      "curve": "linear",
+      "base": 2,
+      "linear_growth": 0,
+      "quadratic_growth": 0,
+      "exponential_growth": 1.0,
+      "minimum": 1
+    }
+  },
+  "defense": {
+    "base_minutes": 60,
+    "max_minutes": 480,
+    "minutes_per_level": {
+      "curve": "linear",
+      "base": 1,
+      "linear_growth": 0,
+      "quadratic_growth": 0,
+      "exponential_growth": 1.0,
+      "minimum": 0
+    },
+    "post_defeat_hp_percent": 0.25,
+    "minimum_damage": 1,
+    "max_battle_rounds": 100
+  },
+  "enemy_generation": {
+    "level_stat_scale": 0.08,
+    "level_reward_scale": 0.05
+  },
+  "shop": {
+    "stock_size": 10,
+    "cost_multiplier": {
+      "curve": "linear",
+      "base": 1.0,
+      "linear_growth": 0.0,
+      "quadratic_growth": 0.0,
+      "exponential_growth": 1.0,
+      "minimum": 0.01
+    },
+    "stat_multiplier": {
+      "curve": "linear",
+      "base": 1.0,
+      "linear_growth": 0.0,
+      "quadratic_growth": 0.0,
+      "exponential_growth": 1.0,
+      "minimum": 0.0
+    },
+    "rarity_weights": {
+      "common": 10,
+      "uncommon": 7,
+      "rare": 4,
+      "epic": 2,
+      "legendary": 1
+    }
+  }
+}

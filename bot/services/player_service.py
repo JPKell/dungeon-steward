@@ -39,7 +39,7 @@ class PlayerService:
 
 
 def title_for_player(player: Player) -> str:
-    if player.level >= 10 or player.total_explorations >= 100:
+    if player.explore_level >= 10 or player.total_explorations >= 100:
         return "Apprentice Dungeon Master"
     if player.discoveries_found >= 20:
         return "Dungeon Steward"

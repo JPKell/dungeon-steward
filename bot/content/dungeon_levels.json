@@ -1,0 +1,142 @@
+[
+  {
+    "level": 1,
+    "enemy_level_min": 1,
+    "enemy_level_max": 3,
+    "stat_modifier": 0.85,
+    "reward_modifier": 1.0
+  },
+  {
+    "level": 2,
+    "enemy_level_min": 2,
+    "enemy_level_max": 4,
+    "stat_modifier": 0.905,
+    "reward_modifier": 1.08
+  },
+  {
+    "level": 3,
+    "enemy_level_min": 3,
+    "enemy_level_max": 6,
+    "stat_modifier": 0.96,
+    "reward_modifier": 1.16
+  },
+  {
+    "level": 4,
+    "enemy_level_min": 4,
+    "enemy_level_max": 7,
+    "stat_modifier": 1.015,
+    "reward_modifier": 1.24
+  },
+  {
+    "level": 5,
+    "enemy_level_min": 5,
+    "enemy_level_max": 8,
+    "stat_modifier": 1.07,
+    "reward_modifier": 1.32
+  },
+  {
+    "level": 6,
+    "enemy_level_min": 6,
+    "enemy_level_max": 10,
+    "stat_modifier": 1.125,
+    "reward_modifier": 1.4
+  },
+  {
+    "level": 7,
+    "enemy_level_min": 7,
+    "enemy_level_max": 11,
+    "stat_modifier": 1.18,
+    "reward_modifier": 1.48
+  },
+  {
+    "level": 8,
+    "enemy_level_min": 8,
+    "enemy_level_max": 12,
+    "stat_modifier": 1.235,
+    "reward_modifier": 1.56
+  },
+  {
+    "level": 9,
+    "enemy_level_min": 9,
+    "enemy_level_max": 14,
+    "stat_modifier": 1.29,
+    "reward_modifier": 1.64
+  },
+  {
+    "level": 10,
+    "enemy_level_min": 10,
+    "enemy_level_max": 15,
+    "stat_modifier": 1.345,
+    "reward_modifier": 1.72
+  },
+  {
+    "level": 11,
+    "enemy_level_min": 11,
+    "enemy_level_max": 16,
+    "stat_modifier": 1.4,
+    "reward_modifier": 1.8
+  },
+  {
+    "level": 12,
+    "enemy_level_min": 12,
+    "enemy_level_max": 18,
+    "stat_modifier": 1.455,
+    "reward_modifier": 1.88
+  },
+  {
+    "level": 13,
+    "enemy_level_min": 13,
+    "enemy_level_max": 19,
+    "stat_modifier": 1.51,
+    "reward_modifier": 1.96
+  },
+  {
+    "level": 14,
+    "enemy_level_min": 14,
+    "enemy_level_max": 20,
+    "stat_modifier": 1.565,
+    "reward_modifier": 2.04
+  },
+  {
+    "level": 15,
+    "enemy_level_min": 15,
+    "enemy_level_max": 22,
+    "stat_modifier": 1.62,
+    "reward_modifier": 2.12
+  },
+  {
+    "level": 16,
+    "enemy_level_min": 16,
+    "enemy_level_max": 23,
+    "stat_modifier": 1.675,
+    "reward_modifier": 2.2
+  },
+  {
+    "level": 17,
+    "enemy_level_min": 17,
+    "enemy_level_max": 24,
+    "stat_modifier": 1.73,
+    "reward_modifier": 2.28
+  },
+  {
+    "level": 18,
+    "enemy_level_min": 18,
+    "enemy_level_max": 26,
+    "stat_modifier": 1.785,
+    "reward_modifier": 2.36
+  },
+  {
+    "level": 19,
+    "enemy_level_min": 19,
+    "enemy_level_max": 27,
+    "stat_modifier": 1.84,
+    "reward_modifier": 2.44
+  },
+  {
+    "level": 20,
+    "enemy_level_min": 20,
+    "enemy_level_max": 28,
+    "stat_modifier": 1.895,
+    "reward_modifier": 2.52
+  }
+]

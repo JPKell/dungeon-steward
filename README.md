@@ -1,17 +1,23 @@
 # Dungeon Steward
 
-Dungeon Steward is a Discord slash-command bot for the Kellrond Games community. It runs a lightweight dungeon exploration game with regenerating energy, encounter choices, discoveries, player profiles, shared server dungeon progress, weekly objectives, and staff controls.
+Dungeon Steward is a Discord slash-command bot for the Kellrond Games community. It runs a lightweight dungeon exploration and defense game with regenerating energy, encounter choices, discoveries, combat progression, player profiles, shared server dungeon progress, weekly objectives, and staff controls.
 
 ## Features
 
 - `/dungeon` slash commands only; no prefix commands and no Message Content intent.
-- Energy regenerates lazily: 1 energy every 2 hours, capped at 12.
+- Explore Level is separate from Combat Level. Explore Level comes from exploration XP and shortens energy recovery down to a 30-minute floor.
+- Combat Level, Combat XP, HP, attack, defense, speed, and unspent stat points are persisted per player.
+- Defending sessions survive bot restarts and resolve lazily from timestamps: one battle per completed minute, capped by Combat Level.
+- Dungeon defense levels 1-20 use content-driven enemy definitions and scaling.
+- Equipment definitions live in `bot/content/equipment.json`, and the shop refreshes 10 Combat Level-appropriate items each hour.
+- Equipment slots are persisted for weapon, shield, helm, armor, gloves, trinket, and boots.
+- Energy regenerates lazily, capped at 12.
 - Replayable content-driven encounters in `bot/content/encounters.json`.
 - Discoveries and collectibles in `bot/content/discoveries.json`.
 - SQLAlchemy models with Alembic migrations.
 - PostgreSQL for production, SQLite for local development.
 - Discord embeds, buttons, private error responses, and staff-only admin commands.
-- Tests for energy, exploration idempotency, content validation, weekly objectives, leaderboards, and permissions.
+- Tests for energy, exploration idempotency, combat progression, defense resolution, content validation, weekly objectives, leaderboards, and permissions.
 
 ## Technology
 
@@ -82,6 +88,11 @@ With `DISCORD_TEST_GUILD_ID` set, commands sync to one test server for fast deve
 Player commands:
 
 - `/dungeon explore`
+- `/dungeon defend dungeon_level:1-20`
+- `/dungeon stop-defending`
+- `/dungeon shop`
+- `/dungeon buy item_number:1-10`
+- `/dungeon stats [stat] [amount]`
 - `/dungeon hall`
 - `/dungeon profile [member]`
 - `/dungeon energy`
@@ -102,7 +113,19 @@ Staff commands require either `Manage Server` permission or the configured `DISC
 
 ## Energy System
 
-New players start with 12 energy. Exploration costs 1 energy. Energy regenerates lazily from `energy_updated_at`, so offline time counts and restarts do not reset progress. When a player is full, the timestamp is refreshed so stored time cannot exceed the 24-hour cap.
+New players start with 12 energy. Exploration costs 1 energy. Energy regenerates lazily from `energy_updated_at`, so offline time counts and restarts do not reset progress. Explore Level 1 uses the base 120-minute recovery; each Explore Level gained reduces that by 1 minute, with a 30-minute minimum. When a player is full, the timestamp is refreshed so stored time cannot exceed the 24-hour cap.
+
+## Progression And Defense
+
+Exploration XP now advances `explore_level`. Existing player `level` values are migrated into `explore_level` by Alembic revision `20260703_0002`.
+
+Combat progression is independent. Players have `combat_level`, `combat_xp`, `combat_xp_to_next_level`, `current_hp`, `max_hp`, `attack`, `defense`, `speed`, and `unspent_stat_points`. Each Combat Level grants 2 stat points and increases maximum HP.
+
+`/dungeon defend` starts a persistent defense session for a selected dungeon level from 1 through 20. A session resolves when the player stops defending, explores, or reaches their Combat Level duration cap. Resolution simulates one enemy battle per completed minute, carries player HP between battles, awards Combat XP and gold for victories, and sends a separate defense report before any exploration result.
+
+`/dungeon stats` shows combat stats. Passing a stat and amount spends unspent points on attack, defense, or speed.
+
+Equipment slots are present in the player record for weapon, shield, helm, armor, gloves, boots, and trinket. The shop offers 10 items at a time from `bot/content/equipment.json`; stock is generated from the current UTC hour rounded down and the player's Combat Level, so players at the same Combat Level see the same stock during the same hour. Shop item costs and stat bonuses can scale by Combat Level through `bot/content/progression.json`. Buying an item spends gold and equips it immediately in the matching slot.
 
 SQLite is useful for local development, but production concurrency should use PostgreSQL. The schema uses uniqueness constraints for exploration resolution and player records; PostgreSQL is the recommended database when many interactions can arrive at once.
 
@@ -111,6 +134,14 @@ SQLite is useful for local development, but production concurrency should use Po
 Encounters live in `bot/content/encounters.json`. Each encounter has a unique `key`, title, description, category, weight, enabled flag, rarity, and two to four choices. Choices define result text, reward ranges, influence effects, stability changes, optional discovery keys, and success state.
 
 Discoveries live in `bot/content/discoveries.json`. Each discovery has a unique key, name, description, category, rarity, optional image URL, and enabled flag.
+
+Equipment lives in `bot/content/equipment.json`. Each item has a unique key, name, slot, rarity, level range, gold cost, and HP/attack/defense/speed bonuses. Shop stock is deterministic per UTC hour and Combat Level, with optional curve scaling for displayed cost and stats.
+
+Enemies live in `bot/content/enemies.json`. Each enemy has a dungeon level range, base stat ranges, stage modifiers, reward ranges, weight, and enabled flag.
+
+Dungeon defense scaling lives in `bot/content/dungeon_levels.json`. Each level defines the possible enemy level range plus stat and reward modifiers.
+
+Progression and combat tuning lives in `bot/content/progression.json`, including exploration cooldowns, Explore Level XP curves, exploration gold/XP reward multipliers, new-player combat defaults, Combat Level XP requirements, scalable HP gained per Combat Level, scalable stat points per Combat Level, defense duration growth, defense recovery, combat round limits, enemy generation scaling, and shop rarity, cost, and stat scaling. Explore Level and the reusable scale blocks support `linear`, `quadratic`, and `exponential` curves while preserving the current balance by default.
 
 After editing content:
 

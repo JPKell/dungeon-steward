@@ -15,7 +15,13 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from bot.config import MAX_ENERGY
+from bot.config import (
+    BASE_ATTACK,
+    BASE_DEFENSE,
+    BASE_PLAYER_HP,
+    BASE_SPEED,
+    MAX_ENERGY,
+)
 from bot.database.base import Base, TimestampMixin
 from bot.utils.time import utc_now
 
@@ -24,7 +30,9 @@ class Player(TimestampMixin, Base):
     __tablename__ = "players"
     __table_args__ = (
         UniqueConstraint("discord_user_id", "guild_id", name="uq_player_user_guild"),
+        UniqueConstraint("defense_session_id", name="uq_players_defense_session_id"),
         Index("ix_players_guild_xp", "guild_id", "experience"),
+        Index("ix_players_active_defense", "is_defending", "defense_started_at"),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -33,7 +41,16 @@ class Player(TimestampMixin, Base):
     guild_id: Mapped[int] = mapped_column(BigInteger, nullable=False)
     gold: Mapped[int] = mapped_column(Integer, default=0)
     experience: Mapped[int] = mapped_column(Integer, default=0)
-    level: Mapped[int] = mapped_column(Integer, default=1)
+    explore_level: Mapped[int] = mapped_column(Integer, default=1)
+    combat_level: Mapped[int] = mapped_column(Integer, default=1)
+    combat_xp: Mapped[int] = mapped_column(Integer, default=0)
+    combat_xp_to_next_level: Mapped[int] = mapped_column(Integer, default=100)
+    unspent_stat_points: Mapped[int] = mapped_column(Integer, default=0)
+    current_hp: Mapped[int] = mapped_column(Integer, default=BASE_PLAYER_HP)
+    max_hp: Mapped[int] = mapped_column(Integer, default=BASE_PLAYER_HP)
+    attack: Mapped[int] = mapped_column(Integer, default=BASE_ATTACK)
+    defense: Mapped[int] = mapped_column(Integer, default=BASE_DEFENSE)
+    speed: Mapped[int] = mapped_column(Integer, default=BASE_SPEED)
     energy: Mapped[int] = mapped_column(Integer, default=MAX_ENERGY)
     energy_updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
     total_explorations: Mapped[int] = mapped_column(Integer, default=0)
@@ -44,6 +61,21 @@ class Player(TimestampMixin, Base):
     discoveries_found: Mapped[int] = mapped_column(Integer, default=0)
     last_exploration_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    is_defending: Mapped[bool] = mapped_column(Boolean, default=False)
+    defense_started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    defense_selected_dungeon_level: Mapped[int | None] = mapped_column(Integer)
+    defense_starting_hp: Mapped[int | None] = mapped_column(Integer)
+    defense_session_id: Mapped[str | None] = mapped_column(String(64))
+    defense_channel_id: Mapped[int | None] = mapped_column(BigInteger)
+    defense_guild_id: Mapped[int | None] = mapped_column(BigInteger)
+    defense_message_id: Mapped[int | None] = mapped_column(BigInteger)
+    weapon: Mapped[str | None] = mapped_column(String(120))
+    shield: Mapped[str | None] = mapped_column(String(120))
+    helm: Mapped[str | None] = mapped_column(String(120))
+    armor: Mapped[str | None] = mapped_column(String(120))
+    gloves: Mapped[str | None] = mapped_column(String(120))
+    trinket: Mapped[str | None] = mapped_column(String(120))
+    boots: Mapped[str | None] = mapped_column(String(120))
 
     discoveries: Mapped[list[PlayerDiscovery]] = relationship(back_populates="player")
 

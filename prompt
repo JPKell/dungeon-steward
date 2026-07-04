@@ -1,0 +1,700 @@
+# Senior Game Progression, Economy, and Balance Implementation
+
+Act as a senior game systems designer, economy designer, and software developer. Analyze the supplied project files and implement a complete, balanced long-term progression system.
+
+You are not being asked only to recommend changes. You must:
+
+1. Inspect the existing code, configuration files, and JSON schemas.
+2. Design the progression and economy.
+3. Edit the supplied files to implement the design.
+4. Generate and populate the required content.
+5. Add automated validation and progression simulations.
+6. Test the resulting balance.
+7. Explain every important change at the end.
+
+Do not stop after producing a design document. Make the changes directly in the project.
+
+---
+
+# Primary Progression Targets
+
+The game has 20 dungeon levels.
+
+Balance the game around a typical non-paying player who plays every day:
+
+* Dungeon level 18 should be reached after approximately 365 days.
+* Dungeon level 20 should be reached after approximately 548 days, or 18 months.
+* Reaching level 20 should require continued exploration, combat progression, equipment upgrades, and sensible stat allocation.
+* A player should not be able to reach the final dungeon levels simply by accumulating one resource.
+* Progress should feel steady throughout the first year without allowing early levels to consume most of the total progression time.
+* Levels 18–20 should be meaningful long-term goals rather than abrupt progression walls.
+
+Treat these as balance targets rather than exact calendar locks. Simulations should place the median typical player close to these targets.
+
+Create separate progression systems for:
+
+1. **Dungeon level:** The difficulty tier selected by the player, from 1 through 20.
+2. **Explore level:** Improved through exploration XP.
+3. **Combat level:** Improved through passive defense combat.
+4. **Equipment progression:** Items with shop-level availability up to at least level 400.
+
+Do not use one shared `level` property for all four systems.
+
+---
+
+# Player Activity Assumptions
+
+Define and document a reasonable typical-player model before tuning the progression.
+
+Unless the existing game provides better usage data, simulate a typical player who:
+
+* Logs in at least once per day.
+* Uses approximately 75–85% of generated exploration energy.
+* Performs regular defense sessions.
+* Does not use paid progression boosts.
+* Purchases equipment at reasonable intervals rather than saving all gold indefinitely.
+* Uses an average-quality stat allocation.
+* Attempts newly unlocked dungeon levels but sometimes returns to easier levels for gold or equipment.
+* Experiences some unsuccessful encounters and defense runs.
+
+Also simulate:
+
+* A casual player using approximately 40–50% of available actions.
+* A dedicated player using approximately 95–100% of available actions.
+
+The dedicated player may progress faster, but the game must not allow dungeon level 20 to be reached in only a few months.
+
+---
+
+# Exploration Progression
+
+The player gains exploration XP and gold from exploration encounters and discoveries.
+
+The current system grants an explore level every 100 XP. Replace this flat requirement with a scalable progression curve.
+
+Requirements:
+
+* Early explore levels should arrive relatively quickly.
+* Midgame levels should take progressively longer.
+* High explore levels must remain attainable without becoming trivial.
+* XP requirements should use a clear formula or generated progression table.
+* Avoid uncontrolled exponential growth.
+* Existing player XP and levels must be migrated safely.
+
+Exploration rewards must scale according to:
+
+* Selected dungeon level.
+* Explore level.
+* Encounter difficulty.
+* Discovery rarity or importance.
+* Risk or failure chance, when applicable.
+
+Higher dungeon levels should grant more XP and gold, but farming the highest unlocked dungeon should not automatically be optimal if the player is significantly underpowered.
+
+Avoid simple reward inflation that makes early gold values irrelevant. Use a controlled formula such as a piecewise polynomial, power curve, or another well-justified progression model.
+
+---
+
+# Exploration Energy
+
+Exploration energy currently regenerates at the following rate:
+
+* One energy every 120 minutes.
+* Each explore level reduces the regeneration time by one minute.
+* Regeneration time has a minimum of 30 minutes.
+
+The player should reach the 30-minute minimum after approximately one year of typical daily play.
+
+This means the explore-level XP curve must be balanced so the player gains the required number of explore levels over approximately 365 days.
+
+Clarify whether the existing project treats the starting explore level as level 0 or level 1, and account for the resulting one-level difference.
+
+After the 30-minute minimum has been reached:
+
+* Explore levels must continue increasing.
+* Energy regeneration must remain at 30 minutes.
+* Additional explore levels should primarily increase exploration gold.
+* Post-cap gold growth must be gradual and controlled.
+* Post-cap levels may provide very small secondary benefits only when they improve the game without causing runaway scaling.
+
+Store the following as configurable values rather than scattering them through the code:
+
+* Starting energy regeneration time.
+* Minimum regeneration time.
+* Reduction per explore level.
+* Explore level at which the minimum is reached.
+* Post-cap gold multiplier growth.
+* XP curve constants.
+
+Use timestamps to calculate regeneration. Do not depend on a continuously running timer.
+
+---
+
+# Dungeon Unlock Progression
+
+Create a clear system for unlocking dungeon levels 1–20.
+
+Dungeon unlocks should consider a combination of:
+
+* Explore level.
+* Combat level.
+* Equipment strength or player power score.
+* Completion of important discoveries or encounters.
+* Successful defense performance.
+* Completion of the preceding dungeon.
+
+Do not require every possible discovery unless the existing game is explicitly designed around complete collection.
+
+The unlock curve should broadly follow this pacing:
+
+* Dungeon levels 1–5: Early game.
+* Dungeon levels 6–10: Established player progression.
+* Dungeon levels 11–15: Long-term midgame.
+* Dungeon levels 16–17: Late first-year progression.
+* Dungeon level 18: Approximately day 365.
+* Dungeon level 19: Between the one-year and 18-month targets.
+* Dungeon level 20: Approximately day 548.
+
+Create a table showing the estimated unlock day for every dungeon level.
+
+Prevent players from permanently trapping themselves by entering an unsuitable dungeon. They must be able to return to previously unlocked levels.
+
+---
+
+# Passive Defense Combat
+
+Combat occurs passively while the player is defending.
+
+## Defense Session Rules
+
+* The player starts a defense session through the existing interface or command.
+* The initial maximum defense duration is one hour.
+* The game stores the defense start timestamp.
+* Combat is not calculated continuously.
+* Combat is resolved when the player next performs an action that ends defense, including:
+
+  * Exploring.
+  * Manually stopping defense.
+  * Starting another incompatible activity.
+* Only completed minutes count.
+* One enemy encounter occurs for each completed defense minute.
+* A loss immediately ends the defense run.
+* No encounters after the first loss grant rewards.
+* Player HP carries from one battle to the next during the session.
+* Clearly define whether HP is restored when a new defense session begins. Unless the existing design specifies otherwise, begin each new defense session at full HP.
+* The same defense session must never be claimable twice.
+
+Add protection against:
+
+* Repeatedly claiming the same elapsed time.
+* Negative elapsed time.
+* Device clock changes where practical.
+* Invalid or corrupted defense timestamps.
+* Starting multiple simultaneous defense sessions.
+* Integer overflow during long offline periods.
+
+---
+
+# Defense Duration and Combat Levels
+
+The requested progression is:
+
+* Defense starts with a maximum duration of 60 minutes.
+* Each combat level increases maximum defense time.
+* Maximum defense duration is 8 hours, or 480 minutes.
+* Equipment and combat progression extend to approximately level 400.
+
+There is a mathematical conflict that must be resolved:
+
+* Starting at 60 minutes and adding exactly one minute per level requires 420 additional minutes.
+* Depending on whether level 1 includes the first increase, the 480-minute cap is reached around combat level 420 or 421, not level 400.
+
+Use one of these solutions:
+
+1. Preferably preserve the literal one-minute-per-level rule and allow the duration cap to be reached at combat level 420 or 421 while equipment progression continues through level 400 and beyond.
+2. If combat level must be capped at exactly 400, distribute the additional 20–21 minutes through documented milestone bonuses.
+3. Use a slightly greater average increase per level only if the existing architecture requires exactly 400 levels.
+
+Do not silently ignore this discrepancy. Choose the solution that best fits the existing project, implement it, and explain the decision.
+
+The 8-hour maximum should be reached in the late-game progression window, preferably around 15–18 months for a typical player.
+
+Store all duration rules in configuration.
+
+---
+
+# Combat Resolution
+
+Inspect the existing player and enemy schemas before changing stat names.
+
+At minimum, combat should account for:
+
+* HP.
+* Attack.
+* Defense.
+* A stat used for initiative or speed, when one exists.
+
+The basic damage formula is:
+
+```text
+damage = attacker attack - defender defense
+```
+
+However, enforce a configurable minimum damage value, normally one, to prevent permanent zero-damage battles:
+
+```text
+damage = max(minimumDamage, attackerAttack - defenderDefense)
+```
+
+Each battle should:
+
+1. Roll initiative to determine who attacks first.
+2. Weight initiative using speed if speed exists in the current stat model.
+3. Alternate attacks until one combatant reaches zero HP.
+4. Carry the player’s remaining HP into the next encounter.
+5. End the entire defense run on the first player loss.
+
+Use a seeded or reproducible random source where practical so defense results can be tested.
+
+Prevent impossible or excessively long battles by adding:
+
+* Minimum damage.
+* A maximum number of combat rounds.
+* Validation against negative HP, attack, or defense.
+* Safe handling for malformed enemy data.
+
+Do not calculate only one attack per encounter. One enemy encounter is started for each elapsed minute, and that encounter resolves fully according to the turn-based combat rules.
+
+---
+
+# Combat XP, Levels, HP, and Stat Points
+
+The player earns combat XP from enemies defeated during defense sessions.
+
+Replace any flat combat XP requirement with a scalable progression curve.
+
+Combat XP should consider:
+
+* Enemy dungeon level.
+* Enemy difficulty.
+* Difference between enemy power and player power.
+* Whether the enemy is below, near, or above the player’s expected combat tier.
+* Reduced XP for repeatedly defeating enemies far below the player’s strength.
+
+When the player gains a combat level:
+
+* Maximum HP increases.
+* The player receives allocatable stat points.
+* The HP increase scales over time.
+* The number of stat points awarded also scales.
+* Scaling must remain controlled and understandable.
+* Unspent stat points must persist.
+* Multiple levels gained in one reward calculation must award all HP and stat increases correctly.
+
+Design an HP and stat-point curve with progression bands. For example:
+
+* Early levels: Smaller but frequent improvements.
+* Mid levels: Moderate HP increases and occasional additional stat points.
+* High levels: Larger numerical gains, balanced against stronger enemy scaling.
+* Milestone levels: Optional bonus points or HP increases.
+
+Do not simply multiply all stats exponentially.
+
+Add a respec mechanism only if one already exists or can be added without significantly expanding scope. Otherwise, make it difficult for a reasonable allocation to permanently ruin a character.
+
+---
+
+# Enemy Scaling
+
+Analyze all supplied combat-enemy JSON files.
+
+Populate each dungeon level with enemies whose stats match the intended player power for that stage.
+
+Enemy scaling must account for:
+
+* HP.
+* Attack.
+* Defense.
+* Initiative or speed.
+* XP reward.
+* Gold reward.
+* Enemy rarity or rank.
+* Dungeon level.
+* Expected player equipment.
+* Expected player stat allocation.
+
+Each dungeon should contain a useful range of enemies:
+
+* Weaker common enemies.
+* Standard enemies.
+* Dangerous enemies.
+* Rare or elite enemies.
+* Bosses or major encounters where supported.
+
+A correctly equipped player at the expected progression point should win most ordinary encounters but should still lose defense runs over time due to HP attrition and occasional stronger enemies.
+
+Do not balance enemies so that every fight is either harmless or an immediate one-hit defeat.
+
+Create automated checks for:
+
+* Enemies dealing no damage.
+* Players dealing no damage.
+* Extreme time-to-kill.
+* Enemy stat discontinuities.
+* Reward values inconsistent with difficulty.
+* Dungeon levels with no valid enemies.
+* Enemies assigned to impossible levels.
+
+---
+
+# Gold Economy
+
+Gold is earned through:
+
+* Exploration.
+* Discoveries.
+* Defense combat.
+* Enemy victories.
+* Any existing supported reward sources.
+
+Gold is spent primarily on equipment.
+
+Balance income and prices together. Do not adjust reward values without also validating shop affordability.
+
+The economy should support:
+
+* Frequent early purchases.
+* Meaningful purchase decisions in the midgame.
+* Longer saving periods for rare high-level equipment.
+* No requirement to save for several weeks for every ordinary upgrade.
+* No ability to purchase every offered upgrade immediately.
+* Continued value for both exploring and defending.
+
+Use gold sinks already present in the project where appropriate. Do not create unnecessary new currencies.
+
+Calculate and report:
+
+* Typical gold earned per day by progression band.
+* Typical equipment prices by progression band.
+* Estimated days between meaningful equipment purchases.
+* Percentage of gold expected from exploration versus defense.
+* Whether farming low-level content creates an exploit.
+* Whether high-level rewards cause excessive inflation.
+
+---
+
+# Equipment Content Expansion
+
+Analyze the supplied equipment JSON schema and preserve compatibility with existing code.
+
+Populate the equipment data with hundreds of additional items.
+
+Unless the current dataset is already extremely large:
+
+* Add at least 400 new equipment items.
+* Maintain reasonable representation across every supported equipment slot.
+* Maintain representation across all rarity tiers.
+* Avoid meaningless numbered duplicates such as `Iron Sword 1`, `Iron Sword 2`, and `Iron Sword 3`.
+* Names should fit the Dungeon Steward fantasy setting.
+* Item names must be unique unless the schema intentionally supports variants.
+* Generated items should have coherent names, descriptions, stats, prices, rarities, and level ranges.
+
+It is acceptable and preferable to create a deterministic equipment-generation script and commit both:
+
+* The generator.
+* The generated JSON output.
+
+The generated JSON must still be ready for the game to load directly.
+
+## Equipment Availability Ranges
+
+For equipment below level 300:
+
+* Each item should normally have a shop minimum and maximum level range spanning approximately 10–20 levels.
+* Ensure continuous equipment coverage from the starting level through level 300.
+* Avoid shop-level gaps where no suitable item can appear.
+* Avoid excessive overlap that produces thousands of equally likely shop options.
+
+For equipment at level 300 and above:
+
+* Items may use wider availability ranges.
+* Endgame items may remain relevant for 25–100 levels depending on rarity and power.
+* Very rare items can have wider ranges than common items.
+* The shop must still provide progression rather than repeatedly showing permanently obsolete items.
+
+Equipment progression must support levels through at least level 400.
+
+## Equipment Stats
+
+Scale equipment using:
+
+* Item level.
+* Rarity.
+* Equipment slot.
+* Primary stat role.
+* Secondary stat budget.
+* Price.
+* Minimum and maximum shop level.
+
+Create a consistent item-budget formula rather than assigning arbitrary values.
+
+Include controlled variation so items at the same level are not identical, but ensure rarity and level remain reliable indicators of expected strength.
+
+Prevent:
+
+* Lower-level common equipment regularly outperforming much higher-level rare equipment.
+* Defense scaling that makes all enemy damage zero.
+* Attack scaling that causes one-hit kills throughout the game.
+* Price values unrelated to item power.
+* Invalid stat combinations.
+* Negative item values.
+* Items that can never appear in the shop.
+
+---
+
+# Shop Rarity Progression
+
+Higher-level shops should have better rarity probabilities.
+
+At low levels:
+
+* Common and uncommon equipment should dominate.
+* Rare equipment should feel exciting.
+* Epic and legendary equipment should be genuinely uncommon.
+
+At higher levels:
+
+* Rare and epic items should become more common.
+* Legendary equipment should become realistically obtainable.
+* Common equipment should gradually become less prominent.
+* Legendary items must not become so common that rarity loses meaning.
+
+Implement configurable rarity-weight bands or a continuous rarity-weight formula.
+
+Produce a table showing expected shop rarity percentages at representative levels such as:
+
+* Level 1.
+* Level 25.
+* Level 50.
+* Level 100.
+* Level 200.
+* Level 300.
+* Level 400.
+
+Validate that all percentages total 100%.
+
+Shop item selection must consider:
+
+* Player or shop level.
+* Item minimum level.
+* Item maximum level.
+* Rarity weighting.
+* Equipment slot weighting where applicable.
+* Duplicate prevention within one shop refresh.
+* A fallback when no valid item is found.
+
+Do not first choose a rarity that has no valid items and then return an empty shop slot.
+
+---
+
+# JSON and Schema Requirements
+
+For every supplied JSON file:
+
+* Preserve valid formatting.
+* Preserve property names unless code and migration logic are updated together.
+* Add schema versions where appropriate.
+* Add validation for required properties.
+* Check duplicate IDs.
+* Check duplicate names where names must be unique.
+* Check invalid level ranges.
+* Check missing rewards.
+* Check unsupported rarity values.
+* Check impossible stat values.
+* Check orphaned references.
+* Check that every dungeon level has sufficient encounter, discovery, enemy, and equipment coverage.
+
+Do not manually edit thousands of values without creating a repeatable generation or balancing process.
+
+If generated data is used, generation must be deterministic using a fixed seed.
+
+
+---
+
+# Balance Simulation
+
+Create a simulation or balance-testing tool that can run without the full game interface.
+
+It should simulate at least:
+
+* Exploration energy generation and use.
+* Explore XP.
+* Explore level progression.
+* Explore gold.
+* Defense duration.
+* Combat encounters.
+* Combat XP.
+* Combat levels.
+* HP attrition.
+* Stat allocation.
+* Equipment purchasing.
+* Shop rarity.
+* Dungeon unlock timing.
+* Dungeon success and failure.
+* Casual, typical, and dedicated players.
+
+Use multiple randomized runs where randomness materially affects progression.
+
+Report at minimum:
+
+* Median day each dungeon level is unlocked.
+* Day explore regeneration reaches 30 minutes.
+* Day combat reaches major duration milestones.
+* Approximate day combat level 400 is reached.
+* Gold earned and spent by progression band.
+* Typical equipment power by progression band.
+* Number of defense wins before HP depletion.
+* Player death rates by dungeon.
+* Percentage of shop items by rarity.
+* Progression outliers.
+* Whether the day-365 and day-548 targets were met.
+
+Target ranges:
+
+* Dungeon 18 median: approximately days 330–400.
+* Dungeon 20 median: approximately days 500–600.
+* Explore regeneration minimum: approximately days 330–400.
+* Combat endgame duration: preferably within the final late-game window.
+
+Do not claim that balancing works unless the simulations support it.
+
+If the first model misses the targets, adjust the curves and rerun the simulation.
+
+---
+
+
+# Required Acceptance Tests
+
+The completed implementation must demonstrate that:
+
+1. Energy begins at one point every 120 minutes.
+2. Energy regeneration cannot become faster than one point every 30 minutes.
+3. Explore levels continue after the regeneration cap.
+4. Post-cap explore levels increase gold without reducing regeneration further.
+5. A defense session begins with the correct duration.
+6. Defense elapsed time is calculated from timestamps.
+7. Each completed defense minute produces no more than one enemy encounter.
+8. A player loss ends the defense run immediately.
+9. HP carries between battles in the same session.
+10. The same defense session cannot be claimed twice.
+11. Combat level increases maximum defense duration correctly.
+12. Defense duration never exceeds eight hours.
+13. Multiple combat levels grant all HP and stat-point rewards.
+14. Damage cannot become negative.
+15. Battles cannot become infinite.
+16. Equipment is available throughout levels 1–400.
+17. Normal sub-300 equipment availability ranges are approximately 10–20 levels.
+18. High-level equipment may use wider ranges.
+19. Higher shop levels have improved rarity probabilities.
+20. The shop never produces an empty slot because of invalid rarity filtering.
+21. Every dungeon level has valid exploration and combat content.
+22. Dungeon 18 and dungeon 20 progression approximates the requested timelines.
+23. Existing saves migrate without losing legitimate progress.
+24. All edited JSON files pass parsing and schema validation.
+
+---
+
+# Final Response
+
+After editing and testing the project, provide a report containing:
+
+## 1. Progression Design
+
+Explain:
+
+* The separate level systems.
+* XP formulas.
+* Energy formula.
+* Dungeon unlock requirements.
+* Combat-level rewards.
+* HP and stat-point scaling.
+* Enemy scaling.
+* Gold scaling.
+* Equipment scaling.
+* Shop rarity scaling.
+
+## 2. Timeline
+
+Provide the simulated median unlock day for all 20 dungeon levels.
+
+Also provide:
+
+* Explore cooldown milestones.
+* Combat duration milestones.
+* Estimated combat level 400 date.
+* Estimated final progression date.
+
+## 3. Files Changed
+
+List every file created or modified and briefly explain why.
+
+## 4. Equipment Generation
+
+Report:
+
+* Number of items before.
+* Number of items added.
+* Total number of items.
+* Count by slot.
+* Count by rarity.
+* Level coverage.
+* Any generation scripts created.
+
+## 5. Economy Results
+
+Report:
+
+* Daily gold income by stage.
+* Equipment prices by stage.
+* Purchase frequency.
+* Exploration versus defense income.
+* Any farming exploits found and corrected.
+
+## 6. Tests and Simulations
+
+List:
+
+* Tests added.
+* Simulations run.
+* Important results.
+* Remaining balance risks.
+* Any assumptions made because data was unavailable.
+
+## 7. Important Design Decisions
+
+Explicitly explain how the conflict between:
+
+* 60 starting minutes,
+* one added minute per combat level,
+* an eight-hour cap,
+* and level 400 progression
+
+was resolved.
+
+## 8. Coding-Agent Follow-Up Prompt
+
+End with a separate, ready-to-send prompt for another coding agent.
+
+That prompt should:
+
+* Reference the exact files changed.
+* Summarize the implemented architecture.
+* Ask the coding agent to review the work for correctness.
+* Ask it to finish any remaining UI, migration, test, or integration work.
+* Include any known issues or uncertain assumptions.
+* Require it to run all tests and simulations.
+* Tell it not to replace the implemented progression with arbitrary values.
+
+Do not give a generic follow-up prompt. Base it on the actual changes you made.
+
+The task is complete only when the supplied files have been edited, generated content has been added, validation has passed, simulations have been run, and the final implementation report has been provided.
