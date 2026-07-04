@@ -56,7 +56,7 @@ def build_purchase_embed(purchase: PurchasedEquipment) -> discord.Embed:
     cost_value = purchase.purchase_cost or purchase.item.cost
     response.add_field(name="Cost", value=f"{cost_value} gold")
     if purchase.trade_in_value > 0:
-        response.add_field(name="Sell", value=f"{purchase.trade_in_value} gold")
+        response.add_field(name="Trade", value=f"{purchase.trade_in_value} gold")
     response.add_field(name="Remaining Gold", value=str(purchase.remaining_gold))
     response.add_field(name="Stats", value=format_item_stats(purchase.item))
     if purchase.item.description:
