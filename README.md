@@ -82,6 +82,7 @@ With `DISCORD_TEST_GUILD_ID` set, commands sync to one test server for fast deve
 Player commands:
 
 - `/dungeon explore`
+- `/dungeon hall`
 - `/dungeon profile [member]`
 - `/dungeon energy`
 - `/dungeon status`
@@ -217,4 +218,3 @@ Store backups outside the application server and test restore procedures periodi
 - Migrations fail: confirm PostgreSQL credentials and run `alembic current`.
 - Content reload fails: run `python -m scripts.validate_content`.
 - Interactions time out: check database connectivity and bot logs.
-

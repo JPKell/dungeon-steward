@@ -17,7 +17,12 @@ from bot.services.player_service import PlayerService, title_for_player
 from bot.services.weekly_objective_service import WeeklyObjectiveService
 from bot.utils.embeds import DEEP_NAVY, MIDNIGHT_BLUE, WARM_GOLD, embed
 from bot.utils.time import discord_relative_timestamp, human_duration
-from bot.views.exploration import ExplorationView
+from bot.views.exploration import (
+    ExplorationView,
+    PostExplorationView,
+    StewardsHallView,
+    build_hall_embed,
+)
 
 log = logging.getLogger(__name__)
 
@@ -31,6 +36,27 @@ class DungeonGroup(app_commands.Group):
         self.exploration = ExplorationService()
         self.discoveries = DiscoveryService()
         self.weekly = WeeklyObjectiveService()
+
+    def _action_view(self, user_id: int) -> PostExplorationView:
+        return PostExplorationView(
+            session_factory=self.session_factory,
+            exploration_service=self.exploration,
+            owner_user_id=user_id,
+        )
+
+    def _hall_view(self, user_id: int) -> StewardsHallView:
+        return StewardsHallView(
+            session_factory=self.session_factory,
+            exploration_service=self.exploration,
+            owner_user_id=user_id,
+        )
+
+    @app_commands.command(name="hall", description="Visit the Steward's Hall to choose your next dungeon action")
+    async def hall(self, interaction: discord.Interaction) -> None:
+        await interaction.response.send_message(
+            embed=build_hall_embed(),
+            view=self._hall_view(interaction.user.id),
+        )
 
     @app_commands.command(name="explore", description="Spend one energy to explore the dungeon")
     async def explore(self, interaction: discord.Interaction) -> None:
@@ -112,7 +138,10 @@ class DungeonGroup(app_commands.Group):
             profile_embed.add_field(name="Discoveries", value=str(player.discoveries_found))
             profile_embed.add_field(name="Hero Influence", value=str(player.hero_influence))
             profile_embed.add_field(name="Villain Influence", value=str(player.villain_influence))
-        await interaction.response.send_message(embed=profile_embed)
+        await interaction.response.send_message(
+            embed=profile_embed,
+            view=self._action_view(interaction.user.id),
+        )
 
     @app_commands.command(name="energy", description="Check your dungeon energy")
     async def energy_command(self, interaction: discord.Interaction) -> None:
@@ -135,7 +164,11 @@ class DungeonGroup(app_commands.Group):
         response.add_field(name="Next Energy", value=discord_relative_timestamp(state.next_energy_at))
         response.add_field(name="Full Energy", value=discord_relative_timestamp(state.full_energy_at))
         response.set_footer(text=f"Energy cap: {MAX_ENERGY} | Regen: {ENERGY_REGEN_SECONDS // 3600} hours")
-        await interaction.response.send_message(embed=response, ephemeral=True)
+        await interaction.response.send_message(
+            embed=response,
+            view=self._action_view(interaction.user.id),
+            ephemeral=True,
+        )
 
     @app_commands.command(name="status", description="View the shared server dungeon")
     async def status(self, interaction: discord.Interaction) -> None:
@@ -158,7 +191,10 @@ class DungeonGroup(app_commands.Group):
                 value=f"{objective.progress_value}/{objective.target_value} | Ends {discord_relative_timestamp(objective.ends_at)}",
                 inline=False,
             )
-        await interaction.response.send_message(embed=status_embed)
+        await interaction.response.send_message(
+            embed=status_embed,
+            view=self._action_view(interaction.user.id),
+        )
 
     @app_commands.command(name="leaderboard", description="Show the server leaderboard")
     @app_commands.choices(
@@ -202,7 +238,10 @@ class DungeonGroup(app_commands.Group):
             )
         else:
             board.description = "No entries yet. The dungeon awaits its first questionable decision."
-        await interaction.response.send_message(embed=board)
+        await interaction.response.send_message(
+            embed=board,
+            view=self._action_view(interaction.user.id),
+        )
 
     @app_commands.command(name="help", description="Learn how the dungeon works")
     async def help_command(self, interaction: discord.Interaction) -> None:
@@ -215,8 +254,12 @@ class DungeonGroup(app_commands.Group):
         )
         help_embed.add_field(
             name="Commands",
-            value="/dungeon explore\n/dungeon profile\n/dungeon energy\n/dungeon status\n/dungeon leaderboard",
+            value="/dungeon explore\n/dungeon hall\n/dungeon profile\n/dungeon energy\n/dungeon status\n/dungeon leaderboard",
             inline=False,
         )
         help_embed.add_field(name="Version", value=__version__)
-        await interaction.response.send_message(embed=help_embed, ephemeral=True)
+        await interaction.response.send_message(
+            embed=help_embed,
+            view=self._action_view(interaction.user.id),
+            ephemeral=True,
+        )

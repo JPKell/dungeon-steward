@@ -15,7 +15,17 @@ def test_staff_role_is_accepted():
     assert is_staff(interaction, 42) is True
 
 
-def test_administrator_style_permission_is_accepted():
+def test_manage_guild_is_rejected_when_staff_role_is_configured():
+    interaction = SimpleNamespace(
+        user=SimpleNamespace(
+            guild_permissions=SimpleNamespace(manage_guild=True),
+            roles=[],
+        )
+    )
+    assert is_staff(interaction, 42) is False
+
+
+def test_manage_guild_is_fallback_when_no_staff_role_is_configured():
     interaction = SimpleNamespace(
         user=SimpleNamespace(guild_permissions=SimpleNamespace(manage_guild=True), roles=[])
     )
@@ -30,4 +40,3 @@ def test_ordinary_user_is_rejected():
         )
     )
     assert is_staff(interaction, 42) is False
-
