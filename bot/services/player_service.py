@@ -3,8 +3,9 @@ from __future__ import annotations
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from bot.config import MAX_ENERGY
+from bot.config import MAX_ENERGY, PROGRESSION_SCHEMA_VERSION
 from bot.models import GuildDungeon, Player
+from bot.services.progression_service import migrate_explore_progression
 from bot.utils.time import utc_now
 
 
@@ -27,6 +28,14 @@ class PlayerService:
             session.flush()
         else:
             player.display_name = display_name[:120]
+        migrate_explore_progression(player)
+        player.highest_unlocked_dungeon_level = max(1, int(player.highest_unlocked_dungeon_level or 1))
+        player.highest_completed_dungeon_level = max(1, int(player.highest_completed_dungeon_level or 1))
+        player.defense_wins = max(0, int(player.defense_wins or 0))
+        player.progression_schema_version = max(
+            int(player.progression_schema_version or 0),
+            PROGRESSION_SCHEMA_VERSION,
+        )
         return player
 
     def get_or_create_guild(self, session: Session, *, guild_id: int) -> GuildDungeon:
@@ -39,7 +48,7 @@ class PlayerService:
 
 
 def title_for_player(player: Player) -> str:
-    if player.level >= 10 or player.total_explorations >= 100:
+    if player.explore_level >= 10 or player.total_explorations >= 100:
         return "Apprentice Dungeon Master"
     if player.discoveries_found >= 20:
         return "Dungeon Steward"

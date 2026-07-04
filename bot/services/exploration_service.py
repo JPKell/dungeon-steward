@@ -11,10 +11,20 @@ from sqlalchemy.orm import Session
 from bot.config import EXPLORATION_TIMEOUT_SECONDS
 from bot.models import EncounterHistory, ExplorationSession, Player
 from bot.services.discovery_service import DiscoveryService
+from bot.services.dungeon_progression_service import can_enter_dungeon, sync_player_dungeon_progression
 from bot.services.encounter_service import Choice, Encounter, EncounterService
+from bot.services.enemy_service import DUNGEON_LEVELS, validate_dungeon_level
 from bot.services.energy_service import EnergyService, EnergyState
+from bot.services.equipment_service import get_effective_combat_stats
 from bot.services.guild_dungeon_service import GuildDungeonService
 from bot.services.player_service import PlayerService
+from bot.services.progression_service import (
+    calculate_combat_power,
+    calculate_explore_level,
+    migrate_explore_progression,
+    scale_exploration_gold,
+    scale_exploration_xp,
+)
 from bot.services.weekly_objective_service import WeeklyObjectiveService
 from bot.utils.time import ensure_utc, is_before_or_equal, utc_now
 
@@ -39,6 +49,7 @@ class ExplorationNotOwnedError(ExplorationError):
 class StartedExploration:
     session: ExplorationSession
     encounter: Encounter
+    dungeon_level: int
     energy_state: EnergyState
 
 
@@ -47,6 +58,7 @@ class ResolvedExploration:
     session: ExplorationSession
     encounter: Encounter
     choice: Choice
+    dungeon_level: int
     gold: int
     experience: int
     leveled_up: bool
@@ -80,25 +92,31 @@ class ExplorationService:
         guild_id: int,
         user_id: int,
         display_name: str,
+        dungeon_level: int = 1,
         now: datetime | None = None,
     ) -> StartedExploration:
         now = ensure_utc(now or utc_now())
-        player = self.players.get_or_create(
-            session, guild_id=guild_id, user_id=user_id, display_name=display_name
-        )
+        validate_dungeon_level(dungeon_level)
+        player = self.players.get_or_create(session, guild_id=guild_id, user_id=user_id, display_name=display_name)
+        migrate_explore_progression(player)
+        _validate_player_dungeon_access(player, dungeon_level)
         self.players.get_or_create_guild(session, guild_id=guild_id)
         energy_state = self.energy.spend(player, now=now)
-        encounter = self.encounters.select(player_level=player.level)
+        encounter = self.encounters.select(
+            explore_level=player.explore_level,
+            dungeon_level=dungeon_level,
+        )
         exploration = ExplorationSession(
             resolution_key=secrets.token_urlsafe(24),
             player_id=player.id,
             guild_id=guild_id,
             encounter_key=encounter.key,
+            dungeon_level=dungeon_level,
             expires_at=now + timedelta(seconds=EXPLORATION_TIMEOUT_SECONDS),
         )
         session.add(exploration)
         session.flush()
-        return StartedExploration(exploration, encounter, energy_state)
+        return StartedExploration(exploration, encounter, dungeon_level, energy_state)
 
     def resolve(
         self,
@@ -112,9 +130,7 @@ class ExplorationService:
     ) -> ResolvedExploration:
         now = ensure_utc(now or utc_now())
         rng = rng or random
-        exploration = session.scalar(
-            select(ExplorationSession).where(ExplorationSession.resolution_key == resolution_key)
-        )
+        exploration = session.scalar(select(ExplorationSession).where(ExplorationSession.resolution_key == resolution_key))
         if exploration is None:
             raise ExplorationExpiredError("Exploration session was not found")
         player = session.get(Player, exploration.player_id)
@@ -131,8 +147,39 @@ class ExplorationService:
         if choice is None:
             raise ExplorationError("Invalid choice")
 
-        gold = rng.randint(choice.gold_min, choice.gold_max)
-        experience = rng.randint(choice.xp_min, choice.xp_max)
+        migrate_explore_progression(player)
+        reward_explore_level = player.explore_level
+        dungeon_level = exploration.dungeon_level
+        validate_dungeon_level(dungeon_level)
+        discovery, is_new = self.discoveries.award(session, player, choice.discovery_key)
+        rarity = getattr(discovery, "rarity", None) or getattr(encounter, "rarity", "common")
+        stats = get_effective_combat_stats(player)
+        player_power = calculate_combat_power(
+            max_hp=stats.max_hp,
+            attack=stats.attack,
+            defense=stats.defense,
+            speed=stats.speed,
+        )
+        expected_power = float(DUNGEON_LEVELS[dungeon_level].get("expected_player_power", 1.0))
+        power_ratio = player_power / max(1.0, expected_power)
+        base_gold = rng.randint(choice.gold_min, choice.gold_max)
+        base_experience = rng.randint(choice.xp_min, choice.xp_max)
+        gold = scale_exploration_gold(
+            base_gold,
+            reward_explore_level,
+            dungeon_level=dungeon_level,
+            rarity=rarity,
+            successful=choice.success,
+            power_ratio=power_ratio,
+        )
+        experience = scale_exploration_xp(
+            base_experience,
+            reward_explore_level,
+            dungeon_level=dungeon_level,
+            rarity=rarity,
+            successful=choice.success,
+            power_ratio=power_ratio,
+        )
         exploration.selected_choice_key = choice.key
         exploration.resolved_at = now
         player.gold += gold
@@ -145,10 +192,9 @@ class ExplorationService:
             player.successful_explorations += 1
         else:
             player.failed_explorations += 1
-        old_level = player.level
-        player.level = max(1, (player.experience // 100) + 1)
+        old_explore_level = player.explore_level
+        player.explore_level = calculate_explore_level(player.experience)
 
-        discovery, is_new = self.discoveries.award(session, player, choice.discovery_key)
         dungeon = self.players.get_or_create_guild(session, guild_id=exploration.guild_id)
         self.guilds.apply_choice(
             dungeon,
@@ -170,6 +216,7 @@ class ExplorationService:
                 player_id=player.id,
                 encounter_key=encounter.key,
                 choice_key=choice.key,
+                dungeon_level=dungeon_level,
                 gold_awarded=gold,
                 experience_awarded=experience,
                 discovery_key=choice.discovery_key,
@@ -179,11 +226,19 @@ class ExplorationService:
             session=exploration,
             encounter=encounter,
             choice=choice,
+            dungeon_level=dungeon_level,
             gold=gold,
             experience=experience,
-            leveled_up=player.level > old_level,
+            leveled_up=player.explore_level > old_explore_level,
             discovery_name=discovery.name if discovery else None,
             new_discovery=is_new,
             energy_state=self.energy.state(player, now=now),
         )
 
+
+def _validate_player_dungeon_access(player: Player, dungeon_level: int) -> None:
+    snapshot = sync_player_dungeon_progression(player)
+    if not can_enter_dungeon(dungeon_level, player.highest_unlocked_dungeon_level):
+        missing = snapshot.next_unlock.missing if snapshot.next_unlock is not None else ()
+        detail = f": {', '.join(missing)}" if missing else ""
+        raise ExplorationError(f"Dungeon level {dungeon_level} is not unlocked{detail}")

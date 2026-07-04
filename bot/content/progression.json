@@ -1,0 +1,225 @@
+{
+  "schema_version": 2,
+  "exploration": {
+    "base_cooldown_minutes": 120,
+    "min_cooldown_minutes": 30,
+    "cooldown_reduction_per_level": 1,
+    "cooldown_cap_level": 91,
+    "leveling": {
+      "curve": "quadratic",
+      "base_xp": 72,
+      "linear_growth": 10.5,
+      "quadratic_growth": 0.58,
+      "exponential_growth": 1.05,
+      "max_level": 0
+    },
+    "reward_scaling": {
+      "gold_multiplier": {
+        "curve": "quadratic",
+        "base": 1.15,
+        "linear_growth": 0.006,
+        "quadratic_growth": 3e-05,
+        "exponential_growth": 1.0,
+        "minimum": 1.15,
+        "maximum": 1.8
+      },
+      "xp_multiplier": {
+        "curve": "linear",
+        "base": 1.0,
+        "linear_growth": 0.0015,
+        "quadratic_growth": 0.0,
+        "exponential_growth": 1.0,
+        "minimum": 1.0,
+        "maximum": 1.14
+      },
+      "dungeon_gold_growth": 0.08,
+      "dungeon_xp_growth": 0.022,
+      "post_cap_gold_growth": 0.004,
+      "underpowered_reward_floor": 0.55,
+      "risk_gold_bonus": 0.18,
+      "failure_xp_multiplier": 0.78,
+      "rarity_gold_multipliers": {
+        "common": 1.0,
+        "uncommon": 1.08,
+        "rare": 1.18,
+        "epic": 1.32,
+        "legendary": 1.5
+      },
+      "rarity_xp_multipliers": {
+        "common": 1.0,
+        "uncommon": 1.05,
+        "rare": 1.12,
+        "epic": 1.22,
+        "legendary": 1.35
+      }
+    }
+  },
+  "new_player": {
+    "base_hp": 50,
+    "attack": 5,
+    "defense": 5,
+    "speed": 5
+  },
+  "combat_leveling": {
+    "xp_to_next_level": {
+      "curve": "quadratic",
+      "base": 1140,
+      "linear_growth": 169.0,
+      "quadratic_growth": 0.23,
+      "exponential_growth": 1.0,
+      "minimum": 1140,
+      "maximum": 250000
+    },
+    "hp_per_level": {
+      "curve": "linear",
+      "base": 2.0,
+      "linear_growth": 0.012,
+      "quadratic_growth": 0.0,
+      "exponential_growth": 1.0,
+      "minimum": 2,
+      "maximum": 7
+    },
+    "stat_points_per_level": {
+      "curve": "linear",
+      "base": 1.0,
+      "linear_growth": 0.0025,
+      "quadratic_growth": 0.0,
+      "exponential_growth": 1.0,
+      "minimum": 1,
+      "maximum": 2
+    },
+    "hp_milestone_interval": 25,
+    "hp_milestone_bonus": 5,
+    "stat_milestone_interval": 20,
+    "stat_milestone_bonus": 1
+  },
+  "defense": {
+    "base_minutes": 60,
+    "max_minutes": 480,
+    "minutes_per_level": {
+      "curve": "linear",
+      "base": 1,
+      "linear_growth": 0,
+      "quadratic_growth": 0,
+      "exponential_growth": 1.0,
+      "minimum": 1,
+      "maximum": 1
+    },
+    "duration_cap_level": 421,
+    "restore_full_hp_on_start": true,
+    "post_defeat_hp_percent": 0.25,
+    "minimum_damage": 1,
+    "max_battle_rounds": 100,
+    "maximum_elapsed_days": 30
+  },
+  "enemy_generation": {
+    "level_stat_scale": 0.035,
+    "level_reward_scale": 0.04,
+    "power_xp_floor": 0.2,
+    "power_xp_ceiling": 1.35,
+    "trivial_enemy_ratio": 0.55,
+    "trivial_enemy_xp_multiplier": 0.25,
+    "combat_gold_multiplier": 0.25,
+    "trivial_enemy_gold_multiplier": 0.35
+  },
+  "shop": {
+    "stock_size": 10,
+    "cost_multiplier": {
+      "curve": "linear",
+      "base": 1.0,
+      "linear_growth": 0.0,
+      "quadratic_growth": 0.0,
+      "exponential_growth": 1.0,
+      "minimum": 1.0,
+      "maximum": 1.0
+    },
+    "stat_multiplier": {
+      "curve": "linear",
+      "base": 1.0,
+      "linear_growth": 0.0,
+      "quadratic_growth": 0.0,
+      "exponential_growth": 1.0,
+      "minimum": 1.0,
+      "maximum": 1.0
+    },
+    "rarity_weights": {
+      "common": 68,
+      "uncommon": 24,
+      "rare": 6,
+      "epic": 1,
+      "legendary": 1
+    },
+    "rarity_bands": [
+      {
+        "min_level": 1,
+        "weights": {
+          "common": 68,
+          "uncommon": 24,
+          "rare": 6,
+          "epic": 1,
+          "legendary": 1
+        }
+      },
+      {
+        "min_level": 25,
+        "weights": {
+          "common": 58,
+          "uncommon": 28,
+          "rare": 10,
+          "epic": 3,
+          "legendary": 1
+        }
+      },
+      {
+        "min_level": 50,
+        "weights": {
+          "common": 48,
+          "uncommon": 30,
+          "rare": 15,
+          "epic": 5,
+          "legendary": 2
+        }
+      },
+      {
+        "min_level": 100,
+        "weights": {
+          "common": 38,
+          "uncommon": 31,
+          "rare": 20,
+          "epic": 8,
+          "legendary": 3
+        }
+      },
+      {
+        "min_level": 200,
+        "weights": {
+          "common": 27,
+          "uncommon": 31,
+          "rare": 25,
+          "epic": 12,
+          "legendary": 5
+        }
+      },
+      {
+        "min_level": 300,
+        "weights": {
+          "common": 20,
+          "uncommon": 28,
+          "rare": 28,
+          "epic": 17,
+          "legendary": 7
+        }
+      },
+      {
+        "min_level": 400,
+        "weights": {
+          "common": 15,
+          "uncommon": 24,
+          "rare": 30,
+          "epic": 21,
+          "legendary": 10
+        }
+      }
+    ]
+  }
+}

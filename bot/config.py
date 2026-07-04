@@ -5,11 +5,27 @@ from dataclasses import dataclass
 
 from dotenv import load_dotenv
 
-ENERGY_REGEN_SECONDS = 2 * 60 * 60
+from bot.services.progression_content import PROGRESSION_CONTENT
+
+BASE_EXPLORE_COOLDOWN_MINUTES = PROGRESSION_CONTENT.exploration.base_cooldown_minutes
+MIN_EXPLORE_COOLDOWN_MINUTES = PROGRESSION_CONTENT.exploration.min_cooldown_minutes
+ENERGY_REGEN_SECONDS = BASE_EXPLORE_COOLDOWN_MINUTES * 60
 MAX_ENERGY = 12
 EXPLORATION_ENERGY_COST = 1
 EXPLORATION_TIMEOUT_SECONDS = 5 * 60
 GAME_VERSION = "0.1.0"
+PROGRESSION_SCHEMA_VERSION = PROGRESSION_CONTENT.schema_version
+
+BASE_PLAYER_HP = PROGRESSION_CONTENT.new_player.base_hp
+BASE_COMBAT_XP_TO_NEXT_LEVEL = int(PROGRESSION_CONTENT.combat_leveling.xp_to_next_level.base)
+HP_PER_COMBAT_LEVEL = int(PROGRESSION_CONTENT.combat_leveling.hp_per_level.base)
+COMBAT_STAT_POINTS_PER_LEVEL = int(PROGRESSION_CONTENT.combat_leveling.stat_points_per_level.base)
+BASE_ATTACK = PROGRESSION_CONTENT.new_player.attack
+BASE_DEFENSE = PROGRESSION_CONTENT.new_player.defense
+BASE_SPEED = PROGRESSION_CONTENT.new_player.speed
+POST_DEFEAT_HP_PERCENT = PROGRESSION_CONTENT.defense.post_defeat_hp_percent
+MINIMUM_DAMAGE = PROGRESSION_CONTENT.defense.minimum_damage
+MAX_BATTLE_ROUNDS = PROGRESSION_CONTENT.defense.max_battle_rounds
 
 
 @dataclass(frozen=True)
@@ -48,4 +64,3 @@ def load_settings(*, require_token: bool = True) -> Settings:
         log_level=os.getenv("LOG_LEVEL", "INFO"),
         environment=os.getenv("ENVIRONMENT", "development"),
     )
-

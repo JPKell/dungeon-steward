@@ -37,6 +37,12 @@ def discord_relative_timestamp(when: datetime | None) -> str:
     return f"<t:{int(ensure_utc(when).timestamp())}:R>"
 
 
+def discord_timestamp(when: datetime | None, style: str = "R") -> str:
+    if when is None:
+        return "now"
+    return f"<t:{int(ensure_utc(when).timestamp())}:{style}>"
+
+
 def add_seconds(when: datetime, seconds: int) -> datetime:
     return ensure_utc(when) + timedelta(seconds=seconds)
 
