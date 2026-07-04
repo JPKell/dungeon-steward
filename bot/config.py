@@ -27,6 +27,16 @@ POST_DEFEAT_HP_PERCENT = PROGRESSION_CONTENT.defense.post_defeat_hp_percent
 MINIMUM_DAMAGE = PROGRESSION_CONTENT.defense.minimum_damage
 MAX_BATTLE_ROUNDS = PROGRESSION_CONTENT.defense.max_battle_rounds
 
+BASE_PLAYER_HP = PROGRESSION_CONTENT.new_player.base_hp
+HP_PER_COMBAT_LEVEL = int(PROGRESSION_CONTENT.combat_leveling.hp_per_level.base)
+COMBAT_STAT_POINTS_PER_LEVEL = int(PROGRESSION_CONTENT.combat_leveling.stat_points_per_level.base)
+BASE_ATTACK = PROGRESSION_CONTENT.new_player.attack
+BASE_DEFENSE = PROGRESSION_CONTENT.new_player.defense
+BASE_SPEED = PROGRESSION_CONTENT.new_player.speed
+POST_DEFEAT_HP_PERCENT = PROGRESSION_CONTENT.defense.post_defeat_hp_percent
+MINIMUM_DAMAGE = PROGRESSION_CONTENT.defense.minimum_damage
+MAX_BATTLE_ROUNDS = PROGRESSION_CONTENT.defense.max_battle_rounds
+
 
 @dataclass(frozen=True)
 class Settings:
