@@ -1,0 +1,4002 @@
+[
+  {
+    "key": "cultist_receptionists_incident_report",
+    "name": "Cultist Receptionist's Incident Report",
+    "description": "It reconstructs an avoidable disturbance involving who keeps moving the west corridor two feet to the left. The reception hours are listed beneath a summoning circle.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "lich_librarians_maintenance_memo",
+    "name": "Lich Librarian's Maintenance Memo",
+    "description": "A practical note requests repairs related to when a secret passage becomes common workplace knowledge. Several overdue notices have been written to the dead.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "kobold_surveyors_expense_claim",
+    "name": "Kobold Surveyor's Expense Claim",
+    "description": "Someone is seeking reimbursement for costs associated with the correct response to a politely worded invasion. Every measurement is precise except the location of north.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "vampire_stewards_training_manual",
+    "name": "Vampire Steward's Training Manual",
+    "description": "A mandatory lesson covers when an adventurer becomes a recurring maintenance problem in twelve unnecessary steps. The signature is written in ink that avoids sunlight.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "heroic_interns_complaint_scroll",
+    "name": "Heroic Intern's Complaint Scroll",
+    "description": "The complaint concerns the approved number of skulls for a tasteful hallway and is signed with unusual determination. The author has underlined every heroic adjective twice.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "dwarven_locksmiths_inspection_notes",
+    "name": "Dwarven Locksmith's Inspection Notes",
+    "description": "The inspector records several concerns about how many goblins may share one official clipboard. A tiny key has been taped beside the signature.",
+    "category": "Lore",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "goblin_quartermasters_inventory_addendum",
+    "name": "Goblin Quartermaster's Inventory Addendum",
+    "description": "A late addition attempts to account for supplies connected to whether a mimic may appraise itself. The final line requests a larger clipboard.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "ogre_cooks_emergency_procedure",
+    "name": "Ogre Cook's Emergency Procedure",
+    "description": "The instructions describe what to do when confronted with the legal definition of a ceremonial trapdoor. Several stains have been identified as stew with confidence.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "bandit_treasurers_performance_review",
+    "name": "Bandit Treasurer's Performance Review",
+    "description": "The review praises initiative but questions judgment regarding why the emergency exit leads to another emergency. The missing funds are described as temporarily adventurous.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "rat_kings_shift_ledger",
+    "name": "Rat-King's Shift Ledger",
+    "description": "The entries track whether heroes count as visitors, hazards, or unpaid entertainment, including two unauthorized overtime claims. The closing decree was approved by several hundred rats.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "bridge_goblins_incident_report",
+    "name": "Bridge Goblin's Incident Report",
+    "description": "It reconstructs an avoidable disturbance involving which department is responsible for moonlight. A bridge fee is demanded before the conclusion.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "skeleton_clerks_field_guide",
+    "name": "Skeleton Clerk's Field Guide",
+    "description": "A well-thumbed chapter explains the safe transport of suspiciously confident eggs with diagrams and warnings. The handwriting is immaculate despite the lack of fingers.",
+    "category": "Lore",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "slime_wranglers_expense_claim",
+    "name": "Slime Wrangler's Expense Claim",
+    "description": "Someone is seeking reimbursement for costs associated with how to schedule thunder for maximum narrative effect. The page corners are damp for professional reasons.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "dragon_accountants_training_manual",
+    "name": "Dragon Accountant's Training Manual",
+    "description": "A mandatory lesson covers acceptable excuses for losing an enchanted key in twelve unnecessary steps. Compound interest is calculated across four centuries.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "werewolf_groundskeepers_complaint_scroll",
+    "name": "Werewolf Groundskeeper's Complaint Scroll",
+    "description": "The complaint concerns why capes are forbidden near exposed gears and is signed with unusual determination. A muddy paw print serves as departmental approval.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "witchs_meeting_minutes",
+    "name": "Witch's Meeting Minutes",
+    "description": "The attendees debated who authorized the ornamental lava until the candles burned out. Tea rings obscure the only sensible recommendation.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "ghost_historians_inventory_addendum",
+    "name": "Ghost Historian's Inventory Addendum",
+    "description": "A late addition attempts to account for supplies connected to why the treasury keeps receiving thank-you notes. Two eyewitnesses are listed as deceased but reliable.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "royal_monster_hunters_emergency_procedure",
+    "name": "Royal Monster Hunter's Emergency Procedure",
+    "description": "The instructions describe what to do when confronted with how to distinguish structural groaning from dramatic groaning. A monster skull has been used as an official seal.",
+    "category": "Lore",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "elven_adventurers_performance_review",
+    "name": "Elven Adventurer's Performance Review",
+    "description": "The review praises initiative but questions judgment regarding the difference between cursed treasure and merely disappointing treasure. The author's cape size is inexplicably recorded.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "orc_masons_incident_report",
+    "name": "Orc Mason's Incident Report",
+    "description": "It reconstructs an avoidable disturbance involving why skeletons require chairs at meetings. A masonry sketch in the margin is needlessly excellent.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "imp_auditors_maintenance_memo",
+    "name": "Imp Auditor's Maintenance Memo",
+    "description": "A practical note requests repairs related to how to measure dungeon morale without asking anyone. The totals are correct, which feels deeply suspicious.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "dungeon_architects_field_guide",
+    "name": "Dungeon Architect's Field Guide",
+    "description": "A well-thumbed chapter explains why every third torch must be complimented before lighting with diagrams and warnings. Three alternate floor plans have been folded into the back.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "banshee_choir_directors_expense_claim",
+    "name": "Banshee Choir Director's Expense Claim",
+    "description": "Someone is seeking reimbursement for costs associated with why the dungeon bell must never be rung during soup. The final paragraph includes breathing instructions.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "potion_brewers_training_manual",
+    "name": "Potion Brewer's Training Manual",
+    "description": "A mandatory lesson covers how to file a haunting without alarming the haunting in twelve unnecessary steps. The last page smells strongly of mint and poor decisions.",
+    "category": "Lore",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "troll_tollkeepers_inspection_notes",
+    "name": "Troll Tollkeeper's Inspection Notes",
+    "description": "The inspector records several concerns about why the drawbridge chain now has a lunch break. A toll has been charged to each paragraph.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "gargoyle_inspectors_meeting_minutes",
+    "name": "Gargoyle Inspector's Meeting Minutes",
+    "description": "The attendees debated which monsters are permitted to wear monocles until the candles burned out. Each defect has been assigned a judgmental stone face.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "mimic_appraisers_inventory_addendum",
+    "name": "Mimic Appraiser's Inventory Addendum",
+    "description": "A late addition attempts to account for supplies connected to the proper labeling of potions that may argue back. The valuation changes whenever the document is watched.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "fungal_ambassadors_emergency_procedure",
+    "name": "Fungal Ambassador's Emergency Procedure",
+    "description": "The instructions describe what to do when confronted with the approved thickness of defensive porridge. The document asks readers not to inhale the appendix.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "apprentice_necromancers_shift_ledger",
+    "name": "Apprentice Necromancer's Shift Ledger",
+    "description": "The entries track how to budget for an unexpected prophecy, including two unauthorized overtime claims. A footnote recommends raising standards before anything else.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "minotaur_custodians_incident_report",
+    "name": "Minotaur Custodian's Incident Report",
+    "description": "It reconstructs an avoidable disturbance involving the disputed ownership of Corridor Seven. A checklist confirms the floor was swept before the crisis.",
+    "category": "Lore",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "cultist_receptionists_maintenance_memo",
+    "name": "Cultist Receptionist's Maintenance Memo",
+    "description": "A practical note requests repairs related to who keeps moving the west corridor two feet to the left. The reception hours are listed beneath a summoning circle.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "lich_librarians_field_guide",
+    "name": "Lich Librarian's Field Guide",
+    "description": "A well-thumbed chapter explains when a secret passage becomes common workplace knowledge with diagrams and warnings. Several overdue notices have been written to the dead.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "kobold_surveyors_training_manual",
+    "name": "Kobold Surveyor's Training Manual",
+    "description": "A mandatory lesson covers the correct response to a politely worded invasion in twelve unnecessary steps. Every measurement is precise except the location of north.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "vampire_stewards_complaint_scroll",
+    "name": "Vampire Steward's Complaint Scroll",
+    "description": "The complaint concerns when an adventurer becomes a recurring maintenance problem and is signed with unusual determination. The signature is written in ink that avoids sunlight.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "heroic_interns_inspection_notes",
+    "name": "Heroic Intern's Inspection Notes",
+    "description": "The inspector records several concerns about the approved number of skulls for a tasteful hallway. The author has underlined every heroic adjective twice.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "dwarven_locksmiths_meeting_minutes",
+    "name": "Dwarven Locksmith's Meeting Minutes",
+    "description": "The attendees debated how many goblins may share one official clipboard until the candles burned out. A tiny key has been taped beside the signature.",
+    "category": "Lore",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "goblin_quartermasters_emergency_procedure",
+    "name": "Goblin Quartermaster's Emergency Procedure",
+    "description": "The instructions describe what to do when confronted with whether a mimic may appraise itself. The final line requests a larger clipboard.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "ogre_cooks_performance_review",
+    "name": "Ogre Cook's Performance Review",
+    "description": "The review praises initiative but questions judgment regarding the legal definition of a ceremonial trapdoor. Several stains have been identified as stew with confidence.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "bandit_treasurers_shift_ledger",
+    "name": "Bandit Treasurer's Shift Ledger",
+    "description": "The entries track why the emergency exit leads to another emergency, including two unauthorized overtime claims. The missing funds are described as temporarily adventurous.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "rat_kings_incident_report",
+    "name": "Rat-King's Incident Report",
+    "description": "It reconstructs an avoidable disturbance involving whether heroes count as visitors, hazards, or unpaid entertainment. The closing decree was approved by several hundred rats.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "bridge_goblins_maintenance_memo",
+    "name": "Bridge Goblin's Maintenance Memo",
+    "description": "A practical note requests repairs related to which department is responsible for moonlight. A bridge fee is demanded before the conclusion.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "skeleton_clerks_expense_claim",
+    "name": "Skeleton Clerk's Expense Claim",
+    "description": "Someone is seeking reimbursement for costs associated with the safe transport of suspiciously confident eggs. The handwriting is immaculate despite the lack of fingers.",
+    "category": "Lore",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "slime_wranglers_training_manual",
+    "name": "Slime Wrangler's Training Manual",
+    "description": "A mandatory lesson covers how to schedule thunder for maximum narrative effect in twelve unnecessary steps. The page corners are damp for professional reasons.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "dragon_accountants_complaint_scroll",
+    "name": "Dragon Accountant's Complaint Scroll",
+    "description": "The complaint concerns acceptable excuses for losing an enchanted key and is signed with unusual determination. Compound interest is calculated across four centuries.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "werewolf_groundskeepers_inspection_notes",
+    "name": "Werewolf Groundskeeper's Inspection Notes",
+    "description": "The inspector records several concerns about why capes are forbidden near exposed gears. A muddy paw print serves as departmental approval.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "witchs_inventory_addendum",
+    "name": "Witch's Inventory Addendum",
+    "description": "A late addition attempts to account for supplies connected to who authorized the ornamental lava. Tea rings obscure the only sensible recommendation.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "ghost_historians_emergency_procedure",
+    "name": "Ghost Historian's Emergency Procedure",
+    "description": "The instructions describe what to do when confronted with why the treasury keeps receiving thank-you notes. Two eyewitnesses are listed as deceased but reliable.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "royal_monster_hunters_performance_review",
+    "name": "Royal Monster Hunter's Performance Review",
+    "description": "The review praises initiative but questions judgment regarding how to distinguish structural groaning from dramatic groaning. A monster skull has been used as an official seal.",
+    "category": "Lore",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "elven_adventurers_shift_ledger",
+    "name": "Elven Adventurer's Shift Ledger",
+    "description": "The entries track the difference between cursed treasure and merely disappointing treasure, including two unauthorized overtime claims. The author's cape size is inexplicably recorded.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "orc_masons_maintenance_memo",
+    "name": "Orc Mason's Maintenance Memo",
+    "description": "A practical note requests repairs related to why skeletons require chairs at meetings. A masonry sketch in the margin is needlessly excellent.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "imp_auditors_field_guide",
+    "name": "Imp Auditor's Field Guide",
+    "description": "A well-thumbed chapter explains how to measure dungeon morale without asking anyone with diagrams and warnings. The totals are correct, which feels deeply suspicious.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "dungeon_architects_expense_claim",
+    "name": "Dungeon Architect's Expense Claim",
+    "description": "Someone is seeking reimbursement for costs associated with why every third torch must be complimented before lighting. Three alternate floor plans have been folded into the back.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "banshee_choir_directors_training_manual",
+    "name": "Banshee Choir Director's Training Manual",
+    "description": "A mandatory lesson covers why the dungeon bell must never be rung during soup in twelve unnecessary steps. The final paragraph includes breathing instructions.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "potion_brewers_complaint_scroll",
+    "name": "Potion Brewer's Complaint Scroll",
+    "description": "The complaint concerns how to file a haunting without alarming the haunting and is signed with unusual determination. The last page smells strongly of mint and poor decisions.",
+    "category": "Lore",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "troll_tollkeepers_meeting_minutes",
+    "name": "Troll Tollkeeper's Meeting Minutes",
+    "description": "The attendees debated why the drawbridge chain now has a lunch break until the candles burned out. A toll has been charged to each paragraph.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "gargoyle_inspectors_inventory_addendum",
+    "name": "Gargoyle Inspector's Inventory Addendum",
+    "description": "A late addition attempts to account for supplies connected to which monsters are permitted to wear monocles. Each defect has been assigned a judgmental stone face.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "mimic_appraisers_emergency_procedure",
+    "name": "Mimic Appraiser's Emergency Procedure",
+    "description": "The instructions describe what to do when confronted with the proper labeling of potions that may argue back. The valuation changes whenever the document is watched.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "fungal_ambassadors_performance_review",
+    "name": "Fungal Ambassador's Performance Review",
+    "description": "The review praises initiative but questions judgment regarding the approved thickness of defensive porridge. The document asks readers not to inhale the appendix.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "apprentice_necromancers_incident_report",
+    "name": "Apprentice Necromancer's Incident Report",
+    "description": "It reconstructs an avoidable disturbance involving how to budget for an unexpected prophecy. A footnote recommends raising standards before anything else.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "minotaur_custodians_maintenance_memo",
+    "name": "Minotaur Custodian's Maintenance Memo",
+    "description": "A practical note requests repairs related to the disputed ownership of Corridor Seven. A checklist confirms the floor was swept before the crisis.",
+    "category": "Lore",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "cultist_receptionists_field_guide",
+    "name": "Cultist Receptionist's Field Guide",
+    "description": "A well-thumbed chapter explains who keeps moving the west corridor two feet to the left with diagrams and warnings. The reception hours are listed beneath a summoning circle.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "lich_librarians_expense_claim",
+    "name": "Lich Librarian's Expense Claim",
+    "description": "Someone is seeking reimbursement for costs associated with when a secret passage becomes common workplace knowledge. Several overdue notices have been written to the dead.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "kobold_surveyors_complaint_scroll",
+    "name": "Kobold Surveyor's Complaint Scroll",
+    "description": "The complaint concerns the correct response to a politely worded invasion and is signed with unusual determination. Every measurement is precise except the location of north.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "vampire_stewards_inspection_notes",
+    "name": "Vampire Steward's Inspection Notes",
+    "description": "The inspector records several concerns about when an adventurer becomes a recurring maintenance problem. The signature is written in ink that avoids sunlight.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "heroic_interns_meeting_minutes",
+    "name": "Heroic Intern's Meeting Minutes",
+    "description": "The attendees debated the approved number of skulls for a tasteful hallway until the candles burned out. The author has underlined every heroic adjective twice.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "dwarven_locksmiths_inventory_addendum",
+    "name": "Dwarven Locksmith's Inventory Addendum",
+    "description": "A late addition attempts to account for supplies connected to how many goblins may share one official clipboard. A tiny key has been taped beside the signature.",
+    "category": "Lore",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "goblin_quartermasters_performance_review",
+    "name": "Goblin Quartermaster's Performance Review",
+    "description": "The review praises initiative but questions judgment regarding whether a mimic may appraise itself. The final line requests a larger clipboard.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "ogre_cooks_shift_ledger",
+    "name": "Ogre Cook's Shift Ledger",
+    "description": "The entries track the legal definition of a ceremonial trapdoor, including two unauthorized overtime claims. Several stains have been identified as stew with confidence.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "bandit_treasurers_incident_report",
+    "name": "Bandit Treasurer's Incident Report",
+    "description": "It reconstructs an avoidable disturbance involving why the emergency exit leads to another emergency. The missing funds are described as temporarily adventurous.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "rat_kings_maintenance_memo",
+    "name": "Rat-King's Maintenance Memo",
+    "description": "A practical note requests repairs related to whether heroes count as visitors, hazards, or unpaid entertainment. The closing decree was approved by several hundred rats.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "bridge_goblins_field_guide",
+    "name": "Bridge Goblin's Field Guide",
+    "description": "A well-thumbed chapter explains which department is responsible for moonlight with diagrams and warnings. A bridge fee is demanded before the conclusion.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "skeleton_clerks_training_manual",
+    "name": "Skeleton Clerk's Training Manual",
+    "description": "A mandatory lesson covers the safe transport of suspiciously confident eggs in twelve unnecessary steps. The handwriting is immaculate despite the lack of fingers.",
+    "category": "Lore",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "slime_wranglers_complaint_scroll",
+    "name": "Slime Wrangler's Complaint Scroll",
+    "description": "The complaint concerns how to schedule thunder for maximum narrative effect and is signed with unusual determination. The page corners are damp for professional reasons.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "dragon_accountants_inspection_notes",
+    "name": "Dragon Accountant's Inspection Notes",
+    "description": "The inspector records several concerns about acceptable excuses for losing an enchanted key. Compound interest is calculated across four centuries.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "werewolf_groundskeepers_meeting_minutes",
+    "name": "Werewolf Groundskeeper's Meeting Minutes",
+    "description": "The attendees debated why capes are forbidden near exposed gears until the candles burned out. A muddy paw print serves as departmental approval.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "witchs_emergency_procedure",
+    "name": "Witch's Emergency Procedure",
+    "description": "The instructions describe what to do when confronted with who authorized the ornamental lava. Tea rings obscure the only sensible recommendation.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "ghost_historians_performance_review",
+    "name": "Ghost Historian's Performance Review",
+    "description": "The review praises initiative but questions judgment regarding why the treasury keeps receiving thank-you notes. Two eyewitnesses are listed as deceased but reliable.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "royal_monster_hunters_shift_ledger",
+    "name": "Royal Monster Hunter's Shift Ledger",
+    "description": "The entries track how to distinguish structural groaning from dramatic groaning, including two unauthorized overtime claims. A monster skull has been used as an official seal.",
+    "category": "Lore",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "elven_adventurers_incident_report",
+    "name": "Elven Adventurer's Incident Report",
+    "description": "It reconstructs an avoidable disturbance involving the difference between cursed treasure and merely disappointing treasure. The author's cape size is inexplicably recorded.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "orc_masons_field_guide",
+    "name": "Orc Mason's Field Guide",
+    "description": "A well-thumbed chapter explains why skeletons require chairs at meetings with diagrams and warnings. A masonry sketch in the margin is needlessly excellent.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "imp_auditors_expense_claim",
+    "name": "Imp Auditor's Expense Claim",
+    "description": "Someone is seeking reimbursement for costs associated with how to measure dungeon morale without asking anyone. The totals are correct, which feels deeply suspicious.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "dungeon_architects_training_manual",
+    "name": "Dungeon Architect's Training Manual",
+    "description": "A mandatory lesson covers why every third torch must be complimented before lighting in twelve unnecessary steps. Three alternate floor plans have been folded into the back.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "banshee_choir_directors_complaint_scroll",
+    "name": "Banshee Choir Director's Complaint Scroll",
+    "description": "The complaint concerns why the dungeon bell must never be rung during soup and is signed with unusual determination. The final paragraph includes breathing instructions.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "potion_brewers_inspection_notes",
+    "name": "Potion Brewer's Inspection Notes",
+    "description": "The inspector records several concerns about how to file a haunting without alarming the haunting. The last page smells strongly of mint and poor decisions.",
+    "category": "Lore",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "troll_tollkeepers_inventory_addendum",
+    "name": "Troll Tollkeeper's Inventory Addendum",
+    "description": "A late addition attempts to account for supplies connected to why the drawbridge chain now has a lunch break. A toll has been charged to each paragraph.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "gargoyle_inspectors_emergency_procedure",
+    "name": "Gargoyle Inspector's Emergency Procedure",
+    "description": "The instructions describe what to do when confronted with which monsters are permitted to wear monocles. Each defect has been assigned a judgmental stone face.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "mimic_appraisers_performance_review",
+    "name": "Mimic Appraiser's Performance Review",
+    "description": "The review praises initiative but questions judgment regarding the proper labeling of potions that may argue back. The valuation changes whenever the document is watched.",
+    "category": "Lore",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "fungal_ambassadors_shift_ledger",
+    "name": "Fungal Ambassador's Shift Ledger",
+    "description": "The entries track the approved thickness of defensive porridge, including two unauthorized overtime claims. The document asks readers not to inhale the appendix.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "apprentice_necromancers_maintenance_memo",
+    "name": "Apprentice Necromancer's Maintenance Memo",
+    "description": "A practical note requests repairs related to how to budget for an unexpected prophecy. A footnote recommends raising standards before anything else.",
+    "category": "Lore",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "minotaur_custodians_field_guide",
+    "name": "Minotaur Custodian's Field Guide",
+    "description": "A well-thumbed chapter explains the disputed ownership of Corridor Seven with diagrams and warnings. A checklist confirms the floor was swept before the crisis.",
+    "category": "Lore",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "midnight_portrait_debate",
+    "name": "Midnight Portrait Debate",
+    "description": "The portraits argue over which painted ancestor looks most trustworthy. It leaves behind a clock showing twelve with no hands.",
+    "category": "Strange Event",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "upside_down_ceiling_rain",
+    "name": "Upside-Down Ceiling Rain",
+    "description": "The ceiling drizzles only over people who forgot an umbrella. Anything affected behaves as though the ceiling were the floor.",
+    "category": "Strange Event",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "suspicious_gravity_pause",
+    "name": "Suspicious Gravity Pause",
+    "description": "Everything becomes weightless except unpaid invoices. It stops immediately when an inspector arrives.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "muttering_dust_storm",
+    "name": "Muttering Dust Storm",
+    "description": "Every neglected corner empties itself into one accusing pile. The walls provide unhelpful commentary throughout.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "echoing_hallway_sigh",
+    "name": "Echoing Hallway Sigh",
+    "description": "The corridor releases a long sigh whenever someone adds another door. A smaller version repeats itself in the next corridor.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "polite_thunder_applause",
+    "name": "Polite Thunder Applause",
+    "description": "A rolling ovation sounds whenever someone survives their own idea. A quiet voice asks permission first.",
+    "category": "Strange Event",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "patient_doorway_hiccup",
+    "name": "Patient Doorway Hiccup",
+    "description": "A doorway hiccups and exchanges its hinges with the next door. It waits until everyone is paying attention.",
+    "category": "Strange Event",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "cheerful_floorboard_waltz",
+    "name": "Cheerful Floorboard Waltz",
+    "description": "Every third board spins once and returns slightly prouder. An unseen audience responds with encouraging murmurs.",
+    "category": "Strange Event",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "rain_soaked_bell_chime",
+    "name": "Rain-Soaked Bell Chime",
+    "description": "Every bell rings one minute before anyone reaches for a rope. The air smells of wet stone and distant storms.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "clockwork_shadow_parade",
+    "name": "Clockwork Shadow Parade",
+    "description": "Every shadow bows to the least important person present. Tiny clicks count every second with irritating accuracy.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "golden_candle_rebellion",
+    "name": "Golden Candle Rebellion",
+    "description": "Every candle lights at once and demands an announcement. For a moment, every edge shines like newly minted coin.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "invisible_key_migration",
+    "name": "Invisible Key Migration",
+    "description": "All duplicate keys leave together without the originals. The disturbance can be heard and felt, but never seen.",
+    "category": "Strange Event",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "backward_doorway_hiccup",
+    "name": "Backward Doorway Hiccup",
+    "description": "Doorways briefly open into the room beside the room they should. The effect finishes just before it begins.",
+    "category": "Strange Event",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "shivering_portrait_debate",
+    "name": "Shivering Portrait Debate",
+    "description": "Every portrait turns to criticize the newest frame. The stone trembles as though trying not to laugh.",
+    "category": "Strange Event",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "hollow_ceiling_rain",
+    "name": "Hollow Ceiling Rain",
+    "description": "Warm rain writes temporary runes across the stone. A second, emptier version can be heard beneath the first.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "velvet_gravity_pause",
+    "name": "Velvet Gravity Pause",
+    "description": "Falling objects stop to reconsider their choices before continuing. All sound becomes soft enough to feel expensive.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "unscheduled_dust_storm",
+    "name": "Unscheduled Dust Storm",
+    "description": "Dust rises into a miniature cyclone and files itself by age. No calendar admits responsibility for it.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "sleepy_hallway_sigh",
+    "name": "Sleepy Hallway Sigh",
+    "description": "Stone walls exhale hard enough to rearrange loose maps. The phenomenon yawns halfway through and resumes later.",
+    "category": "Strange Event",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "moonlit_thunder_applause",
+    "name": "Moonlit Thunder Applause",
+    "description": "The ceiling produces one respectful clap after each dramatic speech. It occurs only where impossible moonlight reaches the floor.",
+    "category": "Strange Event",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "blue_flamed_doorway_hiccup",
+    "name": "Blue-Flamed Doorway Hiccup",
+    "description": "Every open door closes, reopens, and apologizes. Cold blue fire outlines everything involved without burning it.",
+    "category": "Strange Event",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "midnight_floorboard_waltz",
+    "name": "Midnight Floorboard Waltz",
+    "description": "The floorboards perform three careful dance steps beneath passing boots. It leaves behind a clock showing twelve with no hands.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "upside_down_bell_chime",
+    "name": "Upside-Down Bell Chime",
+    "description": "A distant bell answers questions nobody asked aloud. Anything affected behaves as though the ceiling were the floor.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "suspicious_shadow_parade",
+    "name": "Suspicious Shadow Parade",
+    "description": "The shadows exchange owners, then pretend nothing happened. It stops immediately when an inspector arrives.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "muttering_candle_rebellion",
+    "name": "Muttering Candle Rebellion",
+    "description": "The candles swap colors and refuse to explain why. The walls provide unhelpful commentary throughout.",
+    "category": "Strange Event",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "echoing_key_migration",
+    "name": "Echoing Key Migration",
+    "description": "Loose keys gather together and travel toward an unknown lock. A smaller version repeats itself in the next corridor.",
+    "category": "Strange Event",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "polite_doorway_hiccup",
+    "name": "Polite Doorway Hiccup",
+    "description": "Each doorframe jumps an inch whenever crossed too confidently. A quiet voice asks permission first.",
+    "category": "Strange Event",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "patient_portrait_debate",
+    "name": "Patient Portrait Debate",
+    "description": "Painted nobles hold a formal vote on corridor decor. It waits until everyone is paying attention.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "cheerful_ceiling_rain",
+    "name": "Cheerful Ceiling Rain",
+    "description": "A single indoor cloud follows the driest person in the room. An unseen audience responds with encouraging murmurs.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "rain_soaked_gravity_pause",
+    "name": "Rain-Soaked Gravity Pause",
+    "description": "Loose objects hover for several seconds and return in alphabetical order. The air smells of wet stone and distant storms.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "clockwork_dust_storm",
+    "name": "Clockwork Dust Storm",
+    "description": "The corridor fills with dust that spells a strongly worded complaint. Tiny clicks count every second with irritating accuracy.",
+    "category": "Strange Event",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "golden_hallway_sigh",
+    "name": "Golden Hallway Sigh",
+    "description": "A disappointed breath travels from one end of the dungeon to the other. For a moment, every edge shines like newly minted coin.",
+    "category": "Strange Event",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "invisible_thunder_applause",
+    "name": "Invisible Thunder Applause",
+    "description": "Distant thunder cheers for the dungeon's least impressive achievement. The disturbance can be heard and felt, but never seen.",
+    "category": "Strange Event",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "backward_portrait_debate",
+    "name": "Backward Portrait Debate",
+    "description": "The portraits argue over which painted ancestor looks most trustworthy. The effect finishes just before it begins.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "shivering_floorboard_waltz",
+    "name": "Shivering Floorboard Waltz",
+    "description": "Loose planks pair off and waltz around the nearest rug. The stone trembles as though trying not to laugh.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "hollow_bell_chime",
+    "name": "Hollow Bell Chime",
+    "description": "The alarm bells perform a scale instead of sounding danger. A second, emptier version can be heard beneath the first.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "velvet_shadow_parade",
+    "name": "Velvet Shadow Parade",
+    "description": "A procession of unfamiliar shadows crosses the corridor without bodies. All sound becomes soft enough to feel expensive.",
+    "category": "Strange Event",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "unscheduled_candle_rebellion",
+    "name": "Unscheduled Candle Rebellion",
+    "description": "All candles extinguish themselves until promised safer working conditions. No calendar admits responsibility for it.",
+    "category": "Strange Event",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "sleepy_key_migration",
+    "name": "Sleepy Key Migration",
+    "description": "Every key changes hooks according to a schedule only they understand. The phenomenon yawns halfway through and resumes later.",
+    "category": "Strange Event",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "moonlit_doorway_hiccup",
+    "name": "Moonlit Doorway Hiccup",
+    "description": "A doorway hiccups and exchanges its hinges with the next door. It occurs only where impossible moonlight reaches the floor.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "blue_flamed_portrait_debate",
+    "name": "Blue-Flamed Portrait Debate",
+    "description": "The portraits exchange biographies and become immediately confused. Cold blue fire outlines everything involved without burning it.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "midnight_ceiling_rain",
+    "name": "Midnight Ceiling Rain",
+    "description": "A gentle rain falls from the ceiling but vanishes before touching the floor. It leaves behind a clock showing twelve with no hands.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "upside_down_gravity_pause",
+    "name": "Upside-Down Gravity Pause",
+    "description": "Gravity briefly forgets spoons, helmets, and one embarrassed goblin. Anything affected behaves as though the ceiling were the floor.",
+    "category": "Strange Event",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "suspicious_dust_storm",
+    "name": "Suspicious Dust Storm",
+    "description": "A cloud of dust reveals footprints from tomorrow. It stops immediately when an inspector arrives.",
+    "category": "Strange Event",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "muttering_hallway_sigh",
+    "name": "Muttering Hallway Sigh",
+    "description": "The hallway sighs whenever an adventurer claims to know a shortcut. The walls provide unhelpful commentary throughout.",
+    "category": "Strange Event",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "echoing_thunder_applause",
+    "name": "Echoing Thunder Applause",
+    "description": "Thunder applauds every successful repair, regardless of importance. A smaller version repeats itself in the next corridor.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "polite_portrait_debate",
+    "name": "Polite Portrait Debate",
+    "description": "Every portrait turns to criticize the newest frame. A quiet voice asks permission first.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "patient_floorboard_waltz",
+    "name": "Patient Floorboard Waltz",
+    "description": "The floor shifts in rhythm with music nobody else can hear. It waits until everyone is paying attention.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "cheerful_bell_chime",
+    "name": "Cheerful Bell Chime",
+    "description": "One tiny bell rings from inside the thickest wall. An unseen audience responds with encouraging murmurs.",
+    "category": "Strange Event",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "rain_soaked_shadow_parade",
+    "name": "Rain-Soaked Shadow Parade",
+    "description": "Nearby shadows detach and march toward the kitchens in formation. The air smells of wet stone and distant storms.",
+    "category": "Strange Event",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "clockwork_candle_rebellion",
+    "name": "Clockwork Candle Rebellion",
+    "description": "The flames lean away from anyone carrying official paperwork. Tiny clicks count every second with irritating accuracy.",
+    "category": "Strange Event",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "golden_key_migration",
+    "name": "Golden Key Migration",
+    "description": "Keys crawl from pockets and form a neat silver circle. For a moment, every edge shines like newly minted coin.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "invisible_doorway_hiccup",
+    "name": "Invisible Doorway Hiccup",
+    "description": "Every open door closes, reopens, and apologizes. The disturbance can be heard and felt, but never seen.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "backward_floorboard_waltz",
+    "name": "Backward Floorboard Waltz",
+    "description": "The floorboards perform three careful dance steps beneath passing boots. The effect finishes just before it begins.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "shivering_ceiling_rain",
+    "name": "Shivering Ceiling Rain",
+    "description": "The ceiling drizzles only over people who forgot an umbrella. The stone trembles as though trying not to laugh.",
+    "category": "Strange Event",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "hollow_gravity_pause",
+    "name": "Hollow Gravity Pause",
+    "description": "Everything becomes weightless except unpaid invoices. A second, emptier version can be heard beneath the first.",
+    "category": "Strange Event",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "velvet_dust_storm",
+    "name": "Velvet Dust Storm",
+    "description": "Every neglected corner empties itself into one accusing pile. All sound becomes soft enough to feel expensive.",
+    "category": "Strange Event",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "unscheduled_hallway_sigh",
+    "name": "Unscheduled Hallway Sigh",
+    "description": "The corridor releases a long sigh whenever someone adds another door. No calendar admits responsibility for it.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "sleepy_thunder_applause",
+    "name": "Sleepy Thunder Applause",
+    "description": "A rolling ovation sounds whenever someone survives their own idea. The phenomenon yawns halfway through and resumes later.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "moonlit_portrait_debate",
+    "name": "Moonlit Portrait Debate",
+    "description": "Painted nobles hold a formal vote on corridor decor. It occurs only where impossible moonlight reaches the floor.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "blue_flamed_floorboard_waltz",
+    "name": "Blue-Flamed Floorboard Waltz",
+    "description": "Every third board spins once and returns slightly prouder. Cold blue fire outlines everything involved without burning it.",
+    "category": "Strange Event",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "midnight_bell_chime",
+    "name": "Midnight Bell Chime",
+    "description": "Every bell rings one minute before anyone reaches for a rope. It leaves behind a clock showing twelve with no hands.",
+    "category": "Strange Event",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "upside_down_shadow_parade",
+    "name": "Upside-Down Shadow Parade",
+    "description": "Every shadow bows to the least important person present. Anything affected behaves as though the ceiling were the floor.",
+    "category": "Strange Event",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "suspicious_candle_rebellion",
+    "name": "Suspicious Candle Rebellion",
+    "description": "Every candle lights at once and demands an announcement. It stops immediately when an inspector arrives.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "muttering_key_migration",
+    "name": "Muttering Key Migration",
+    "description": "All duplicate keys leave together without the originals. The walls provide unhelpful commentary throughout.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "echoing_doorway_hiccup",
+    "name": "Echoing Doorway Hiccup",
+    "description": "Doorways briefly open into the room beside the room they should. A smaller version repeats itself in the next corridor.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "polite_floorboard_waltz",
+    "name": "Polite Floorboard Waltz",
+    "description": "Loose planks pair off and waltz around the nearest rug. A quiet voice asks permission first.",
+    "category": "Strange Event",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "patient_ceiling_rain",
+    "name": "Patient Ceiling Rain",
+    "description": "Warm rain writes temporary runes across the stone. It waits until everyone is paying attention.",
+    "category": "Strange Event",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "cheerful_gravity_pause",
+    "name": "Cheerful Gravity Pause",
+    "description": "Falling objects stop to reconsider their choices before continuing. An unseen audience responds with encouraging murmurs.",
+    "category": "Strange Event",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "rain_soaked_dust_storm",
+    "name": "Rain-Soaked Dust Storm",
+    "description": "Dust rises into a miniature cyclone and files itself by age. The air smells of wet stone and distant storms.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "clockwork_hallway_sigh",
+    "name": "Clockwork Hallway Sigh",
+    "description": "Stone walls exhale hard enough to rearrange loose maps. Tiny clicks count every second with irritating accuracy.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "golden_thunder_applause",
+    "name": "Golden Thunder Applause",
+    "description": "The ceiling produces one respectful clap after each dramatic speech. For a moment, every edge shines like newly minted coin.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "invisible_portrait_debate",
+    "name": "Invisible Portrait Debate",
+    "description": "The portraits exchange biographies and become immediately confused. The disturbance can be heard and felt, but never seen.",
+    "category": "Strange Event",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "backward_ceiling_rain",
+    "name": "Backward Ceiling Rain",
+    "description": "A gentle rain falls from the ceiling but vanishes before touching the floor. The effect finishes just before it begins.",
+    "category": "Strange Event",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "shivering_bell_chime",
+    "name": "Shivering Bell Chime",
+    "description": "A distant bell answers questions nobody asked aloud. The stone trembles as though trying not to laugh.",
+    "category": "Strange Event",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "hollow_shadow_parade",
+    "name": "Hollow Shadow Parade",
+    "description": "The shadows exchange owners, then pretend nothing happened. A second, emptier version can be heard beneath the first.",
+    "category": "Strange Event",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "velvet_archive",
+    "name": "Velvet Archive",
+    "description": "Records file themselves under events that have not happened yet. Even footsteps sound soft, expensive, and mildly suspicious.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "patient_conservatory",
+    "name": "Patient Conservatory",
+    "description": "Stone flowers bloom whenever the dungeon survives an attack. The room reveals its purpose only after everyone stops asking.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "drowsy_armory",
+    "name": "Drowsy Armory",
+    "description": "The spears lean away from anyone wearing a cape. Anyone who sits down dreams of finishing their assigned work.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "hollow_map_room",
+    "name": "Hollow Map Room",
+    "description": "The compass rose rotates whenever someone confidently points north. Knocking on any wall produces an answer from much farther away.",
+    "category": "Room",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "golden_gallery",
+    "name": "Golden Gallery",
+    "description": "Portraits rearrange themselves by confidence rather than age. The gilding is mostly paint, but the room remains proud of it.",
+    "category": "Room",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "echoing_observatory",
+    "name": "Echoing Observatory",
+    "description": "A brass model predicts the movements of heroes instead of planets. Every sound returns with a slightly different opinion.",
+    "category": "Room",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "whispering_workshop",
+    "name": "Whispering Workshop",
+    "description": "A workbench produces one extra screw after every repair. The walls repeat secrets after improving the wording.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "forgotten_barracks",
+    "name": "Forgotten Barracks",
+    "description": "Boots line up by rank after everyone falls asleep. Dusty nameplates suggest an entire department once worked here.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "crooked_armory",
+    "name": "Crooked Armory",
+    "description": "Weapons sort themselves by dramatic potential rather than size. Nothing inside keeps quite the same angle twice.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "rotating_dining_hall",
+    "name": "Rotating Dining Hall",
+    "description": "Silverware rearranges itself according to unresolved grudges. The entire chamber turns slowly while the doorway stays put.",
+    "category": "Room",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "suspicious_waiting_chamber",
+    "name": "Suspicious Waiting Chamber",
+    "description": "A service bell summons a numbered ticket instead of assistance. Drawers close whenever the room notices it is being searched.",
+    "category": "Room",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "unfinished_pantry",
+    "name": "Unfinished Pantry",
+    "description": "A locked cupboard smells strongly of cake and conspiracy. One wall remains a convincing charcoal sketch.",
+    "category": "Room",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "dusty_antechamber",
+    "name": "Dusty Antechamber",
+    "description": "Three doors lead onward, though all insist they are the main entrance. Fresh footprints appear each morning before anyone enters.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "flooded_archive",
+    "name": "Flooded Archive",
+    "description": "Every shelf is labeled correctly except the shelf of labels. The ankle-deep water never wets boots, only paperwork.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "moonlit_conservatory",
+    "name": "Moonlit Conservatory",
+    "description": "A fountain waters plants with perfectly brewed tea. Impossible moonbeams cross the floor far below ground.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "overdecorated_armory",
+    "name": "Overdecorated Armory",
+    "description": "An empty rack is guarded more carefully than the full ones. Every available surface has been given at least one tassel.",
+    "category": "Room",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "candlelit_map_room",
+    "name": "Candlelit Map Room",
+    "description": "Every map shows the dungeon from a slightly offended perspective. The candles brighten for good ideas and dim for expensive ones.",
+    "category": "Room",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "mossy_gallery",
+    "name": "Mossy Gallery",
+    "description": "Empty frames follow visitors with painted eyes that are not there. The moss forms arrows toward places that no longer exist.",
+    "category": "Room",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "ceremonial_observatory",
+    "name": "Ceremonial Observatory",
+    "description": "The ceiling displays constellations shaped like dungeon equipment. A plaque requires a formal entrance and an informal exit.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "clockwork_workshop",
+    "name": "Clockwork Workshop",
+    "description": "Blueprints rewrite their measurements when the hammer is lifted. Hidden gears reset the furniture at the top of every hour.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "velvet_barracks",
+    "name": "Velvet Barracks",
+    "description": "The bunks make themselves but refuse military corners. Even footsteps sound soft, expensive, and mildly suspicious.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "patient_armory",
+    "name": "Patient Armory",
+    "description": "Every shield bears a fresh dent from a battle nobody remembers. The room reveals its purpose only after everyone stops asking.",
+    "category": "Room",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "drowsy_dining_hall",
+    "name": "Drowsy Dining Hall",
+    "description": "The chairs scrape back whenever soup is announced. Anyone who sits down dreams of finishing their assigned work.",
+    "category": "Room",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "hollow_waiting_chamber",
+    "name": "Hollow Waiting Chamber",
+    "description": "The clock advances only when nobody looks at it. Knocking on any wall produces an answer from much farther away.",
+    "category": "Room",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "golden_pantry",
+    "name": "Golden Pantry",
+    "description": "Jars label themselves according to mood instead of contents. The gilding is mostly paint, but the room remains proud of it.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "echoing_antechamber",
+    "name": "Echoing Antechamber",
+    "description": "A row of chairs faces a speaking tube connected to nowhere. Every sound returns with a slightly different opinion.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "whispering_archive",
+    "name": "Whispering Archive",
+    "description": "A ladder rolls toward whichever book is trying to hide. The walls repeat secrets after improving the wording.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "forgotten_conservatory",
+    "name": "Forgotten Conservatory",
+    "description": "Mushrooms hum different notes according to the weather above. Dusty nameplates suggest an entire department once worked here.",
+    "category": "Room",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "crooked_dining_hall",
+    "name": "Crooked Dining Hall",
+    "description": "The long table sets itself for one more guest than expected. Nothing inside keeps quite the same angle twice.",
+    "category": "Room",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "rotating_map_room",
+    "name": "Rotating Map Room",
+    "description": "Pins move overnight to mark tomorrow's arguments. The entire chamber turns slowly while the doorway stays put.",
+    "category": "Room",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "suspicious_gallery",
+    "name": "Suspicious Gallery",
+    "description": "Every landscape painting includes the same distant goblin. Drawers close whenever the room notices it is being searched.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "unfinished_observatory",
+    "name": "Unfinished Observatory",
+    "description": "Every lens points toward a different possible moon. One wall remains a convincing charcoal sketch.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "dusty_workshop",
+    "name": "Dusty Workshop",
+    "description": "Half-built mechanisms continue working without their missing pieces. Fresh footprints appear each morning before anyone enters.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "flooded_barracks",
+    "name": "Flooded Barracks",
+    "description": "Armor stands snore louder than the guards. The ankle-deep water never wets boots, only paperwork.",
+    "category": "Room",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "moonlit_armory",
+    "name": "Moonlit Armory",
+    "description": "The spears lean away from anyone wearing a cape. Impossible moonbeams cross the floor far below ground.",
+    "category": "Room",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "overdecorated_dining_hall",
+    "name": "Overdecorated Dining Hall",
+    "description": "A serving hatch delivers bread and occasional legal notices. Every available surface has been given at least one tassel.",
+    "category": "Room",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "candlelit_waiting_chamber",
+    "name": "Candlelit Waiting Chamber",
+    "description": "A brass sign claims the delay is part of the experience. The candles brighten for good ideas and dim for expensive ones.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "mossy_pantry",
+    "name": "Mossy Pantry",
+    "description": "The flour barrel contains footprints leading out but never in. The moss forms arrows toward places that no longer exist.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "ceremonial_antechamber",
+    "name": "Ceremonial Antechamber",
+    "description": "Visitors receive numbered tokens that are never called. A plaque requires a formal entrance and an informal exit.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "clockwork_archive",
+    "name": "Clockwork Archive",
+    "description": "The oldest scrolls quietly correct the newest ones. Hidden gears reset the furniture at the top of every hour.",
+    "category": "Room",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "velvet_conservatory",
+    "name": "Velvet Conservatory",
+    "description": "Pale vines grow toward whispered secrets instead of light. Even footsteps sound soft, expensive, and mildly suspicious.",
+    "category": "Room",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "patient_dining_hall",
+    "name": "Patient Dining Hall",
+    "description": "Silverware rearranges itself according to unresolved grudges. The room reveals its purpose only after everyone stops asking.",
+    "category": "Room",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "drowsy_map_room",
+    "name": "Drowsy Map Room",
+    "description": "One chart includes a corridor that appears only on paperwork. Anyone who sits down dreams of finishing their assigned work.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "hollow_gallery",
+    "name": "Hollow Gallery",
+    "description": "The statues change poses whenever someone criticizes the lighting. Knocking on any wall produces an answer from much farther away.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "golden_observatory",
+    "name": "Golden Observatory",
+    "description": "Its telescope studies underground stars no surface scholar recognizes. The gilding is mostly paint, but the room remains proud of it.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "echoing_workshop",
+    "name": "Echoing Workshop",
+    "description": "Tools return themselves to the wrong hooks with great discipline. Every sound returns with a slightly different opinion.",
+    "category": "Room",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "whispering_barracks",
+    "name": "Whispering Barracks",
+    "description": "A duty roster assigns night watch to several retired ghosts. The walls repeat secrets after improving the wording.",
+    "category": "Room",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "forgotten_armory",
+    "name": "Forgotten Armory",
+    "description": "An empty rack is guarded more carefully than the full ones. Dusty nameplates suggest an entire department once worked here.",
+    "category": "Room",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "crooked_map_room",
+    "name": "Crooked Map Room",
+    "description": "Every map shows the dungeon from a slightly offended perspective. Nothing inside keeps quite the same angle twice.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "rotating_waiting_chamber",
+    "name": "Rotating Waiting Chamber",
+    "description": "The benches become less comfortable as appointments approach. The entire chamber turns slowly while the doorway stays put.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "suspicious_pantry",
+    "name": "Suspicious Pantry",
+    "description": "Shelves restock onions while hiding every useful spice. Drawers close whenever the room notices it is being searched.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "unfinished_antechamber",
+    "name": "Unfinished Antechamber",
+    "description": "The coat hooks accept capes but reject unnecessary confidence. One wall remains a convincing charcoal sketch.",
+    "category": "Room",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "dusty_archive",
+    "name": "Dusty Archive",
+    "description": "Records file themselves under events that have not happened yet. Fresh footprints appear each morning before anyone enters.",
+    "category": "Room",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "flooded_conservatory",
+    "name": "Flooded Conservatory",
+    "description": "Stone flowers bloom whenever the dungeon survives an attack. The ankle-deep water never wets boots, only paperwork.",
+    "category": "Room",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "moonlit_dining_hall",
+    "name": "Moonlit Dining Hall",
+    "description": "The chairs scrape back whenever soup is announced. Impossible moonbeams cross the floor far below ground.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "overdecorated_map_room",
+    "name": "Overdecorated Map Room",
+    "description": "The compass rose rotates whenever someone confidently points north. Every available surface has been given at least one tassel.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "candlelit_gallery",
+    "name": "Candlelit Gallery",
+    "description": "Portraits rearrange themselves by confidence rather than age. The candles brighten for good ideas and dim for expensive ones.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "mossy_observatory",
+    "name": "Mossy Observatory",
+    "description": "A brass model predicts the movements of heroes instead of planets. The moss forms arrows toward places that no longer exist.",
+    "category": "Room",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "ceremonial_workshop",
+    "name": "Ceremonial Workshop",
+    "description": "A workbench produces one extra screw after every repair. A plaque requires a formal entrance and an informal exit.",
+    "category": "Room",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "clockwork_barracks",
+    "name": "Clockwork Barracks",
+    "description": "Boots line up by rank after everyone falls asleep. Hidden gears reset the furniture at the top of every hour.",
+    "category": "Room",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "velvet_armory",
+    "name": "Velvet Armory",
+    "description": "Weapons sort themselves by dramatic potential rather than size. Even footsteps sound soft, expensive, and mildly suspicious.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "patient_map_room",
+    "name": "Patient Map Room",
+    "description": "Pins move overnight to mark tomorrow's arguments. The room reveals its purpose only after everyone stops asking.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "drowsy_waiting_chamber",
+    "name": "Drowsy Waiting Chamber",
+    "description": "A service bell summons a numbered ticket instead of assistance. Anyone who sits down dreams of finishing their assigned work.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "hollow_pantry",
+    "name": "Hollow Pantry",
+    "description": "A locked cupboard smells strongly of cake and conspiracy. Knocking on any wall produces an answer from much farther away.",
+    "category": "Room",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "golden_antechamber",
+    "name": "Golden Antechamber",
+    "description": "Three doors lead onward, though all insist they are the main entrance. The gilding is mostly paint, but the room remains proud of it.",
+    "category": "Room",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "echoing_archive",
+    "name": "Echoing Archive",
+    "description": "Every shelf is labeled correctly except the shelf of labels. Every sound returns with a slightly different opinion.",
+    "category": "Room",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "whispering_conservatory",
+    "name": "Whispering Conservatory",
+    "description": "A fountain waters plants with perfectly brewed tea. The walls repeat secrets after improving the wording.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "forgotten_dining_hall",
+    "name": "Forgotten Dining Hall",
+    "description": "A serving hatch delivers bread and occasional legal notices. Dusty nameplates suggest an entire department once worked here.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "crooked_waiting_chamber",
+    "name": "Crooked Waiting Chamber",
+    "description": "A brass sign claims the delay is part of the experience. Nothing inside keeps quite the same angle twice.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "rotating_gallery",
+    "name": "Rotating Gallery",
+    "description": "Empty frames follow visitors with painted eyes that are not there. The entire chamber turns slowly while the doorway stays put.",
+    "category": "Room",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "suspicious_observatory",
+    "name": "Suspicious Observatory",
+    "description": "The ceiling displays constellations shaped like dungeon equipment. Drawers close whenever the room notices it is being searched.",
+    "category": "Room",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "unfinished_workshop",
+    "name": "Unfinished Workshop",
+    "description": "Blueprints rewrite their measurements when the hammer is lifted. One wall remains a convincing charcoal sketch.",
+    "category": "Room",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "dusty_barracks",
+    "name": "Dusty Barracks",
+    "description": "The bunks make themselves but refuse military corners. Fresh footprints appear each morning before anyone enters.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "flooded_armory",
+    "name": "Flooded Armory",
+    "description": "Every shield bears a fresh dent from a battle nobody remembers. The ankle-deep water never wets boots, only paperwork.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "moonlit_map_room",
+    "name": "Moonlit Map Room",
+    "description": "One chart includes a corridor that appears only on paperwork. Impossible moonbeams cross the floor far below ground.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "overdecorated_waiting_chamber",
+    "name": "Overdecorated Waiting Chamber",
+    "description": "The clock advances only when nobody looks at it. Every available surface has been given at least one tassel.",
+    "category": "Room",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "candlelit_pantry",
+    "name": "Candlelit Pantry",
+    "description": "Jars label themselves according to mood instead of contents. The candles brighten for good ideas and dim for expensive ones.",
+    "category": "Room",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "mossy_antechamber",
+    "name": "Mossy Antechamber",
+    "description": "A row of chairs faces a speaking tube connected to nowhere. The moss forms arrows toward places that no longer exist.",
+    "category": "Room",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "ceremonial_archive",
+    "name": "Ceremonial Archive",
+    "description": "A ladder rolls toward whichever book is trying to hide. A plaque requires a formal entrance and an informal exit.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "clockwork_conservatory",
+    "name": "Clockwork Conservatory",
+    "description": "Mushrooms hum different notes according to the weather above. Hidden gears reset the furniture at the top of every hour.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "velvet_dining_hall",
+    "name": "Velvet Dining Hall",
+    "description": "The long table sets itself for one more guest than expected. Even footsteps sound soft, expensive, and mildly suspicious.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "patient_waiting_chamber",
+    "name": "Patient Waiting Chamber",
+    "description": "The benches become less comfortable as appointments approach. The room reveals its purpose only after everyone stops asking.",
+    "category": "Room",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "drowsy_gallery",
+    "name": "Drowsy Gallery",
+    "description": "Every landscape painting includes the same distant goblin. Anyone who sits down dreams of finishing their assigned work.",
+    "category": "Room",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "hollow_observatory",
+    "name": "Hollow Observatory",
+    "description": "Every lens points toward a different possible moon. Knocking on any wall produces an answer from much farther away.",
+    "category": "Room",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "golden_workshop",
+    "name": "Golden Workshop",
+    "description": "Half-built mechanisms continue working without their missing pieces. The gilding is mostly paint, but the room remains proud of it.",
+    "category": "Room",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "clockwork_spyglass",
+    "name": "Clockwork Spyglass",
+    "description": "It reveals distant places but refuses to show the kitchens. Tiny gears reset it with fussy precision after every use.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "whispering_ink_bottle",
+    "name": "Whispering Ink Bottle",
+    "description": "The ink changes color according to the writer's confidence. It offers commentary too quiet to challenge.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "sleepy_crown",
+    "name": "Sleepy Crown",
+    "description": "Its jewels brighten when the wearer admits a mistake. It yawns before activating and works best after sunset.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "brass_compass",
+    "name": "Brass Compass",
+    "description": "It spins near secret doors and stops near honest ones. Invisible hands polish its metalwork every dawn.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "polite_pocket_watch",
+    "name": "Polite Pocket Watch",
+    "description": "It runs five minutes fast whenever danger is being dramatic. It refuses to function until properly thanked.",
+    "category": "Artifact",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "invisible_lantern",
+    "name": "Invisible Lantern",
+    "description": "Its flame points toward the safest route while illuminating the exciting one. Only its shadow can be seen until it is needed.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "unlucky_hand_mirror",
+    "name": "Unlucky Hand Mirror",
+    "description": "It reveals disguises but politely preserves flattering lighting. Its failures are harmless but impeccably timed.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "rain_stained_signet_ring",
+    "name": "Rain-Stained Signet Ring",
+    "description": "It stamps wax with a symbol nobody admits recognizing. One cold drop forms on it whenever a storm begins above.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "crooked_spyglass",
+    "name": "Crooked Spyglass",
+    "description": "It reveals distant places but refuses to show the kitchens. It works perfectly only when held at an unreasonable angle.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "jealous_ink_bottle",
+    "name": "Jealous Ink Bottle",
+    "description": "The ink changes color according to the writer's confidence. It sulks whenever another magical object is praised.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "moonlit_crown",
+    "name": "Moonlit Crown",
+    "description": "Its jewels brighten when the wearer admits a mistake. It becomes more reliable under moonlight, even underground.",
+    "category": "Artifact",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "muttering_measuring_spoon",
+    "name": "Muttering Measuring Spoon",
+    "description": "Anything measured with it becomes exactly one pinch too dramatic. It complains about technique throughout the process.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "frosted_goblet",
+    "name": "Frosted Goblet",
+    "description": "It refills itself with lukewarm tea during arguments. A rim of frost forms around it in the presence of lies.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "hollow_lantern",
+    "name": "Hollow Lantern",
+    "description": "Its flame points toward the safest route while illuminating the exciting one. Something small knocks from inside when danger approaches.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "gilded_hand_mirror",
+    "name": "Gilded Hand Mirror",
+    "description": "It reveals disguises but politely preserves flattering lighting. The gold leaf is false, but its sense of importance is genuine.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "royal_signet_ring",
+    "name": "Royal Signet Ring",
+    "description": "It stamps wax with a symbol nobody admits recognizing. It recognizes titles, including several invented on the spot.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "velvet_spyglass",
+    "name": "Velvet Spyglass",
+    "description": "It reveals distant places but refuses to show the kitchens. A small velvet cushion appears whenever it is set down.",
+    "category": "Artifact",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "cracked_ink_bottle",
+    "name": "Cracked Ink Bottle",
+    "description": "The ink changes color according to the writer's confidence. The fracture glows whenever its magic is accurate.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "ceremonial_door_knocker",
+    "name": "Ceremonial Door Knocker",
+    "description": "It announces visitors using titles they have not earned. It demands a brief announcement before every use.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "patient_measuring_spoon",
+    "name": "Patient Measuring Spoon",
+    "description": "Anything measured with it becomes exactly one pinch too dramatic. It waits for everyone else to finish before activating.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "clockwork_goblet",
+    "name": "Clockwork Goblet",
+    "description": "It refills itself with lukewarm tea during arguments. Tiny gears reset it with fussy precision after every use.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "whispering_lantern",
+    "name": "Whispering Lantern",
+    "description": "Its flame points toward the safest route while illuminating the exciting one. It offers commentary too quiet to challenge.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "sleepy_hand_mirror",
+    "name": "Sleepy Hand Mirror",
+    "description": "It reveals disguises but politely preserves flattering lighting. It yawns before activating and works best after sunset.",
+    "category": "Artifact",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "brass_signet_ring",
+    "name": "Brass Signet Ring",
+    "description": "It stamps wax with a symbol nobody admits recognizing. Invisible hands polish its metalwork every dawn.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "polite_spyglass",
+    "name": "Polite Spyglass",
+    "description": "It reveals distant places but refuses to show the kitchens. It refuses to function until properly thanked.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "invisible_serving_fork",
+    "name": "Invisible Serving Fork",
+    "description": "The fork points toward the freshest dish and the oldest grudge. Only its shadow can be seen until it is needed.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "unlucky_door_knocker",
+    "name": "Unlucky Door Knocker",
+    "description": "It announces visitors using titles they have not earned. Its failures are harmless but impeccably timed.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "rain_stained_measuring_spoon",
+    "name": "Rain-Stained Measuring Spoon",
+    "description": "Anything measured with it becomes exactly one pinch too dramatic. One cold drop forms on it whenever a storm begins above.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "crooked_goblet",
+    "name": "Crooked Goblet",
+    "description": "It refills itself with lukewarm tea during arguments. It works perfectly only when held at an unreasonable angle.",
+    "category": "Artifact",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "jealous_lantern",
+    "name": "Jealous Lantern",
+    "description": "Its flame points toward the safest route while illuminating the exciting one. It sulks whenever another magical object is praised.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "moonlit_hand_mirror",
+    "name": "Moonlit Hand Mirror",
+    "description": "It reveals disguises but politely preserves flattering lighting. It becomes more reliable under moonlight, even underground.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "muttering_music_box",
+    "name": "Muttering Music Box",
+    "description": "Its tiny dancers reenact arguments from elsewhere in the dungeon. It complains about technique throughout the process.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "frosted_dice_cup",
+    "name": "Frosted Dice Cup",
+    "description": "It always rolls the number most likely to start an argument. A rim of frost forms around it in the presence of lies.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "hollow_serving_fork",
+    "name": "Hollow Serving Fork",
+    "description": "The fork points toward the freshest dish and the oldest grudge. Something small knocks from inside when danger approaches.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "gilded_door_knocker",
+    "name": "Gilded Door Knocker",
+    "description": "It announces visitors using titles they have not earned. The gold leaf is false, but its sense of importance is genuine.",
+    "category": "Artifact",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "royal_measuring_spoon",
+    "name": "Royal Measuring Spoon",
+    "description": "Anything measured with it becomes exactly one pinch too dramatic. It recognizes titles, including several invented on the spot.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "velvet_goblet",
+    "name": "Velvet Goblet",
+    "description": "It refills itself with lukewarm tea during arguments. A small velvet cushion appears whenever it is set down.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "cracked_lantern",
+    "name": "Cracked Lantern",
+    "description": "Its flame points toward the safest route while illuminating the exciting one. The fracture glows whenever its magic is accurate.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "ceremonial_quill",
+    "name": "Ceremonial Quill",
+    "description": "It signs documents using the name of the most nervous witness. It demands a brief announcement before every use.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "patient_music_box",
+    "name": "Patient Music Box",
+    "description": "Its tiny dancers reenact arguments from elsewhere in the dungeon. It waits for everyone else to finish before activating.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "clockwork_dice_cup",
+    "name": "Clockwork Dice Cup",
+    "description": "It always rolls the number most likely to start an argument. Tiny gears reset it with fussy precision after every use.",
+    "category": "Artifact",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "whispering_serving_fork",
+    "name": "Whispering Serving Fork",
+    "description": "The fork points toward the freshest dish and the oldest grudge. It offers commentary too quiet to challenge.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "sleepy_door_knocker",
+    "name": "Sleepy Door Knocker",
+    "description": "It announces visitors using titles they have not earned. It yawns before activating and works best after sunset.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "brass_measuring_spoon",
+    "name": "Brass Measuring Spoon",
+    "description": "Anything measured with it becomes exactly one pinch too dramatic. Invisible hands polish its metalwork every dawn.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "polite_goblet",
+    "name": "Polite Goblet",
+    "description": "It refills itself with lukewarm tea during arguments. It refuses to function until properly thanked.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "invisible_pocket_watch",
+    "name": "Invisible Pocket Watch",
+    "description": "Its second hand pauses during lies and sprints through excuses. Only its shadow can be seen until it is needed.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "unlucky_quill",
+    "name": "Unlucky Quill",
+    "description": "It signs documents using the name of the most nervous witness. Its failures are harmless but impeccably timed.",
+    "category": "Artifact",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "rain_stained_music_box",
+    "name": "Rain-Stained Music Box",
+    "description": "Its tiny dancers reenact arguments from elsewhere in the dungeon. One cold drop forms on it whenever a storm begins above.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "crooked_dice_cup",
+    "name": "Crooked Dice Cup",
+    "description": "It always rolls the number most likely to start an argument. It works perfectly only when held at an unreasonable angle.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "jealous_serving_fork",
+    "name": "Jealous Serving Fork",
+    "description": "The fork points toward the freshest dish and the oldest grudge. It sulks whenever another magical object is praised.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "moonlit_door_knocker",
+    "name": "Moonlit Door Knocker",
+    "description": "It announces visitors using titles they have not earned. It becomes more reliable under moonlight, even underground.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "muttering_crown",
+    "name": "Muttering Crown",
+    "description": "Anyone wearing it can hear the private opinions of nearby chairs. It complains about technique throughout the process.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "frosted_compass",
+    "name": "Frosted Compass",
+    "description": "Its needle points toward the nearest unguarded treasure. A rim of frost forms around it in the presence of lies.",
+    "category": "Artifact",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "hollow_pocket_watch",
+    "name": "Hollow Pocket Watch",
+    "description": "Its second hand pauses during lies and sprints through excuses. Something small knocks from inside when danger approaches.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "gilded_quill",
+    "name": "Gilded Quill",
+    "description": "It signs documents using the name of the most nervous witness. The gold leaf is false, but its sense of importance is genuine.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "royal_music_box",
+    "name": "Royal Music Box",
+    "description": "Its tiny dancers reenact arguments from elsewhere in the dungeon. It recognizes titles, including several invented on the spot.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "velvet_dice_cup",
+    "name": "Velvet Dice Cup",
+    "description": "It always rolls the number most likely to start an argument. A small velvet cushion appears whenever it is set down.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "cracked_serving_fork",
+    "name": "Cracked Serving Fork",
+    "description": "The fork points toward the freshest dish and the oldest grudge. The fracture glows whenever its magic is accurate.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "ceremonial_ink_bottle",
+    "name": "Ceremonial Ink Bottle",
+    "description": "Spilled drops crawl back into the bottle before inspections. It demands a brief announcement before every use.",
+    "category": "Artifact",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "patient_crown",
+    "name": "Patient Crown",
+    "description": "Anyone wearing it can hear the private opinions of nearby chairs. It waits for everyone else to finish before activating.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "clockwork_compass",
+    "name": "Clockwork Compass",
+    "description": "Its needle points toward the nearest unguarded treasure. Tiny gears reset it with fussy precision after every use.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "whispering_pocket_watch",
+    "name": "Whispering Pocket Watch",
+    "description": "Its second hand pauses during lies and sprints through excuses. It offers commentary too quiet to challenge.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "sleepy_quill",
+    "name": "Sleepy Quill",
+    "description": "It signs documents using the name of the most nervous witness. It yawns before activating and works best after sunset.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "brass_music_box",
+    "name": "Brass Music Box",
+    "description": "Its tiny dancers reenact arguments from elsewhere in the dungeon. Invisible hands polish its metalwork every dawn.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "polite_dice_cup",
+    "name": "Polite Dice Cup",
+    "description": "It always rolls the number most likely to start an argument. It refuses to function until properly thanked.",
+    "category": "Artifact",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "invisible_spyglass",
+    "name": "Invisible Spyglass",
+    "description": "Viewed doors appear open if they will be unlocked within the hour. Only its shadow can be seen until it is needed.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "unlucky_ink_bottle",
+    "name": "Unlucky Ink Bottle",
+    "description": "Spilled drops crawl back into the bottle before inspections. Its failures are harmless but impeccably timed.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "rain_stained_crown",
+    "name": "Rain-Stained Crown",
+    "description": "Anyone wearing it can hear the private opinions of nearby chairs. One cold drop forms on it whenever a storm begins above.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "crooked_compass",
+    "name": "Crooked Compass",
+    "description": "Its needle points toward the nearest unguarded treasure. It works perfectly only when held at an unreasonable angle.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "jealous_pocket_watch",
+    "name": "Jealous Pocket Watch",
+    "description": "Its second hand pauses during lies and sprints through excuses. It sulks whenever another magical object is praised.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "moonlit_quill",
+    "name": "Moonlit Quill",
+    "description": "It signs documents using the name of the most nervous witness. It becomes more reliable under moonlight, even underground.",
+    "category": "Artifact",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "muttering_hand_mirror",
+    "name": "Muttering Hand Mirror",
+    "description": "Anyone reflected appears equally heroic and exhausted. It complains about technique throughout the process.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "frosted_signet_ring",
+    "name": "Frosted Signet Ring",
+    "description": "Its seal marks any letter as officially concerning. A rim of frost forms around it in the presence of lies.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "hollow_spyglass",
+    "name": "Hollow Spyglass",
+    "description": "Viewed doors appear open if they will be unlocked within the hour. Something small knocks from inside when danger approaches.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "gilded_ink_bottle",
+    "name": "Gilded Ink Bottle",
+    "description": "Spilled drops crawl back into the bottle before inspections. The gold leaf is false, but its sense of importance is genuine.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "royal_crown",
+    "name": "Royal Crown",
+    "description": "Anyone wearing it can hear the private opinions of nearby chairs. It recognizes titles, including several invented on the spot.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "velvet_compass",
+    "name": "Velvet Compass",
+    "description": "Its needle points toward the nearest unguarded treasure. A small velvet cushion appears whenever it is set down.",
+    "category": "Artifact",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "cracked_pocket_watch",
+    "name": "Cracked Pocket Watch",
+    "description": "Its second hand pauses during lies and sprints through excuses. The fracture glows whenever its magic is accurate.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "ceremonial_lantern",
+    "name": "Ceremonial Lantern",
+    "description": "It reveals invisible ink and very visible dust. It demands a brief announcement before every use.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "patient_hand_mirror",
+    "name": "Patient Hand Mirror",
+    "description": "Anyone reflected appears equally heroic and exhausted. It waits for everyone else to finish before activating.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "clockwork_signet_ring",
+    "name": "Clockwork Signet Ring",
+    "description": "Its seal marks any letter as officially concerning. Tiny gears reset it with fussy precision after every use.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "whispering_spyglass",
+    "name": "Whispering Spyglass",
+    "description": "Viewed doors appear open if they will be unlocked within the hour. It offers commentary too quiet to challenge.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "sleepy_ink_bottle",
+    "name": "Sleepy Ink Bottle",
+    "description": "Spilled drops crawl back into the bottle before inspections. It yawns before activating and works best after sunset.",
+    "category": "Artifact",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "brass_crown",
+    "name": "Brass Crown",
+    "description": "Anyone wearing it can hear the private opinions of nearby chairs. Invisible hands polish its metalwork every dawn.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "polite_compass",
+    "name": "Polite Compass",
+    "description": "Its needle points toward the nearest unguarded treasure. It refuses to function until properly thanked.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "invisible_goblet",
+    "name": "Invisible Goblet",
+    "description": "Any drink poured into it tastes faintly of victory. Only its shadow can be seen until it is needed.",
+    "category": "Artifact",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "unlucky_lantern",
+    "name": "Unlucky Lantern",
+    "description": "It reveals invisible ink and very visible dust. Its failures are harmless but impeccably timed.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "rain_stained_hand_mirror",
+    "name": "Rain-Stained Hand Mirror",
+    "description": "Anyone reflected appears equally heroic and exhausted. One cold drop forms on it whenever a storm begins above.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "crooked_signet_ring",
+    "name": "Crooked Signet Ring",
+    "description": "Its seal marks any letter as officially concerning. It works perfectly only when held at an unreasonable angle.",
+    "category": "Artifact",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "jealous_spyglass",
+    "name": "Jealous Spyglass",
+    "description": "Viewed doors appear open if they will be unlocked within the hour. It sulks whenever another magical object is praised.",
+    "category": "Artifact",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "apologetic_rune_mine",
+    "name": "Apologetic Rune Mine",
+    "description": "The hidden rune flashes and marks intruders with a glowing target. A brass voice apologizes before and after activation.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "royal_ceiling_cage",
+    "name": "Royal Ceiling Cage",
+    "description": "The cage lands one step ahead, encouraging intruders to walk into it. A stamped decree declares capture an honor.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "muttering_alarm_bell",
+    "name": "Muttering Alarm Bell",
+    "description": "The alarm repeats the trespasser's last words throughout the dungeon. The mechanism complains throughout its reset cycle.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "gilded_pressure_plate",
+    "name": "Gilded Pressure Plate",
+    "description": "The mechanism records the trespasser's weight and loudly disputes it. Gold paint decorates every part except the safety release.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "sleepy_arrow_slit",
+    "name": "Sleepy Arrow Slit",
+    "description": "Hidden launchers fire blunt arrows carrying tiny warning flags. It activates a moment late, as though waking from a nap.",
+    "category": "Trap",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "polite_trapdoor",
+    "name": "Polite Trapdoor",
+    "description": "The hatch drops intruders into a padded but humiliating chute. A small sign requests that intruders remain still.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "moonlit_spike_panel",
+    "name": "Moonlit Spike Panel",
+    "description": "Spikes emerge in sequence, forcing a deeply undignified dance. It arms only where impossible moonlight touches the floor.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "humming_rune_mine",
+    "name": "Humming Rune Mine",
+    "description": "The mine teleports carried weapons into a locked display case. A steady note rises sharply just before it triggers.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "unreliable_glue_tile",
+    "name": "Unreliable Glue Tile",
+    "description": "The tile grips boots firmly while allowing dignity to escape. It fails safely most of the time and strangely the rest.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "patient_pendulum_snare",
+    "name": "Patient Pendulum Snare",
+    "description": "A swinging log knocks intruders neatly into a holding alcove. It waits until the target feels completely safe.",
+    "category": "Trap",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "invisible_falling_net",
+    "name": "Invisible Falling Net",
+    "description": "A second, smaller net falls after the first is removed. Only warning labels and moving dust reveal its position.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "whispering_rolling_boulder",
+    "name": "Whispering Rolling Boulder",
+    "description": "The stone stops at intersections to choose the most dramatic route. The walls quietly discuss whether the target noticed it.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "velvet_wall_clamp",
+    "name": "Velvet Wall Clamp",
+    "description": "Padded arms extend from the masonry and hold intruders firmly in place. Every striking surface has been inexplicably upholstered.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "clockwork_rune_mine",
+    "name": "Clockwork Rune Mine",
+    "description": "Crossing the sigil swaps the trespasser's left and right boot. Its gears count down with irritating accuracy.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "dusty_ceiling_cage",
+    "name": "Dusty Ceiling Cage",
+    "description": "Bars descend silently while a lock rises from the floor. Activation produces a cloud older than the trap itself.",
+    "category": "Trap",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "spring_loaded_alarm_bell",
+    "name": "Spring-Loaded Alarm Bell",
+    "description": "One chime summons guards while three chimes summon the kitchen staff. Coils release with far more enthusiasm than necessary.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "crooked_pressure_plate",
+    "name": "Crooked Pressure Plate",
+    "description": "Stepping on the plate locks every nearby door except the embarrassing one. The trigger sits several inches away from where the blueprint places it.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "ceremonial_arrow_slit",
+    "name": "Ceremonial Arrow Slit",
+    "description": "The slit tracks capes with unreasonable accuracy. A trumpet fanfare announces the mechanism's formal deployment.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "overengineered_trapdoor",
+    "name": "Overengineered Trapdoor",
+    "description": "It opens one step after the suspicious tile has been crossed. Seven extra gears accomplish nothing but look expensive.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "rusty_spike_panel",
+    "name": "Rusty Spike Panel",
+    "description": "The floor bristles whenever someone runs despite the warning signs. The mechanism sounds worse than it performs.",
+    "category": "Trap",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "apologetic_ceiling_cage",
+    "name": "Apologetic Ceiling Cage",
+    "description": "An iron cage drops from above and seals itself around the target. A brass voice apologizes before and after activation.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "royal_glue_tile",
+    "name": "Royal Glue Tile",
+    "description": "A clear resin spreads across the floor and hardens around dropped equipment. A stamped decree declares capture an honor.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "muttering_pendulum_snare",
+    "name": "Muttering Pendulum Snare",
+    "description": "The pendulum accelerates whenever someone attempts to time it. The mechanism complains throughout its reset cycle.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "gilded_falling_net",
+    "name": "Gilded Falling Net",
+    "description": "The ropes knot themselves around weapons before ankles. Gold paint decorates every part except the safety release.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "sleepy_rolling_boulder",
+    "name": "Sleepy Rolling Boulder",
+    "description": "A stone sphere rolls downhill through a corridor that appears perfectly level. It activates a moment late, as though waking from a nap.",
+    "category": "Trap",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "polite_wall_clamp",
+    "name": "Polite Wall Clamp",
+    "description": "The clamp catches shields first and adventurers second. A small sign requests that intruders remain still.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "moonlit_rune_mine",
+    "name": "Moonlit Rune Mine",
+    "description": "The rune releases a harmless blast that alerts every gargoyle nearby. It arms only where impossible moonlight touches the floor.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "humming_ceiling_cage",
+    "name": "Humming Ceiling Cage",
+    "description": "The mechanism captures the tallest person and everyone standing too close. A steady note rises sharply just before it triggers.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "unreliable_alarm_bell",
+    "name": "Unreliable Alarm Bell",
+    "description": "The bell rings loudly enough to alert every guard except the assigned one. It fails safely most of the time and strangely the rest.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "patient_pressure_plate",
+    "name": "Patient Pressure Plate",
+    "description": "The plate sinks slowly while a countdown begins in an unknown language. It waits until the target feels completely safe.",
+    "category": "Trap",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "invisible_arrow_slit",
+    "name": "Invisible Arrow Slit",
+    "description": "A volley pins loose clothing to the nearest wall. Only warning labels and moving dust reveal its position.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "whispering_trapdoor",
+    "name": "Whispering Trapdoor",
+    "description": "The trapdoor swaps places with an ordinary floor tile each morning. The walls quietly discuss whether the target noticed it.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "velvet_spike_panel",
+    "name": "Velvet Spike Panel",
+    "description": "A row of spikes rises in the shape of an annoyed eyebrow. Every striking surface has been inexplicably upholstered.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "clockwork_ceiling_cage",
+    "name": "Clockwork Ceiling Cage",
+    "description": "The cage lands one step ahead, encouraging intruders to walk into it. Its gears count down with irritating accuracy.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "dusty_glue_tile",
+    "name": "Dusty Glue Tile",
+    "description": "The adhesive releases only after the victim stops pulling. Activation produces a cloud older than the trap itself.",
+    "category": "Trap",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "spring_loaded_pendulum_snare",
+    "name": "Spring-Loaded Pendulum Snare",
+    "description": "A suspended hammer swings once, pauses, then returns for emphasis. Coils release with far more enthusiasm than necessary.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "crooked_falling_net",
+    "name": "Crooked Falling Net",
+    "description": "A weighted net drops over anyone crossing the marked stones. The trigger sits several inches away from where the blueprint places it.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "ceremonial_rolling_boulder",
+    "name": "Ceremonial Rolling Boulder",
+    "description": "The boulder follows intruders around one corner before losing interest. A trumpet fanfare announces the mechanism's formal deployment.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "overengineered_wall_clamp",
+    "name": "Overengineered Wall Clamp",
+    "description": "Stone jaws close around equipment while leaving the wearer untouched. Seven extra gears accomplish nothing but look expensive.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "rusty_rune_mine",
+    "name": "Rusty Rune Mine",
+    "description": "The mine teleports carried weapons into a locked display case. The mechanism sounds worse than it performs.",
+    "category": "Trap",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "apologetic_glue_tile",
+    "name": "Apologetic Glue Tile",
+    "description": "The tile grips boots firmly while allowing dignity to escape. A brass voice apologizes before and after activation.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "royal_alarm_bell",
+    "name": "Royal Alarm Bell",
+    "description": "A hidden clapper announces the intruder's approximate height and confidence. A stamped decree declares capture an honor.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "muttering_pressure_plate",
+    "name": "Muttering Pressure Plate",
+    "description": "It triggers only after the intruder lifts their foot in relief. The mechanism complains throughout its reset cycle.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "gilded_arrow_slit",
+    "name": "Gilded Arrow Slit",
+    "description": "The mechanism fires one arrow ahead and another behind the target. Gold paint decorates every part except the safety release.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "sleepy_trapdoor",
+    "name": "Sleepy Trapdoor",
+    "description": "The floor opens beneath anyone carrying more confidence than caution. It activates a moment late, as though waking from a nap.",
+    "category": "Trap",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "polite_spike_panel",
+    "name": "Polite Spike Panel",
+    "description": "The panel extends dull spikes that herd intruders toward the guard post. A small sign requests that intruders remain still.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "moonlit_ceiling_cage",
+    "name": "Moonlit Ceiling Cage",
+    "description": "Bars descend silently while a lock rises from the floor. It arms only where impossible moonlight touches the floor.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "humming_glue_tile",
+    "name": "Humming Glue Tile",
+    "description": "The tile captures one foot, then negotiates for the other. A steady note rises sharply just before it triggers.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "unreliable_pendulum_snare",
+    "name": "Unreliable Pendulum Snare",
+    "description": "A weighted blade sweeps across the corridor at shoulder height. It fails safely most of the time and strangely the rest.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "patient_falling_net",
+    "name": "Patient Falling Net",
+    "description": "The net tightens just enough to prevent dignified movement. It waits until the target feels completely safe.",
+    "category": "Trap",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "invisible_rolling_boulder",
+    "name": "Invisible Rolling Boulder",
+    "description": "A smaller practice boulder arrives before the real one. Only warning labels and moving dust reveal its position.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "whispering_wall_clamp",
+    "name": "Whispering Wall Clamp",
+    "description": "The mechanism pins trespassers against a posted list of rules. The walls quietly discuss whether the target noticed it.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "velvet_rune_mine",
+    "name": "Velvet Rune Mine",
+    "description": "The hidden rune flashes and marks intruders with a glowing target. Every striking surface has been inexplicably upholstered.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "clockwork_glue_tile",
+    "name": "Clockwork Glue Tile",
+    "description": "A clear resin spreads across the floor and hardens around dropped equipment. Its gears count down with irritating accuracy.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "dusty_alarm_bell",
+    "name": "Dusty Alarm Bell",
+    "description": "The alarm repeats the trespasser's last words throughout the dungeon. Activation produces a cloud older than the trap itself.",
+    "category": "Trap",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "spring_loaded_pressure_plate",
+    "name": "Spring-Loaded Pressure Plate",
+    "description": "The mechanism records the trespasser's weight and loudly disputes it. Coils release with far more enthusiasm than necessary.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "crooked_arrow_slit",
+    "name": "Crooked Arrow Slit",
+    "description": "Hidden launchers fire blunt arrows carrying tiny warning flags. The trigger sits several inches away from where the blueprint places it.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "ceremonial_trapdoor",
+    "name": "Ceremonial Trapdoor",
+    "description": "The hatch drops intruders into a padded but humiliating chute. A trumpet fanfare announces the mechanism's formal deployment.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "overengineered_spike_panel",
+    "name": "Overengineered Spike Panel",
+    "description": "Spikes emerge in sequence, forcing a deeply undignified dance. Seven extra gears accomplish nothing but look expensive.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "rusty_ceiling_cage",
+    "name": "Rusty Ceiling Cage",
+    "description": "The mechanism captures the tallest person and everyone standing too close. The mechanism sounds worse than it performs.",
+    "category": "Trap",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "apologetic_alarm_bell",
+    "name": "Apologetic Alarm Bell",
+    "description": "The bell rings loudly enough to alert every guard except the assigned one. A brass voice apologizes before and after activation.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "royal_pendulum_snare",
+    "name": "Royal Pendulum Snare",
+    "description": "A swinging log knocks intruders neatly into a holding alcove. A stamped decree declares capture an honor.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "muttering_falling_net",
+    "name": "Muttering Falling Net",
+    "description": "A second, smaller net falls after the first is removed. The mechanism complains throughout its reset cycle.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "gilded_rolling_boulder",
+    "name": "Gilded Rolling Boulder",
+    "description": "The stone stops at intersections to choose the most dramatic route. Gold paint decorates every part except the safety release.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "sleepy_wall_clamp",
+    "name": "Sleepy Wall Clamp",
+    "description": "Padded arms extend from the masonry and hold intruders firmly in place. It activates a moment late, as though waking from a nap.",
+    "category": "Trap",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "polite_rune_mine",
+    "name": "Polite Rune Mine",
+    "description": "Crossing the sigil swaps the trespasser's left and right boot. A small sign requests that intruders remain still.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "moonlit_glue_tile",
+    "name": "Moonlit Glue Tile",
+    "description": "The adhesive releases only after the victim stops pulling. It arms only where impossible moonlight touches the floor.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "humming_alarm_bell",
+    "name": "Humming Alarm Bell",
+    "description": "One chime summons guards while three chimes summon the kitchen staff. A steady note rises sharply just before it triggers.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "unreliable_pressure_plate",
+    "name": "Unreliable Pressure Plate",
+    "description": "Stepping on the plate locks every nearby door except the embarrassing one. It fails safely most of the time and strangely the rest.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "patient_arrow_slit",
+    "name": "Patient Arrow Slit",
+    "description": "The slit tracks capes with unreasonable accuracy. It waits until the target feels completely safe.",
+    "category": "Trap",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "invisible_trapdoor",
+    "name": "Invisible Trapdoor",
+    "description": "It opens one step after the suspicious tile has been crossed. Only warning labels and moving dust reveal its position.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "whispering_spike_panel",
+    "name": "Whispering Spike Panel",
+    "description": "The floor bristles whenever someone runs despite the warning signs. The walls quietly discuss whether the target noticed it.",
+    "category": "Trap",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "velvet_ceiling_cage",
+    "name": "Velvet Ceiling Cage",
+    "description": "An iron cage drops from above and seals itself around the target. Every striking surface has been inexplicably upholstered.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "clockwork_alarm_bell",
+    "name": "Clockwork Alarm Bell",
+    "description": "A hidden clapper announces the intruder's approximate height and confidence. Its gears count down with irritating accuracy.",
+    "category": "Trap",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "dusty_pendulum_snare",
+    "name": "Dusty Pendulum Snare",
+    "description": "The pendulum accelerates whenever someone attempts to time it. Activation produces a cloud older than the trap itself.",
+    "category": "Trap",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "clockwork_ledger_imp",
+    "name": "Clockwork Ledger Imp",
+    "description": "It keeps meticulous records of every person it inconveniences. A key in its back turns whenever it becomes excited.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "muttering_key_bat",
+    "name": "Muttering Key Bat",
+    "description": "It can identify a lock by hearing its key jingle once. It provides a constant commentary on dungeon management.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "polite_stair_goblin",
+    "name": "Polite Stair Goblin",
+    "description": "It repairs loose stairs using spoons, nails, and stubbornness. It bows before causing even minor inconvenience.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "three_hatted_ceiling_crab",
+    "name": "Three-Hatted Ceiling Crab",
+    "description": "It drops pebbles near intruders but never directly on them. Each hat appears responsible for a different bad decision.",
+    "category": "Creature",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "tiny_bell_toad",
+    "name": "Tiny Bell Toad",
+    "description": "It rings whenever someone nearby tells an obvious lie. It compensates for its size with impressive administrative confidence.",
+    "category": "Creature",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "rain_soaked_torch_moth",
+    "name": "Rain-Soaked Torch Moth",
+    "description": "It circles only torches that have been properly maintained. It drips constantly despite every corridor being dry.",
+    "category": "Creature",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "suspicious_cave_newt",
+    "name": "Suspicious Cave Newt",
+    "description": "It carries tiny messages between underground pools. It watches doors carefully and trusts windows even less.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "invisible_mushroom_hound",
+    "name": "Invisible Mushroom Hound",
+    "description": "It digs up truffles, keys, and occasionally old helmets. Only its tracks and offended breathing reveal where it stands.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "sleepy_dust_sprite",
+    "name": "Sleepy Dust Sprite",
+    "description": "It builds tiny castles beneath furniture nobody moves. It yawns before fleeing and often forgets to continue.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "moon_eyed_ceiling_crab",
+    "name": "Moon-Eyed Ceiling Crab",
+    "description": "It lowers stolen objects on silk threads to trade for snacks. Its pale eyes reflect a moon that cannot be seen from underground.",
+    "category": "Creature",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "cheerful_soup_slime",
+    "name": "Cheerful Soup Slime",
+    "description": "It cleans cooking pots while stealing exactly one carrot. It treats every alarm as an invitation to help.",
+    "category": "Creature",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "candle_crowned_archive_spider",
+    "name": "Candle-Crowned Archive Spider",
+    "description": "It webs shut any book returned to the wrong section. Small flames burn above its head without singeing it.",
+    "category": "Creature",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "overqualified_tunnel_rat",
+    "name": "Overqualified Tunnel Rat",
+    "description": "It collects copper coins and returns them with financial advice. It carries certifications for duties nobody assigned it.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "moss_covered_ledger_imp",
+    "name": "Moss-Covered Ledger Imp",
+    "description": "It audits treasure piles by sleeping on the incorrect totals. Tiny flowers bloom on it after successful repairs.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "golden_toed_key_bat",
+    "name": "Golden-Toed Key Bat",
+    "description": "It nests above doors that have forgotten where they lead. Its footprints glitter for several minutes before fading.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "armored_stair_goblin",
+    "name": "Armored Stair Goblin",
+    "description": "It gives directions entirely in terms of up, more up, and regrettably down. Its improvised plating includes spoons, buckles, and one medal.",
+    "category": "Creature",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "unionized_soup_slime",
+    "name": "Unionized Soup Slime",
+    "description": "It absorbs spilled stew and becomes briefly philosophical. It refuses danger outside scheduled working hours.",
+    "category": "Creature",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "elderly_bell_toad",
+    "name": "Elderly Bell Toad",
+    "description": "Its croak perfectly imitates the dungeon's shift bell. It remembers corridors that the dungeon has not built yet.",
+    "category": "Creature",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "hollow_boned_torch_moth",
+    "name": "Hollow-Boned Torch Moth",
+    "description": "Its wings scatter sparks that briefly form readable letters. A faint whistle passes through it whenever it runs.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "velvet_eared_cave_newt",
+    "name": "Velvet-Eared Cave Newt",
+    "description": "It licks runes clean when nobody is watching. It can hear secrets through three stone walls.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "clockwork_mushroom_hound",
+    "name": "Clockwork Mushroom Hound",
+    "description": "It guards a patch of fungus it clearly does not own. A key in its back turns whenever it becomes excited.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "muttering_dust_sprite",
+    "name": "Muttering Dust Sprite",
+    "description": "It sweeps one perfect circle while making the rest of the room worse. It provides a constant commentary on dungeon management.",
+    "category": "Creature",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "polite_ceiling_crab",
+    "name": "Polite Ceiling Crab",
+    "description": "Its shell resembles a decorative ceiling boss until it sneezes. It bows before causing even minor inconvenience.",
+    "category": "Creature",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "three_hatted_soup_slime",
+    "name": "Three-Hatted Soup Slime",
+    "description": "It follows ladles with the loyalty of a trained hound. Each hat appears responsible for a different bad decision.",
+    "category": "Creature",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "tiny_archive_spider",
+    "name": "Tiny Archive Spider",
+    "description": "It repairs damaged books with silk and excessive confidence. It compensates for its size with impressive administrative confidence.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "rain_soaked_tunnel_rat",
+    "name": "Rain-Soaked Tunnel Rat",
+    "description": "It maps forgotten passages using crumbs and stolen red string. It drips constantly despite every corridor being dry.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "suspicious_ledger_imp",
+    "name": "Suspicious Ledger Imp",
+    "description": "It adds footnotes to contracts using smoke instead of ink. It watches doors carefully and trusts windows even less.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "invisible_key_bat",
+    "name": "Invisible Key Bat",
+    "description": "It returns borrowed keys to pockets belonging to different people. Only its tracks and offended breathing reveal where it stands.",
+    "category": "Creature",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "sleepy_stair_goblin",
+    "name": "Sleepy Stair Goblin",
+    "description": "It charges a toll of one compliment per staircase. It yawns before fleeing and often forgets to continue.",
+    "category": "Creature",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "moon_eyed_soup_slime",
+    "name": "Moon-Eyed Soup Slime",
+    "description": "It changes color according to the last soup it encountered. Its pale eyes reflect a moon that cannot be seen from underground.",
+    "category": "Creature",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "cheerful_bell_toad",
+    "name": "Cheerful Bell Toad",
+    "description": "It swallows tiny bells and sorts them by tone. It treats every alarm as an invitation to help.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "candle_crowned_torch_moth",
+    "name": "Candle-Crowned Torch Moth",
+    "description": "It sleeps inside lanterns and objects to sudden illumination. Small flames burn above its head without singeing it.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "overqualified_cave_newt",
+    "name": "Overqualified Cave Newt",
+    "description": "It pretends to be a dragon whenever the lighting is favorable. It carries certifications for duties nobody assigned it.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "moss_covered_mushroom_hound",
+    "name": "Moss-Covered Mushroom Hound",
+    "description": "It tracks intruders by the spores clinging to their boots. Tiny flowers bloom on it after successful repairs.",
+    "category": "Creature",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "golden_toed_dust_sprite",
+    "name": "Golden-Toed Dust Sprite",
+    "description": "It records footprints by sculpting miniature copies of the boots. Its footprints glitter for several minutes before fading.",
+    "category": "Creature",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "armored_ceiling_crab",
+    "name": "Armored Ceiling Crab",
+    "description": "It drops pebbles near intruders but never directly on them. Its improvised plating includes spoons, buckles, and one medal.",
+    "category": "Creature",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "unionized_bell_toad",
+    "name": "Unionized Bell Toad",
+    "description": "It rings whenever someone nearby tells an obvious lie. It refuses danger outside scheduled working hours.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "elderly_archive_spider",
+    "name": "Elderly Archive Spider",
+    "description": "It indexes shelves by spinning labels between them. It remembers corridors that the dungeon has not built yet.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "hollow_boned_tunnel_rat",
+    "name": "Hollow-Boned Tunnel Rat",
+    "description": "It tests suspicious floor tiles by throwing pebbles from a safe distance. A faint whistle passes through it whenever it runs.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "velvet_eared_ledger_imp",
+    "name": "Velvet-Eared Ledger Imp",
+    "description": "It demands receipts before allowing stolen goods into the dungeon. It can hear secrets through three stone walls.",
+    "category": "Creature",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "clockwork_key_bat",
+    "name": "Clockwork Key Bat",
+    "description": "It steals loose keys, labels them, and hangs them alphabetically. A key in its back turns whenever it becomes excited.",
+    "category": "Creature",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "muttering_stair_goblin",
+    "name": "Muttering Stair Goblin",
+    "description": "It numbers every step and objects loudly when one is skipped. It provides a constant commentary on dungeon management.",
+    "category": "Creature",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "polite_soup_slime",
+    "name": "Polite Soup Slime",
+    "description": "It cleans cooking pots while stealing exactly one carrot. It bows before causing even minor inconvenience.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "three_hatted_bell_toad",
+    "name": "Three-Hatted Bell Toad",
+    "description": "It sounds one warning note before unstable masonry gives way. Each hat appears responsible for a different bad decision.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "tiny_torch_moth",
+    "name": "Tiny Torch Moth",
+    "description": "It trims candlewicks and collects the burnt ends for nesting. It compensates for its size with impressive administrative confidence.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "rain_soaked_cave_newt",
+    "name": "Rain-Soaked Cave Newt",
+    "description": "Its skin changes color near unstable magic and fresh berries. It drips constantly despite every corridor being dry.",
+    "category": "Creature",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "suspicious_mushroom_hound",
+    "name": "Suspicious Mushroom Hound",
+    "description": "Its bark causes nearby mushrooms to fold shut. It watches doors carefully and trusts windows even less.",
+    "category": "Creature",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "invisible_dust_sprite",
+    "name": "Invisible Dust Sprite",
+    "description": "It hides in sunbeams despite living several floors underground. Only its tracks and offended breathing reveal where it stands.",
+    "category": "Creature",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "sleepy_ceiling_crab",
+    "name": "Sleepy Ceiling Crab",
+    "description": "It walks overhead while criticizing floor construction. It yawns before fleeing and often forgets to continue.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "moon_eyed_bell_toad",
+    "name": "Moon-Eyed Bell Toad",
+    "description": "Its croak perfectly imitates the dungeon's shift bell. Its pale eyes reflect a moon that cannot be seen from underground.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "cheerful_archive_spider",
+    "name": "Cheerful Archive Spider",
+    "description": "It catches silverfish and interrogates them about missing pages. It treats every alarm as an invitation to help.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "candle_crowned_tunnel_rat",
+    "name": "Candle-Crowned Tunnel Rat",
+    "description": "It maintains three emergency burrows and rents out a fourth. Small flames burn above its head without singeing it.",
+    "category": "Creature",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "overqualified_ledger_imp",
+    "name": "Overqualified Ledger Imp",
+    "description": "It keeps meticulous records of every person it inconveniences. It carries certifications for duties nobody assigned it.",
+    "category": "Creature",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "moss_covered_key_bat",
+    "name": "Moss-Covered Key Bat",
+    "description": "It can identify a lock by hearing its key jingle once. Tiny flowers bloom on it after successful repairs.",
+    "category": "Creature",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "golden_toed_stair_goblin",
+    "name": "Golden-Toed Stair Goblin",
+    "description": "It repairs loose stairs using spoons, nails, and stubbornness. Its footprints glitter for several minutes before fading.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "armored_soup_slime",
+    "name": "Armored Soup Slime",
+    "description": "It follows ladles with the loyalty of a trained hound. Its improvised plating includes spoons, buckles, and one medal.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "unionized_archive_spider",
+    "name": "Unionized Archive Spider",
+    "description": "It repairs damaged books with silk and excessive confidence. It refuses danger outside scheduled working hours.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "elderly_torch_moth",
+    "name": "Elderly Torch Moth",
+    "description": "It circles only torches that have been properly maintained. It remembers corridors that the dungeon has not built yet.",
+    "category": "Creature",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "hollow_boned_cave_newt",
+    "name": "Hollow-Boned Cave Newt",
+    "description": "It carries tiny messages between underground pools. A faint whistle passes through it whenever it runs.",
+    "category": "Creature",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "velvet_eared_mushroom_hound",
+    "name": "Velvet-Eared Mushroom Hound",
+    "description": "It digs up truffles, keys, and occasionally old helmets. It can hear secrets through three stone walls.",
+    "category": "Creature",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "clockwork_dust_sprite",
+    "name": "Clockwork Dust Sprite",
+    "description": "It builds tiny castles beneath furniture nobody moves. A key in its back turns whenever it becomes excited.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "muttering_ceiling_crab",
+    "name": "Muttering Ceiling Crab",
+    "description": "It lowers stolen objects on silk threads to trade for snacks. It provides a constant commentary on dungeon management.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "polite_bell_toad",
+    "name": "Polite Bell Toad",
+    "description": "It swallows tiny bells and sorts them by tone. It bows before causing even minor inconvenience.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "three_hatted_archive_spider",
+    "name": "Three-Hatted Archive Spider",
+    "description": "It webs shut any book returned to the wrong section. Each hat appears responsible for a different bad decision.",
+    "category": "Creature",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "tiny_tunnel_rat",
+    "name": "Tiny Tunnel Rat",
+    "description": "It collects copper coins and returns them with financial advice. It compensates for its size with impressive administrative confidence.",
+    "category": "Creature",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "rain_soaked_ledger_imp",
+    "name": "Rain-Soaked Ledger Imp",
+    "description": "It audits treasure piles by sleeping on the incorrect totals. It drips constantly despite every corridor being dry.",
+    "category": "Creature",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "suspicious_key_bat",
+    "name": "Suspicious Key Bat",
+    "description": "It nests above doors that have forgotten where they lead. It watches doors carefully and trusts windows even less.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "invisible_stair_goblin",
+    "name": "Invisible Stair Goblin",
+    "description": "It gives directions entirely in terms of up, more up, and regrettably down. Only its tracks and offended breathing reveal where it stands.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "sleepy_soup_slime",
+    "name": "Sleepy Soup Slime",
+    "description": "It absorbs spilled stew and becomes briefly philosophical. It yawns before fleeing and often forgets to continue.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "moon_eyed_archive_spider",
+    "name": "Moon-Eyed Archive Spider",
+    "description": "It indexes shelves by spinning labels between them. Its pale eyes reflect a moon that cannot be seen from underground.",
+    "category": "Creature",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "cheerful_torch_moth",
+    "name": "Cheerful Torch Moth",
+    "description": "Its wings scatter sparks that briefly form readable letters. It treats every alarm as an invitation to help.",
+    "category": "Creature",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "candle_crowned_cave_newt",
+    "name": "Candle-Crowned Cave Newt",
+    "description": "It licks runes clean when nobody is watching. Small flames burn above its head without singeing it.",
+    "category": "Creature",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "overqualified_mushroom_hound",
+    "name": "Overqualified Mushroom Hound",
+    "description": "It guards a patch of fungus it clearly does not own. It carries certifications for duties nobody assigned it.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "moss_covered_dust_sprite",
+    "name": "Moss-Covered Dust Sprite",
+    "description": "It sweeps one perfect circle while making the rest of the room worse. Tiny flowers bloom on it after successful repairs.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "golden_toed_ceiling_crab",
+    "name": "Golden-Toed Ceiling Crab",
+    "description": "Its shell resembles a decorative ceiling boss until it sneezes. Its footprints glitter for several minutes before fading.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "armored_bell_toad",
+    "name": "Armored Bell Toad",
+    "description": "It sounds one warning note before unstable masonry gives way. Its improvised plating includes spoons, buckles, and one medal.",
+    "category": "Creature",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "unionized_torch_moth",
+    "name": "Unionized Torch Moth",
+    "description": "It trims candlewicks and collects the burnt ends for nesting. It refuses danger outside scheduled working hours.",
+    "category": "Creature",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "elderly_tunnel_rat",
+    "name": "Elderly Tunnel Rat",
+    "description": "It maps forgotten passages using crumbs and stolen red string. It remembers corridors that the dungeon has not built yet.",
+    "category": "Creature",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "hollow_boned_ledger_imp",
+    "name": "Hollow-Boned Ledger Imp",
+    "description": "It adds footnotes to contracts using smoke instead of ink. A faint whistle passes through it whenever it runs.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "velvet_eared_key_bat",
+    "name": "Velvet-Eared Key Bat",
+    "description": "It returns borrowed keys to pockets belonging to different people. It can hear secrets through three stone walls.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "clockwork_stair_goblin",
+    "name": "Clockwork Stair Goblin",
+    "description": "It charges a toll of one compliment per staircase. A key in its back turns whenever it becomes excited.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  },
+  {
+    "key": "muttering_soup_slime",
+    "name": "Muttering Soup Slime",
+    "description": "It changes color according to the last soup it encountered. It provides a constant commentary on dungeon management.",
+    "category": "Creature",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "polite_archive_spider",
+    "name": "Polite Archive Spider",
+    "description": "It catches silverfish and interrogates them about missing pages. It bows before causing even minor inconvenience.",
+    "category": "Creature",
+    "rarity": "uncommon",
+    "enabled": true
+  },
+  {
+    "key": "three_hatted_torch_moth",
+    "name": "Three-Hatted Torch Moth",
+    "description": "It sleeps inside lanterns and objects to sudden illumination. Each hat appears responsible for a different bad decision.",
+    "category": "Creature",
+    "rarity": "rare",
+    "enabled": true
+  },
+  {
+    "key": "tiny_cave_newt",
+    "name": "Tiny Cave Newt",
+    "description": "It pretends to be a dragon whenever the lighting is favorable. It compensates for its size with impressive administrative confidence.",
+    "category": "Creature",
+    "rarity": "common",
+    "enabled": true
+  }
+]

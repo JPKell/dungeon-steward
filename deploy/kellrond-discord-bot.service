@@ -1,0 +1,26 @@
+[Unit]
+Description=Kellrond Games Discord Dungeon Bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=kellrond-bot
+Group=kellrond-bot
+WorkingDirectory=/var/www/kellrond-discord-bot
+EnvironmentFile=/etc/kellrond-discord-bot.env
+ExecStart=/var/www/kellrond-discord-bot/.venv/bin/python -m bot.main
+Restart=on-failure
+RestartSec=10
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/www/kellrond-discord-bot
+CapabilityBoundingSet=
+LockPersonality=true
+MemoryDenyWriteExecute=true
+
+[Install]
+WantedBy=multi-user.target
+

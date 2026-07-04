@@ -1,0 +1,31 @@
+[project]
+name = "dungeon-steward"
+version = "0.1.0"
+description = "Kellrond Games Discord dungeon bot"
+requires-python = ">=3.12"
+dependencies = [
+    "alembic>=1.13",
+    "discord.py>=2.4",
+    "psycopg[binary]>=3.2",
+    "python-dotenv>=1.0",
+    "SQLAlchemy>=2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "ruff>=0.5",
+]
+
+[tool.ruff]
+line-length = 140
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "ASYNC"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+pythonpath = ["."]
