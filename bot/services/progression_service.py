@@ -154,7 +154,7 @@ def sync_combat_progression(player: Player) -> None:
     player.combat_level = max(1, int(player.combat_level or 1))
     calculated_max_hp = calculate_max_hp(player.combat_level)
     player.max_hp = max(int(player.max_hp or 0), calculated_max_hp)
-    player.current_hp = min(max(1, int(player.current_hp or 1)), player.max_hp)
+    player.current_hp = max(1, int(player.current_hp or 1))
     player.combat_xp = max(0, int(player.combat_xp or 0))
     player.combat_xp_to_next_level = get_combat_xp_to_next_level(player.combat_level)
     player.unspent_stat_points = max(0, int(player.unspent_stat_points or 0))

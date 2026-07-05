@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 
 from bot.models import Player
 from bot.services.equipment_service import EquipmentItem
@@ -63,16 +63,23 @@ def test_shop_embed_shows_equipped_stats_and_rarity_badges() -> None:
 
     equipped_field = next(field for field in embed.fields if field.name == "Equipped")
     stock_field = next(field for field in embed.fields if field.name == "Stock")
+    gold_field = next(field for field in embed.fields if field.name == "🪙 250")
 
     assert "Heroic Blade" in equipped_field.value
+    assert equipped_field.value.startswith("⚔️ HP 4")
+    assert equipped_field.value.index("HP 4") < equipped_field.value.index("Heroic Blade")
     assert "HP 4" in equipped_field.value
     assert "ATK 8" in equipped_field.value
     assert "DEF 3" in equipped_field.value
     assert "SPD 2" in equipped_field.value
-    assert "⚔️" in stock_field.value
+    assert "Trade 🪙 14" in equipped_field.value
+    assert gold_field.value == "\u200b"
+    assert "**⚔️ Weapon ⚔️**" in stock_field.value
+    assert "1. HP 1 | ATK 3 | DEF 0 | SPD 1 | ⚪ Rusty Axe | 🪙 60" in stock_field.value
+    assert "⚔️ 1." not in stock_field.value
     assert stock_field.value.index("Rusty Axe") < stock_field.value.index("Heroic Blade")
     assert "weapon" not in stock_field.value
-    assert "| HP" in stock_field.value
+    assert "gold" not in stock_field.value.lower()
 
 
 def test_purchase_embed_uses_embed_timestamp_for_refreshes() -> None:
@@ -153,5 +160,5 @@ def test_purchase_embed_shows_trade_in_discount() -> None:
     trade_in_field = next(field for field in embed.fields if field.name == "Trade")
     cost_field = next(field for field in embed.fields if field.name == "Cost")
 
-    assert trade_in_field.value == "14 gold"
-    assert cost_field.value == "126 gold"
+    assert trade_in_field.value == "🪙 14"
+    assert cost_field.value == "🪙 126"

@@ -42,8 +42,14 @@ class ContentValidationError(ValueError):
 
 
 class EncounterService:
-    def __init__(self, content_path: Path | None = None) -> None:
+    def __init__(
+        self,
+        content_path: Path | None = None,
+        *,
+        document: list[Any] | None = None,
+    ) -> None:
         self.content_path = content_path or Path(__file__).parents[1] / "content" / "encounters.json"
+        self._document = document
         self._encounters = self._load()
 
     @property
@@ -75,7 +81,11 @@ class EncounterService:
         raise KeyError(key)
 
     def _load(self) -> list[Encounter]:
-        raw = json.loads(self.content_path.read_text(encoding="utf-8"))
+        raw = self._document
+        if raw is None:
+            raw = _ENCOUNTER_DOCUMENT
+        if raw is None:
+            raw = json.loads(self.content_path.read_text(encoding="utf-8"))
         seen: set[str] = set()
         encounters: list[Encounter] = []
         for item in raw:
@@ -127,3 +137,11 @@ def _required_str(item: dict[str, Any], key: str) -> str:
     if not isinstance(value, str) or not value.strip():
         raise ContentValidationError(f"Missing required string field: {key}")
     return value
+
+
+_ENCOUNTER_DOCUMENT: list[Any] | None = None
+
+
+def refresh_encounter_content(document: list[Any]) -> None:
+    global _ENCOUNTER_DOCUMENT
+    _ENCOUNTER_DOCUMENT = document

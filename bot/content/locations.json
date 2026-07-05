@@ -1,0 +1,17 @@
+[
+  {
+    "key": "stewards_hall",
+    "name": "Steward's Hall",
+    "banner_asset": "location.stewards_hall"
+  },
+  {
+    "key": "dungeon_selection",
+    "name": "Dungeon Entrances",
+    "banner_asset": "location.dungeon_selection"
+  },
+  {
+    "key": "equipment_shop",
+    "name": "Dungeon Equipment Shop",
+    "banner_asset": "location.shop"
+  }
+]

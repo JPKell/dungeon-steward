@@ -16,11 +16,14 @@ from bot.services.defense_service import (
     InvalidDungeonLevelError,
     NotDefendingError,
 )
+from bot.services.discord_asset_service import DEFAULT_DISCORD_ASSETS
 from bot.services.discovery_service import DiscoveryService
 from bot.services.energy_service import EnergyService, InsufficientEnergyError
 from bot.services.equipment_service import get_effective_combat_stats
 from bot.services.exploration_service import ExplorationService
-from bot.services.player_service import PlayerService, title_for_player
+from bot.services.location_service import LOCATION_SERVICE
+from bot.services.player_service import PlayerService
+from bot.services.potion_service import PotionService
 from bot.services.progression_service import (
     ALLOCATABLE_STATS,
     allocate_stat_points,
@@ -36,9 +39,12 @@ from bot.services.shop_service import (
 from bot.services.weekly_objective_service import WeeklyObjectiveService
 from bot.utils.defense_embeds import build_defense_report_embed, build_defense_started_embed
 from bot.utils.embeds import DEEP_NAVY, MIDNIGHT_BLUE, WARM_GOLD, embed
+from bot.utils.profile_embeds import build_profile_embed
 from bot.utils.shop_embeds import build_purchase_embed, build_shop_embed
 from bot.utils.time import discord_relative_timestamp, human_duration
 from bot.views.exploration import (
+    STAT_ALLOCATION_PROFILE,
+    STAT_ALLOCATION_SUMMARY,
     ExplorationView,
     PostExplorationView,
     ShopView,
@@ -53,30 +59,64 @@ class DungeonGroup(app_commands.Group):
     def __init__(self, *, session_factory: sessionmaker) -> None:
         super().__init__(name="dungeon", description="Explore the Kellrond community dungeon")
         self.session_factory = session_factory
+        self.reload_content()
+
+    def reload_content(self) -> None:
         self.energy = EnergyService()
         self.players = PlayerService()
-        self.exploration = ExplorationService()
-        self.defense = DefenseService(players=self.players)
+        self.potions = PotionService()
+        self.exploration = ExplorationService(potions=self.potions)
+        self.defense = DefenseService(players=self.players, potions=self.potions)
         self.shop = ShopService(players=self.players)
         self.discoveries = DiscoveryService()
         self.weekly = WeeklyObjectiveService()
 
-    def _action_view(self, user_id: int) -> PostExplorationView:
+    def _action_view(
+        self,
+        user_id: int,
+        *,
+        is_defending: bool = False,
+        stat_allocation_context: str | None = None,
+    ) -> PostExplorationView:
         return PostExplorationView(
             session_factory=self.session_factory,
             exploration_service=self.exploration,
             defense_service=self.defense,
             shop_service=self.shop,
             owner_user_id=user_id,
+            is_defending=is_defending,
+            stat_allocation_context=stat_allocation_context,
         )
 
-    def _hall_view(self, user_id: int) -> StewardsHallView:
+    def _hall_view(self, user_id: int, *, is_defending: bool = False) -> StewardsHallView:
         return StewardsHallView(
             session_factory=self.session_factory,
             exploration_service=self.exploration,
             defense_service=self.defense,
             shop_service=self.shop,
             owner_user_id=user_id,
+            is_defending=is_defending,
+        )
+
+    def _is_defending(self, guild_id: int | None, user_id: int) -> bool:
+        if guild_id is None:
+            return False
+        with self.session_factory() as db:
+            value = db.scalar(
+                select(Player.is_defending).where(
+                    Player.guild_id == guild_id,
+                    Player.discord_user_id == user_id,
+                )
+            )
+        return bool(value)
+
+    def _defense_report_view(self, user_id: int, report) -> PostExplorationView | None:
+        if report.stat_points_earned <= 0:
+            return None
+        return self._action_view(
+            user_id,
+            is_defending=False,
+            stat_allocation_context=STAT_ALLOCATION_SUMMARY,
         )
 
     async def _resolve_defense_before_explore(self, interaction: discord.Interaction) -> bool:
@@ -99,14 +139,20 @@ class DungeonGroup(app_commands.Group):
             )
             return False
         if report is not None:
-            await interaction.followup.send(embed=build_defense_report_embed(report))
+            await interaction.followup.send(
+                embed=build_defense_report_embed(report),
+                view=self._defense_report_view(interaction.user.id, report),
+            )
         return True
 
     @app_commands.command(name="hall", description="Visit the Steward's Hall to choose your next dungeon action")
     async def hall(self, interaction: discord.Interaction) -> None:
         await interaction.response.send_message(
             embed=build_hall_embed(),
-            view=self._hall_view(interaction.user.id),
+            view=self._hall_view(
+                interaction.user.id,
+                is_defending=self._is_defending(interaction.guild_id, interaction.user.id),
+            ),
         )
 
     @app_commands.command(name="explore", description="Spend one energy to explore the dungeon")
@@ -160,6 +206,7 @@ class DungeonGroup(app_commands.Group):
         encounter_embed = embed(started.encounter.title, started.encounter.description, colour=DEEP_NAVY)
         encounter_embed.add_field(name="Cost", value="Entering the dungeon consumes 1 energy.")
         encounter_embed.add_field(name="Remaining Energy", value=f"{started.energy_state.energy}/{MAX_ENERGY}")
+        DEFAULT_DISCORD_ASSETS.apply_banner(encounter_embed, LOCATION_SERVICE.banner_asset_for("dungeon_selection"))
         await interaction.followup.send(
             embed=encounter_embed,
             view=ExplorationView(
@@ -182,6 +229,8 @@ class DungeonGroup(app_commands.Group):
         await interaction.response.defer()
         target = member or interaction.user
         report = None
+        action_is_defending = False
+        stat_context = None
         with self.session_factory() as db:
             player = self.players.get_or_create(
                 db,
@@ -192,46 +241,34 @@ class DungeonGroup(app_commands.Group):
             if target.id == interaction.user.id:
                 report = self.defense.resolve_if_expired(db, player)
             state = self.energy.recalculate(player)
-            profile_embed = embed(target.display_name, title_for_player(player), colour=WARM_GOLD)
             sync_combat_progression(player)
             stats = get_effective_combat_stats(player)
             db.commit()
-            profile_embed.add_field(name="Explore Level", value=str(player.explore_level))
-            profile_embed.add_field(name="Explore XP", value=str(player.experience))
-            profile_embed.add_field(
-                name="Explore Cooldown",
-                value=human_duration(get_explore_cooldown_minutes(player.explore_level) * 60),
+            profile_embed = build_profile_embed(
+                display_name=target.display_name,
+                player=player,
+                energy_state=state,
+                stats=stats,
             )
-            profile_embed.add_field(name="Combat Level", value=str(player.combat_level))
-            profile_embed.add_field(
-                name="Combat XP",
-                value=f"{player.combat_xp}/{player.combat_xp_to_next_level}",
+            action_is_defending = (
+                player.is_defending
+                if target.id == interaction.user.id
+                else self._is_defending(interaction.guild_id, interaction.user.id)
             )
-            profile_embed.add_field(name="HP", value=f"{player.current_hp}/{stats.max_hp}")
-            profile_embed.add_field(
-                name="Combat Stats",
-                value=f"Attack {stats.attack}\nDefense {stats.defense}\nSpeed {stats.speed}",
-            )
-            profile_embed.add_field(name="Unspent Stat Points", value=str(player.unspent_stat_points))
-            profile_embed.add_field(name="Gold", value=str(player.gold))
-            profile_embed.add_field(name="Energy", value=f"{state.energy}/{MAX_ENERGY}")
-            profile_embed.add_field(name="Next Energy", value=human_duration(state.seconds_until_next))
-            profile_embed.add_field(name="Explorations", value=str(player.total_explorations))
-            profile_embed.add_field(name="Successful", value=str(player.successful_explorations))
-            profile_embed.add_field(name="Discoveries", value=str(player.discoveries_found))
-            profile_embed.add_field(name="Hero Influence", value=str(player.hero_influence))
-            profile_embed.add_field(name="Villain Influence", value=str(player.villain_influence))
-            if player.is_defending and player.defense_selected_dungeon_level:
-                profile_embed.add_field(
-                    name="Defending",
-                    value=f"Dungeon Level {player.defense_selected_dungeon_level}",
-                    inline=False,
-                )
+            if target.id == interaction.user.id and player.unspent_stat_points > 0:
+                stat_context = STAT_ALLOCATION_PROFILE
         if report is not None:
-            await interaction.followup.send(embed=build_defense_report_embed(report))
+            await interaction.followup.send(
+                embed=build_defense_report_embed(report),
+                view=self._defense_report_view(interaction.user.id, report),
+            )
         await interaction.followup.send(
             embed=profile_embed,
-            view=self._action_view(interaction.user.id),
+            view=self._action_view(
+                interaction.user.id,
+                is_defending=action_is_defending,
+                stat_allocation_context=stat_context,
+            ),
         )
 
     @app_commands.command(name="energy", description="Check your dungeon energy")
@@ -248,6 +285,7 @@ class DungeonGroup(app_commands.Group):
             )
             state = self.energy.recalculate(player)
             cooldown_seconds = get_explore_cooldown_minutes(player.explore_level) * 60
+            action_is_defending = player.is_defending
             db.commit()
         response = embed("Dungeon Energy", colour=MIDNIGHT_BLUE)
         response.add_field(name="Energy", value=f"{state.energy}/{MAX_ENERGY}")
@@ -258,7 +296,7 @@ class DungeonGroup(app_commands.Group):
         response.set_footer(text=f"Energy cap: {MAX_ENERGY} | Explore Level: {player.explore_level}")
         await interaction.response.send_message(
             embed=response,
-            view=self._action_view(interaction.user.id),
+            view=self._action_view(interaction.user.id, is_defending=action_is_defending),
             ephemeral=True,
         )
 
@@ -295,10 +333,13 @@ class DungeonGroup(app_commands.Group):
             await interaction.followup.send("The guard roster fell off the wall. Please try again.", ephemeral=True)
             return
         if result.resolved_previous is not None:
-            await interaction.followup.send(embed=build_defense_report_embed(result.resolved_previous))
+            await interaction.followup.send(
+                embed=build_defense_report_embed(result.resolved_previous),
+                view=self._defense_report_view(interaction.user.id, result.resolved_previous),
+            )
         await interaction.followup.send(
             embed=build_defense_started_embed(result.started),
-            view=self._action_view(interaction.user.id),
+            view=self._action_view(interaction.user.id, is_defending=True),
         )
 
     @app_commands.command(name="stop-defending", description="Stop defending and collect the defense report")
@@ -324,7 +365,8 @@ class DungeonGroup(app_commands.Group):
             return
         await interaction.followup.send(
             embed=build_defense_report_embed(report),
-            view=self._action_view(interaction.user.id),
+            view=self._defense_report_view(interaction.user.id, report)
+            or self._action_view(interaction.user.id, is_defending=False),
         )
 
     @app_commands.command(name="shop", description="View this hour's equipment shop")
@@ -340,6 +382,7 @@ class DungeonGroup(app_commands.Group):
                 display_name=interaction.user.display_name,
             )
             stock = self.shop.stock_for_player(player)
+            action_is_defending = player.is_defending
             db.commit()
             shop_embed = build_shop_embed(stock, player=player, equipment=self.shop.equipment)
         await interaction.response.send_message(
@@ -350,6 +393,7 @@ class DungeonGroup(app_commands.Group):
                 defense_service=self.defense,
                 shop_service=self.shop,
                 owner_user_id=interaction.user.id,
+                is_defending=action_is_defending,
             ),
             ephemeral=True,
         )
@@ -382,7 +426,10 @@ class DungeonGroup(app_commands.Group):
             return
         await interaction.response.send_message(
             embed=build_purchase_embed(purchase),
-            view=self._action_view(interaction.user.id),
+            view=self._action_view(
+                interaction.user.id,
+                is_defending=self._is_defending(interaction.guild_id, interaction.user.id),
+            ),
             ephemeral=True,
         )
 
@@ -433,6 +480,7 @@ class DungeonGroup(app_commands.Group):
                     allocate_stat_points(player, selected_stat, amount)
                 sync_combat_progression(player)
                 stats = get_effective_combat_stats(player)
+                action_is_defending = player.is_defending
                 db.commit()
         except ValueError as error:
             await interaction.response.send_message(str(error), ephemeral=True)
@@ -459,7 +507,11 @@ class DungeonGroup(app_commands.Group):
             stats_embed.description = f"Added {amount} point(s) to {selected_stat}."
         await interaction.response.send_message(
             embed=stats_embed,
-            view=self._action_view(interaction.user.id),
+            view=self._action_view(
+                interaction.user.id,
+                is_defending=action_is_defending,
+                stat_allocation_context=STAT_ALLOCATION_PROFILE if player.unspent_stat_points > 0 else None,
+            ),
             ephemeral=True,
         )
 
@@ -486,7 +538,10 @@ class DungeonGroup(app_commands.Group):
             )
         await interaction.response.send_message(
             embed=status_embed,
-            view=self._action_view(interaction.user.id),
+            view=self._action_view(
+                interaction.user.id,
+                is_defending=self._is_defending(interaction.guild_id, interaction.user.id),
+            ),
         )
 
     @app_commands.command(name="leaderboard", description="Show the server leaderboard")
@@ -529,7 +584,10 @@ class DungeonGroup(app_commands.Group):
             board.description = "No entries yet. The dungeon awaits its first questionable decision."
         await interaction.response.send_message(
             embed=board,
-            view=self._action_view(interaction.user.id),
+            view=self._action_view(
+                interaction.user.id,
+                is_defending=self._is_defending(interaction.guild_id, interaction.user.id),
+            ),
         )
 
     @app_commands.command(name="help", description="Learn how the dungeon works")
@@ -554,6 +612,9 @@ class DungeonGroup(app_commands.Group):
         help_embed.add_field(name="Version", value=__version__)
         await interaction.response.send_message(
             embed=help_embed,
-            view=self._action_view(interaction.user.id),
+            view=self._action_view(
+                interaction.user.id,
+                is_defending=self._is_defending(interaction.guild_id, interaction.user.id),
+            ),
             ephemeral=True,
         )

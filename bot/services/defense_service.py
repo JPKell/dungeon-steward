@@ -15,6 +15,7 @@ from bot.services.dungeon_progression_service import can_enter_dungeon, sync_pla
 from bot.services.enemy_service import DUNGEON_LEVEL_MAX, DUNGEON_LEVEL_MIN, generate_enemy
 from bot.services.equipment_service import CombatStats, get_effective_combat_stats
 from bot.services.player_service import PlayerService
+from bot.services.potion_service import ActivePotion, PotionService
 from bot.services.progression_content import PROGRESSION_CONTENT
 from bot.services.progression_service import (
     calculate_post_defeat_hp,
@@ -87,11 +88,17 @@ class DefenseReport:
     max_hp: int
     enemies_encountered: dict[str, int]
     notable_battles: tuple[str, ...]
+    potion_effects: tuple[str, ...] = ()
+    potion_healing: int = 0
+    potion_luck_procs: int = 0
+    potion_bonus_combat_xp: int = 0
+    max_hp_effect_expired: bool = False
 
 
 class DefenseService:
-    def __init__(self, *, players: PlayerService | None = None) -> None:
+    def __init__(self, *, players: PlayerService | None = None, potions: PotionService | None = None) -> None:
         self.players = players or PlayerService()
+        self.potions = potions or PotionService()
 
     def start(
         self,
@@ -120,13 +127,16 @@ class DefenseService:
         sync_player_dungeon_progression(player)
         if not can_enter_dungeon(dungeon_level, player.highest_unlocked_dungeon_level):
             raise InvalidDungeonLevelError("That dungeon level is not unlocked")
-        stats = get_effective_combat_stats(player)
+        stats = self.potions.apply_effects_to_stats(
+            get_effective_combat_stats(player),
+            self.potions.active_effects_at(session, player, now),
+        )
         if PROGRESSION_CONTENT.defense.restore_full_hp_on_start:
-            player.current_hp = player.max_hp
+            player.current_hp = stats.max_hp
             starting_hp = stats.max_hp
         else:
             if player.current_hp <= 0:
-                player.current_hp = _safe_recovery_hp(player.max_hp)
+                player.current_hp = _safe_recovery_hp(stats.max_hp)
             starting_hp = min(stats.max_hp, max(1, player.current_hp))
 
         session_id = secrets.token_urlsafe(24)
@@ -340,32 +350,74 @@ class DefenseService:
         capped_seconds = min(elapsed_seconds, max_seconds)
         scheduled_battles = capped_seconds // 60
 
-        stats = get_effective_combat_stats(player)
+        base_stats = get_effective_combat_stats(player)
+        history = self.potions.activation_history(
+            session,
+            player,
+            start=started_at,
+            end=now + timedelta(seconds=1),
+        )
+        start_effects = self.potions.active_from_history(history, started_at)
+        start_stats = self.potions.apply_effects_to_stats(base_stats, start_effects)
         starting_hp = min(
-            stats.max_hp,
-            max(1, int(player.defense_starting_hp or stats.max_hp)),
+            start_stats.max_hp,
+            max(1, int(player.defense_starting_hp or start_stats.max_hp)),
         )
         player_hp = starting_hp
+        previous_max_hp = start_stats.max_hp
+        last_battle_stats = start_stats
         enemies: Counter[str] = Counter()
         notable_battles: list[str] = []
+        potion_effects: dict[str, str] = {}
+        _record_potion_effects(potion_effects, start_effects)
         victories = defeats = draws = 0
         combat_xp_earned = 0
         gold_earned = 0
         completed_battles = 0
+        potion_healing = 0
+        potion_luck_procs = 0
+        potion_bonus_combat_xp = 0
+        max_hp_effect_expired = False
 
         for battle_index in range(1, scheduled_battles + 1):
+            battle_time = started_at + timedelta(minutes=battle_index)
+            active_effects = self.potions.active_from_history(history, battle_time)
+            _record_potion_effects(potion_effects, active_effects)
+            stats = self.potions.apply_effects_to_stats(base_stats, active_effects)
+            if stats.max_hp < previous_max_hp:
+                max_hp_effect_expired = True
+            player_hp = min(stats.max_hp, max(0, player_hp))
+            previous_max_hp = stats.max_hp
+            last_battle_stats = stats
             enemy = generate_enemy(dungeon_level, rng=rng)
+            luck_proc = False
+            luck_chance = self.potions.luck_chance(active_effects)
+            if luck_chance > 0 and rng.random() < luck_chance:
+                luck_proc = True
             battle = resolve_battle(
                 player_stats=stats,
                 player_hp=player_hp,
                 enemy=enemy,
                 rng=rng,
+                reward_combat_xp=_enemy_max_combat_xp(enemy) if luck_proc else None,
+                reward_gold=_enemy_max_gold(enemy) if luck_proc else None,
+                combat_xp_multiplier=self.potions.combat_xp_multiplier(active_effects),
+                luck_proc=luck_proc,
             )
             completed_battles += 1
             enemies[enemy.name] += 1
             player_hp = battle.player_hp
+            if battle.outcome == "victory":
+                healing = self.potions.healing_amount(active_effects, active_max_hp=stats.max_hp)
+                if healing > 0:
+                    healed_hp = min(stats.max_hp, player_hp + healing)
+                    potion_healing += max(0, healed_hp - player_hp)
+                    player_hp = healed_hp
             combat_xp_earned += battle.combat_xp
             gold_earned += battle.gold
+            potion_bonus_combat_xp += battle.potion_bonus_xp
+            if battle.luck_proc:
+                potion_luck_procs += 1
             if battle.outcome == "victory":
                 victories += 1
             elif battle.outcome == "defeat":
@@ -377,12 +429,29 @@ class DefenseService:
             if battle.outcome == "defeat":
                 break
 
+        battle_end_at = started_at + timedelta(seconds=capped_seconds)
+        battle_end_effects = self.potions.active_from_history(history, battle_end_at)
+        battle_end_stats = self.potions.apply_effects_to_stats(base_stats, battle_end_effects)
+        if battle_end_stats.max_hp < last_battle_stats.max_hp:
+            max_hp_effect_expired = True
+        battle_ending_hp = min(battle_end_stats.max_hp, max(0, player_hp))
         player.gold += gold_earned
         player.defense_wins += victories
-        player.current_hp = min(player.max_hp, max(0, player_hp))
+        player.current_hp = battle_ending_hp
         levels_gained, stat_points_earned = grant_combat_xp(player, combat_xp_earned)
+        final_base_stats = get_effective_combat_stats(player)
+        report_stats = self.potions.apply_effects_to_stats(final_base_stats, battle_end_effects)
+        current_stats = self.potions.apply_effects_to_stats(
+            final_base_stats,
+            self.potions.active_from_history(history, now),
+        )
+        ending_hp = min(report_stats.max_hp, battle_ending_hp)
         if defeats:
-            player.current_hp = player.max_hp
+            player.current_hp = current_stats.max_hp
+        elif levels_gained:
+            player.current_hp = current_stats.max_hp
+        else:
+            player.current_hp = min(current_stats.max_hp, ending_hp)
         if victories > 0 and defeats == 0:
             player.highest_completed_dungeon_level = max(
                 player.highest_completed_dungeon_level,
@@ -390,8 +459,7 @@ class DefenseService:
             )
         sync_player_dungeon_progression(player)
 
-        ending_hp = player.current_hp
-        max_hp = player.max_hp
+        max_hp = report_stats.max_hp
         unresolved_attacks = max(0, scheduled_battles - completed_battles)
         self._clear_defense(player)
         session.flush()
@@ -420,6 +488,11 @@ class DefenseService:
             max_hp=max_hp,
             enemies_encountered=dict(enemies),
             notable_battles=tuple(notable_battles),
+            potion_effects=tuple(potion_effects.values()),
+            potion_healing=potion_healing,
+            potion_luck_procs=potion_luck_procs,
+            potion_bonus_combat_xp=potion_bonus_combat_xp,
+            max_hp_effect_expired=max_hp_effect_expired,
         )
 
     def _validate_dungeon_level(self, dungeon_level: int) -> None:
@@ -449,6 +522,19 @@ def _battle_summary(battle: BattleResult, battle_index: int) -> str:
     else:
         outcome = "drew"
     return f"Battle {battle_index}: {outcome} against {battle.enemy.name} Lv. {battle.enemy.level} in {battle.rounds} rounds"
+
+
+def _record_potion_effects(target: dict[str, str], active_effects: tuple[ActivePotion, ...]) -> None:
+    for active in active_effects:
+        target[active.effect_group] = f"{active.item.name} ({active.effect_group})"
+
+
+def _enemy_max_combat_xp(enemy) -> int:
+    return max(int(enemy.combat_xp), int(getattr(enemy, "max_combat_xp", enemy.combat_xp) or 0))
+
+
+def _enemy_max_gold(enemy) -> int:
+    return max(int(enemy.gold), int(getattr(enemy, "max_gold", enemy.gold) or 0))
 
 
 def _validated_started_at(value: datetime | None, *, now: datetime) -> datetime:

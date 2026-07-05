@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Callable
 
 import discord
 from discord import app_commands
@@ -16,6 +17,7 @@ from bot.models import (
     PlayerDiscovery,
     WeeklyPlayerContribution,
 )
+from bot.services.content_runtime import refresh_runtime_content_from_database
 from bot.services.discovery_service import DiscoveryService
 from bot.services.encounter_service import EncounterService
 from bot.services.energy_service import EnergyService
@@ -26,10 +28,17 @@ log = logging.getLogger(__name__)
 
 
 class DungeonAdminGroup(app_commands.Group):
-    def __init__(self, *, session_factory: sessionmaker, settings: Settings) -> None:
+    def __init__(
+        self,
+        *,
+        session_factory: sessionmaker,
+        settings: Settings,
+        content_reload_callback: Callable[[], None] | None = None,
+    ) -> None:
         super().__init__(name="dungeon-admin", description="Staff controls for Dungeon Steward")
         self.session_factory = session_factory
         self.settings = settings
+        self.content_reload_callback = content_reload_callback
         self.energy = EnergyService()
         self.players = PlayerService()
         self.discoveries = DiscoveryService()
@@ -116,11 +125,13 @@ class DungeonAdminGroup(app_commands.Group):
             ephemeral=True,
         )
 
-    @app_commands.command(name="reload-content", description="Reload discovery content into the database")
+    @app_commands.command(name="reload-content", description="Reload game content from the database")
     async def reload_content(self, interaction: discord.Interaction) -> None:
         if not await self._guard(interaction):
             return
-        with self.session_factory() as db:
-            self.discoveries.sync_content(db)
-            db.commit()
-        await interaction.response.send_message("Discovery content reloaded.", ephemeral=True)
+        refresh_runtime_content_from_database(self.session_factory)
+        self.discoveries = DiscoveryService()
+        self.encounters = EncounterService()
+        if self.content_reload_callback is not None:
+            self.content_reload_callback()
+        await interaction.response.send_message("Database content reloaded.", ephemeral=True)

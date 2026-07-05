@@ -128,9 +128,16 @@ class ProgressionContent:
 RARITIES = ("common", "uncommon", "rare", "epic", "legendary")
 
 
-def load_progression_content(path: Path | None = None) -> ProgressionContent:
-    content_path = path or _default_content_path("progression.json")
-    raw = json.loads(content_path.read_text(encoding="utf-8"))
+def load_progression_content(
+    path: Path | None = None,
+    *,
+    document: dict[str, Any] | None = None,
+) -> ProgressionContent:
+    if document is None:
+        content_path = path or _default_content_path("progression.json")
+        raw = json.loads(content_path.read_text(encoding="utf-8"))
+    else:
+        raw = document
     if not isinstance(raw, dict):
         raise ProgressionContentError("Progression content must be an object")
 
@@ -249,6 +256,12 @@ def load_progression_content(path: Path | None = None) -> ProgressionContent:
             "duration_cap_level must preserve the literal one-minute-per-level rule"
         )
     return content
+
+
+def refresh_progression_content(document: dict[str, Any]) -> ProgressionContent:
+    global PROGRESSION_CONTENT
+    PROGRESSION_CONTENT = load_progression_content(document=document)
+    return PROGRESSION_CONTENT
 
 
 def _default_content_path(filename: str) -> Path:

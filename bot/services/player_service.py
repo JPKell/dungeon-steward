@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from bot.config import MAX_ENERGY, PROGRESSION_SCHEMA_VERSION
 from bot.models import GuildDungeon, Player
+from bot.services import progression_content
 from bot.services.progression_service import migrate_explore_progression
 from bot.utils.time import utc_now
 
@@ -17,12 +18,20 @@ class PlayerService:
             select(Player).where(Player.guild_id == guild_id, Player.discord_user_id == user_id)
         )
         if player is None:
+            content = progression_content.PROGRESSION_CONTENT
             player = Player(
                 guild_id=guild_id,
                 discord_user_id=user_id,
                 display_name=display_name[:120],
                 energy=MAX_ENERGY,
                 energy_updated_at=utc_now(),
+                combat_xp_to_next_level=int(content.combat_leveling.xp_to_next_level.base),
+                current_hp=content.new_player.base_hp,
+                max_hp=content.new_player.base_hp,
+                attack=content.new_player.attack,
+                defense=content.new_player.defense,
+                speed=content.new_player.speed,
+                progression_schema_version=content.schema_version,
             )
             session.add(player)
             session.flush()

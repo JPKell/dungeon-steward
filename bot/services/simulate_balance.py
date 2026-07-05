@@ -15,7 +15,7 @@ BASE = Path(__file__).parents[1] / "content"
 RARITIES = ("common", "uncommon", "rare", "epic", "legendary")
 POWER_WEIGHTS = {"hp": 0.12, "attack": 2.0, "defense": 2.25, "speed": 1.25}
 ENCOUNTER_POOL_CACHE: dict[int, tuple[list[dict[str, Any]], list[int]]] = {}
-ENEMY_EXPECTATION_CACHE: dict[int, tuple[float, float, float]] = {}
+ENEMY_EXPECTATION_CACHE: dict[int, tuple[float, float, float, float, float]] = {}
 EQUIPMENT_POOL_CACHE: dict[int, list[dict[str, Any]]] = {}
 MAX_CACHED_EQUIPMENT_LEVEL = 1
 
@@ -27,12 +27,13 @@ class Profile:
     defense_sessions: float
     shop_refreshes: float
     allocation_quality: float
+    potion_use: float
 
 
 PROFILES = (
-    Profile("casual", 0.45, 0.85, 0.55, 0.90),
-    Profile("typical", 0.80, 1.80, 1.00, 1.00),
-    Profile("dedicated", 0.98, 2.60, 1.75, 1.06),
+    Profile("casual", 0.45, 0.85, 0.55, 0.90, 0.35),
+    Profile("typical", 0.80, 1.80, 1.00, 1.00, 0.52),
+    Profile("dedicated", 0.98, 2.60, 1.75, 1.06, 0.68),
 )
 
 
@@ -61,15 +62,34 @@ class State:
     battles_by_dungeon: Counter[int] = field(default_factory=Counter)
     equipment_power_history: dict[int, float] = field(default_factory=dict)
     gold_band: dict[str, dict[str, int]] = field(default_factory=lambda: defaultdict(lambda: defaultdict(int)))
+    potion_inventory: Counter[str] = field(default_factory=Counter)
+    potion_acquired: int = 0
+    potion_used: int = 0
+    potion_acquired_by_band: Counter[str] = field(default_factory=Counter)
+    potion_used_by_group: Counter[str] = field(default_factory=Counter)
+    defense_xp_without_potions: int = 0
+    defense_gold_without_luck: int = 0
+    potion_bonus_combat_xp: int = 0
+    potion_luck_bonus_xp: int = 0
+    potion_luck_bonus_gold: int = 0
+    potion_luck_procs: int = 0
 
 
-def load() -> tuple[dict[str, Any], list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+def load() -> tuple[
+    dict[str, Any],
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+    dict[str, Any],
+]:
     progression = json.loads((BASE / "progression.json").read_text())
     dungeons = json.loads((BASE / "dungeon_levels.json").read_text())
     enemies = json.loads((BASE / "enemies.json").read_text())
     equipment = json.loads((BASE / "equipment.json").read_text())
     encounters = json.loads((BASE / "encounters.json").read_text())
-    return progression, dungeons, enemies, equipment, encounters
+    potions = json.loads((BASE / "potion_items.json").read_text())
+    return progression, dungeons, enemies, equipment, encounters, potions
 
 
 def scaling(step: int, cfg: dict[str, Any]) -> float:
@@ -252,9 +272,112 @@ def choose_choice(encounter: dict[str, Any], rng: random.Random) -> dict[str, An
     return rng.choices(choices, weights=weights, k=1)[0]
 
 
+def maybe_award_potion(
+    state: State,
+    potions: dict[str, Any],
+    *,
+    dungeon_level: int,
+    encounter: dict[str, Any],
+    choice: dict[str, Any],
+    day: int,
+    rng: random.Random,
+) -> None:
+    rules = potions["drop_rules"]
+    rarity = encounter.get("rarity", "common")
+    chance = (
+        rules["base_drop_chance"]
+        + rules["successful_choice_bonus"]
+        + max(0, dungeon_level - 1) * rules["dungeon_level_bonus_per_level_after_one"]
+        + rules["encounter_rarity_bonus"].get(rarity, 0.0)
+    )
+    if choice.get("success", True) is False:
+        chance *= rules["failed_choice_multiplier"]
+    chance = min(rules["maximum_drop_chance"], chance)
+    if rng.random() >= chance:
+        return
+    eligible = [
+        item
+        for item in potions["items"]
+        if item["enabled"] and item["min_explore_level"] <= state.explore_level <= item["max_explore_level"]
+    ]
+    if not eligible:
+        return
+    item = rng.choices(eligible, weights=[item["exploration_drop_weight"] for item in eligible], k=1)[0]
+    state.potion_inventory[item["key"]] += 1
+    state.potion_acquired += 1
+    state.potion_acquired_by_band[band_for_day(day)] += 1
+
+
+def select_potions_for_defense(
+    state: State,
+    potions: dict[str, Any],
+    profile: Profile,
+    *,
+    dungeon_level: int,
+    rng: random.Random,
+) -> list[dict[str, Any]]:
+    if not state.potion_inventory or rng.random() > profile.potion_use:
+        return []
+    by_key = {item["key"]: item for item in potions["items"]}
+    owned = [by_key[key] for key, quantity in state.potion_inventory.items() if quantity > 0 and key in by_key]
+    if not owned:
+        return []
+    pressure = min(1.0, dungeon_level / 20)
+    preference = {
+        "xp": 1.0 + profile.exploration_use * 0.4,
+        "attack": 0.95 + pressure * 0.35,
+        "defense": 0.95 + pressure * 0.45,
+        "max_hp": 0.72 + pressure * 0.35,
+        "healing": 0.64 + pressure * 0.30,
+        "luck": 0.55 + profile.shop_refreshes * 0.12,
+    }
+    best_by_group: dict[str, dict[str, Any]] = {}
+    for item in owned:
+        group = item["effect_group"]
+        current = best_by_group.get(group)
+        if current is None or item["tier"] > current["tier"]:
+            best_by_group[group] = item
+    ranked = sorted(
+        best_by_group.values(),
+        key=lambda item: (preference.get(item["effect_group"], 0.0), item["tier"], item["exploration_drop_weight"]),
+        reverse=True,
+    )
+    selected = ranked[: potions["activation_rules"]["max_simultaneous_effect_groups"]]
+    for item in selected:
+        state.potion_inventory[item["key"]] -= 1
+        state.potion_used += 1
+        state.potion_used_by_group[item["effect_group"]] += 1
+    return selected
+
+
+def potion_multiplier(active: list[dict[str, Any]], kind: str) -> float:
+    multiplier = 1.0
+    for item in active:
+        effect = item["effect"]
+        if effect["kind"] == kind:
+            multiplier *= float(effect["final_multiplier"])
+    return multiplier
+
+
+def potion_luck_chance(active: list[dict[str, Any]]) -> float:
+    for item in active:
+        effect = item["effect"]
+        if effect["kind"] == "maximum_enemy_reward_chance":
+            return float(effect["chance"])
+    return 0.0
+
+
+def potion_healing_pressure_reduction(active: list[dict[str, Any]]) -> float:
+    for item in active:
+        effect = item["effect"]
+        if effect["kind"] == "heal_between_battles":
+            return min(0.10, 8.0 * float(effect["max_hp_percent"]))
+    return 0.0
+
+
 def enemy_expectations(
     dungeon_level: int, dungeons: list[dict[str, Any]], enemies: list[dict[str, Any]], progression: dict[str, Any]
-) -> tuple[float, float, float]:
+) -> tuple[float, float, float, float, float]:
     cached = ENEMY_EXPECTATION_CACHE.get(dungeon_level)
     if cached is not None:
         return cached
@@ -265,12 +388,16 @@ def enemy_expectations(
     level_reward = 1 + (avg_level - 1) * progression["enemy_generation"]["level_reward_scale"]
     xp = sum(((e["xp_min"] + e["xp_max"]) / 2) * e["weight"] for e in eligible) / total_weight
     gold = sum(((e["gold_min"] + e["gold_max"]) / 2) * e["weight"] for e in eligible) / total_weight
+    max_xp = sum(e["xp_max"] * e["weight"] for e in eligible) / total_weight
+    max_gold = sum(e["gold_max"] * e["weight"] for e in eligible) / total_weight
     rank_hazard = {"common": 0.8, "standard": 1.0, "dangerous": 1.35, "elite": 1.8, "boss": 2.5}
     hazard = sum(rank_hazard[e["rank"]] * e["weight"] for e in eligible) / total_weight
     return (
         xp * dungeon["reward_modifier"] * level_reward,
         gold * dungeon["reward_modifier"] * level_reward * progression["enemy_generation"].get("combat_gold_multiplier", 1.0),
         hazard,
+        max_xp * dungeon["reward_modifier"] * level_reward,
+        max_gold * dungeon["reward_modifier"] * level_reward * progression["enemy_generation"].get("combat_gold_multiplier", 1.0),
     )
 
 
@@ -336,7 +463,7 @@ def band_for_day(day: int) -> str:
 
 
 def simulate_one(profile: Profile, seed: int, max_days: int, data: tuple[Any, ...]) -> State:
-    progression, dungeons, enemies, equipment, encounters = data
+    progression, dungeons, enemies, equipment, encounters, potions = data
     rng = random.Random(seed)
     state = State()
     for day in range(1, max_days + 1):
@@ -352,6 +479,15 @@ def simulate_one(profile: Profile, seed: int, max_days: int, data: tuple[Any, ..
             state.gold += gold
             state.gold_earned_explore += gold
             state.gold_band[band_for_day(day)]["exploration"] += gold
+            maybe_award_potion(
+                state,
+                potions,
+                dungeon_level=state.highest_dungeon,
+                encounter=encounter,
+                choice=choice,
+                day=day,
+                rng=rng,
+            )
             add_explore_xp(state, xp, progression)
             discovery = choice.get("discovery_key")
             if discovery and rng.random() < 0.72:
@@ -364,9 +500,31 @@ def simulate_one(profile: Profile, seed: int, max_days: int, data: tuple[Any, ..
         sessions = sessions_floor + (1 if rng.random() < profile.defense_sessions - sessions_floor else 0)
         for _ in range(sessions):
             dungeon_level = state.highest_dungeon
-            expected_xp, expected_gold, rank_hazard = enemy_expectations(dungeon_level, dungeons, enemies, progression)
-            power_ratio = player_power(state, progression, profile) / max(1.0, dungeons[dungeon_level - 1]["expected_player_power"])
+            expected_xp, expected_gold, rank_hazard, max_xp, max_gold = enemy_expectations(
+                dungeon_level,
+                dungeons,
+                enemies,
+                progression,
+            )
+            active_potions = select_potions_for_defense(
+                state,
+                potions,
+                profile,
+                dungeon_level=dungeon_level,
+                rng=rng,
+            )
+            potion_attack = potion_multiplier(active_potions, "attack_multiplier")
+            potion_defense = potion_multiplier(active_potions, "defense_multiplier")
+            potion_max_hp = potion_multiplier(active_potions, "max_hp_multiplier")
+            effective_power = player_power(state, progression, profile) * (
+                1
+                + (potion_attack - 1) * 0.34
+                + (potion_defense - 1) * 0.38
+                + (potion_max_hp - 1) * 0.12
+            )
+            power_ratio = effective_power / max(1.0, dungeons[dungeon_level - 1]["expected_player_power"])
             loss_hazard = 0.0032 * rank_hazard / max(0.45, power_ratio**0.72)
+            loss_hazard *= 1 - potion_healing_pressure_reduction(active_potions)
             loss_hazard = min(0.12, max(0.0018, loss_hazard))
             cap = defense_minutes(state.combat_level, progression)
             wins, died = geometric_wins(loss_hazard, cap, rng)
@@ -376,13 +534,28 @@ def simulate_one(profile: Profile, seed: int, max_days: int, data: tuple[Any, ..
                 state.death_by_dungeon[dungeon_level] += 1
             # Reward power adjustment reduces trivial-floor farming.
             enemy_to_player = min(1.35, max(0.2, 1.0 / max(0.4, power_ratio)))
-            xp_gain = round(wins * expected_xp * (0.55 + 0.55 * enemy_to_player))
+            xp_power_multiplier = 0.55 + 0.55 * enemy_to_player
+            base_xp = wins * expected_xp * xp_power_multiplier
             gold_power_multiplier = (
                 progression["enemy_generation"].get("trivial_enemy_gold_multiplier", 0.35)
                 if enemy_to_player < progression["enemy_generation"].get("trivial_enemy_ratio", 0.55)
                 else min(1.1, max(0.35, 0.55 + enemy_to_player * 0.45))
             )
-            gold_gain = round(wins * expected_gold * gold_power_multiplier)
+            base_gold = wins * expected_gold * gold_power_multiplier
+            luck_chance = potion_luck_chance(active_potions)
+            luck_procs = sum(1 for _ in range(wins) if luck_chance > 0 and rng.random() < luck_chance)
+            luck_bonus_xp = max(0.0, luck_procs * (max_xp - expected_xp) * xp_power_multiplier)
+            luck_bonus_gold = max(0.0, luck_procs * (max_gold - expected_gold) * gold_power_multiplier)
+            xp_before_multiplier = base_xp + luck_bonus_xp
+            xp_multiplier = potion_multiplier(active_potions, "combat_xp_multiplier")
+            xp_gain = round(xp_before_multiplier * xp_multiplier)
+            gold_gain = round(base_gold + luck_bonus_gold)
+            state.defense_xp_without_potions += round(base_xp)
+            state.defense_gold_without_luck += round(base_gold)
+            state.potion_luck_procs += luck_procs
+            state.potion_luck_bonus_xp += round(luck_bonus_xp)
+            state.potion_luck_bonus_gold += round(luck_bonus_gold)
+            state.potion_bonus_combat_xp += max(0, xp_gain - round(base_xp))
             add_combat_xp(state, xp_gain, progression, day)
             state.gold += gold_gain
             state.gold_earned_defense += gold_gain
@@ -445,6 +618,34 @@ def aggregate(profile: Profile, states: list[State], progression: dict[str, Any]
         "median_days_between_purchases": median(purchase_intervals),
         "median_purchase_cost": median([statistics.median(state.purchase_costs) if state.purchase_costs else None for state in states]),
     }
+    potion_band_lengths = {"days_1_30": 30, "days_31_120": 90, "days_121_365": 245, "days_366_600": 235}
+    potion_acquisition_by_band = {
+        band: round((median([state.potion_acquired_by_band[band] for state in states]) or 0) / length, 3)
+        for band, length in potion_band_lengths.items()
+    }
+    potion_used_by_group = {
+        group: median([state.potion_used_by_group[group] for state in states])
+        for group in ("xp", "max_hp", "healing", "attack", "defense", "luck")
+    }
+    potion_stats = {
+        "median_acquired": median([state.potion_acquired for state in states]),
+        "median_used": median([state.potion_used for state in states]),
+        "median_acquired_per_day_by_band": potion_acquisition_by_band,
+        "median_used_by_group": potion_used_by_group,
+        "median_combat_xp_uplift_percent": median(
+            [
+                state.potion_bonus_combat_xp / max(1, state.defense_xp_without_potions) * 100
+                for state in states
+            ]
+        ),
+        "median_luck_gold_uplift_percent": median(
+            [
+                state.potion_luck_bonus_gold / max(1, state.defense_gold_without_luck) * 100
+                for state in states
+            ]
+        ),
+        "median_luck_procs": median([state.potion_luck_procs for state in states]),
+    }
     deaths: dict[str, float] = {}
     for level in range(1, 21):
         deaths_count = sum(state.death_by_dungeon[level] for state in states)
@@ -461,6 +662,7 @@ def aggregate(profile: Profile, states: list[State], progression: dict[str, Any]
         "median_gold": gold,
         "median_gold_by_band": gold_by_band,
         "purchase_stats": purchase_stats,
+        "potion_stats": potion_stats,
         "death_rate_percent_by_dungeon": deaths,
         "median_final_explore_level": median([state.explore_level for state in states]),
         "median_final_combat_level": median([state.combat_level for state in states]),
@@ -483,7 +685,7 @@ def shop_percentages(progression: dict[str, Any]) -> dict[str, dict[str, float]]
 
 def build_caches(data: tuple[Any, ...]) -> None:
     global MAX_CACHED_EQUIPMENT_LEVEL
-    progression, dungeons, enemies, equipment, encounters = data
+    progression, dungeons, enemies, equipment, encounters, _potions = data
     max_explore = max(200, max(int(e.get("min_level", 1)) for e in encounters))
     for level in range(1, max_explore + 1):
         eligible = [e for e in encounters if e.get("enabled", True) and e.get("min_level", 1) <= level]
@@ -497,12 +699,16 @@ def build_caches(data: tuple[Any, ...]) -> None:
         level_reward = 1 + (avg_level - 1) * progression["enemy_generation"]["level_reward_scale"]
         xp = sum(((e["xp_min"] + e["xp_max"]) / 2) * e["weight"] for e in eligible) / total_weight
         gold = sum(((e["gold_min"] + e["gold_max"]) / 2) * e["weight"] for e in eligible) / total_weight
+        max_xp = sum(e["xp_max"] * e["weight"] for e in eligible) / total_weight
+        max_gold = sum(e["gold_max"] * e["weight"] for e in eligible) / total_weight
         rank_hazard = {"common": 0.8, "standard": 1.0, "dangerous": 1.35, "elite": 1.8, "boss": 2.5}
         hazard = sum(rank_hazard[e["rank"]] * e["weight"] for e in eligible) / total_weight
         ENEMY_EXPECTATION_CACHE[level] = (
             xp * dungeon["reward_modifier"] * level_reward,
             gold * dungeon["reward_modifier"] * level_reward * progression["enemy_generation"].get("combat_gold_multiplier", 1.0),
             hazard,
+            max_xp * dungeon["reward_modifier"] * level_reward,
+            max_gold * dungeon["reward_modifier"] * level_reward * progression["enemy_generation"].get("combat_gold_multiplier", 1.0),
         )
     MAX_CACHED_EQUIPMENT_LEVEL = max(int(item["max_level"]) for item in equipment)
     for level in range(1, MAX_CACHED_EQUIPMENT_LEVEL + 1):
@@ -527,6 +733,7 @@ def main() -> None:
                 "defense_sessions_per_day": profile.defense_sessions,
                 "shop_refreshes_per_day": profile.shop_refreshes,
                 "allocation_quality": profile.allocation_quality,
+                "potion_use_per_defense_session": profile.potion_use,
             }
             for profile in PROFILES
         },
@@ -538,16 +745,26 @@ def main() -> None:
         results["profiles"][profile.name] = aggregate(profile, states, progression)
 
     typical = results["profiles"]["typical"]
+    dedicated = results["profiles"]["dedicated"]
     d18 = typical["median_unlock_day"]["18"]
     d20 = typical["median_unlock_day"]["20"]
+    dedicated_d20 = dedicated["median_unlock_day"]["20"]
     cap = typical["median_cooldown_cap_day"]
+    typical_xp_uplift = typical["potion_stats"]["median_combat_xp_uplift_percent"]
+    typical_luck_gold_uplift = typical["potion_stats"]["median_luck_gold_uplift_percent"]
     results["target_evaluation"] = {
         "dungeon_18_in_range": d18 is not None and 330 <= d18 <= 400,
-        "dungeon_20_in_range": d20 is not None and 500 <= d20 <= 600,
+        "dungeon_20_in_range": d20 is not None and 470 <= d20 <= 575,
+        "dedicated_dungeon_20_not_too_early": dedicated_d20 is not None and dedicated_d20 >= 365,
         "cooldown_cap_in_range": cap is not None and 330 <= cap <= 400,
+        "typical_potion_combat_xp_uplift_in_range": typical_xp_uplift is not None and typical_xp_uplift <= 4.0,
+        "typical_luck_gold_uplift_in_range": typical_luck_gold_uplift is not None and typical_luck_gold_uplift <= 5.0,
         "typical_dungeon_18_day": d18,
         "typical_dungeon_20_day": d20,
+        "dedicated_dungeon_20_day": dedicated_d20,
         "typical_cooldown_cap_day": cap,
+        "typical_potion_combat_xp_uplift_percent": typical_xp_uplift,
+        "typical_luck_gold_uplift_percent": typical_luck_gold_uplift,
     }
     args.output.write_text(json.dumps(results, indent=2) + "\n")
     print(json.dumps(results["target_evaluation"], indent=2))

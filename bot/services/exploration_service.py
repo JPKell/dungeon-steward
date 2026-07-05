@@ -18,6 +18,7 @@ from bot.services.energy_service import EnergyService, EnergyState
 from bot.services.equipment_service import get_effective_combat_stats
 from bot.services.guild_dungeon_service import GuildDungeonService
 from bot.services.player_service import PlayerService
+from bot.services.potion_service import PotionItem, PotionService
 from bot.services.progression_service import (
     calculate_combat_power,
     calculate_explore_level,
@@ -65,6 +66,7 @@ class ResolvedExploration:
     discovery_name: str | None
     new_discovery: bool
     energy_state: EnergyState
+    potion_drop: PotionItem | None
 
 
 class ExplorationService:
@@ -77,6 +79,7 @@ class ExplorationService:
         discoveries: DiscoveryService | None = None,
         guilds: GuildDungeonService | None = None,
         weekly: WeeklyObjectiveService | None = None,
+        potions: PotionService | None = None,
     ) -> None:
         self.encounters = encounters or EncounterService()
         self.energy = energy or EnergyService()
@@ -84,6 +87,7 @@ class ExplorationService:
         self.discoveries = discoveries or DiscoveryService()
         self.guilds = guilds or GuildDungeonService()
         self.weekly = weekly or WeeklyObjectiveService()
+        self.potions = potions or PotionService()
 
     def start(
         self,
@@ -193,6 +197,14 @@ class ExplorationService:
         else:
             player.failed_explorations += 1
         old_explore_level = player.explore_level
+        potion_drop = self.potions.maybe_award_exploration_drop(
+            session,
+            player,
+            dungeon_level=dungeon_level,
+            encounter_rarity=getattr(encounter, "rarity", "common"),
+            successful=choice.success,
+            rng=rng,
+        )
         player.explore_level = calculate_explore_level(player.experience)
 
         dungeon = self.players.get_or_create_guild(session, guild_id=exploration.guild_id)
@@ -220,6 +232,7 @@ class ExplorationService:
                 gold_awarded=gold,
                 experience_awarded=experience,
                 discovery_key=choice.discovery_key,
+                potion_item_key=potion_drop.key if potion_drop else None,
             )
         )
         return ResolvedExploration(
@@ -233,6 +246,7 @@ class ExplorationService:
             discovery_name=discovery.name if discovery else None,
             new_discovery=is_new,
             energy_state=self.energy.state(player, now=now),
+            potion_drop=potion_drop,
         )
 
 

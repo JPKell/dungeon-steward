@@ -7,7 +7,10 @@ from sqlalchemy import engine_from_config, pool
 
 from bot.config import load_settings
 from bot.database.base import Base
-from bot.models import game  # noqa: F401
+from bot.models import (
+    content,  # noqa: F401
+    game,  # noqa: F401
+)
 
 config = context.config
 
@@ -46,4 +49,3 @@ if context.is_offline_mode():
     run_migrations_offline()
 else:
     run_migrations_online()
-

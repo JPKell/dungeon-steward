@@ -5,6 +5,7 @@ from datetime import datetime
 from sqlalchemy import (
     BigInteger,
     Boolean,
+    CheckConstraint,
     DateTime,
     ForeignKey,
     Index,
@@ -137,6 +138,66 @@ class EncounterHistory(TimestampMixin, Base):
     gold_awarded: Mapped[int] = mapped_column(Integer, default=0)
     experience_awarded: Mapped[int] = mapped_column(Integer, default=0)
     discovery_key: Mapped[str | None] = mapped_column(String(120))
+    potion_item_key: Mapped[str | None] = mapped_column(String(120))
+
+
+class PotionInventoryStack(TimestampMixin, Base):
+    __tablename__ = "potion_inventory_stacks"
+    __table_args__ = (
+        UniqueConstraint("player_id", "item_key", name="uq_potion_inventory_player_item"),
+        CheckConstraint("quantity >= 0", name="ck_potion_inventory_quantity_nonnegative"),
+        Index("ix_potion_inventory_player", "player_id"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    player_id: Mapped[int] = mapped_column(ForeignKey("players.id"), nullable=False)
+    item_key: Mapped[str] = mapped_column(String(120), nullable=False)
+    quantity: Mapped[int] = mapped_column(Integer, default=0)
+
+
+class PotionActivation(TimestampMixin, Base):
+    __tablename__ = "potion_activations"
+    __table_args__ = (
+        UniqueConstraint("player_id", "idempotency_token", name="uq_potion_activation_player_token"),
+        Index("ix_potion_activation_player_time", "player_id", "activated_at", "effective_ends_at"),
+        Index("ix_potion_activation_player_group", "player_id", "effect_group", "effective_ends_at"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    player_id: Mapped[int] = mapped_column(ForeignKey("players.id"), nullable=False)
+    item_key: Mapped[str] = mapped_column(String(120), nullable=False)
+    effect_group: Mapped[str] = mapped_column(String(40), nullable=False)
+    tier: Mapped[int] = mapped_column(Integer, nullable=False)
+    activated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    original_expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    effective_ends_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    idempotency_token: Mapped[str] = mapped_column(String(120), nullable=False)
+
+
+class AdminAuditLog(TimestampMixin, Base):
+    __tablename__ = "admin_audit_log"
+    __table_args__ = (
+        Index("ix_admin_audit_admin_created", "administrator_identity", "created_at"),
+        Index("ix_admin_audit_target_user", "target_user_id", "created_at"),
+        Index("ix_admin_audit_action", "action_name", "created_at"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    administrator_identity: Mapped[str] = mapped_column(String(160), nullable=False)
+    administrator_role: Mapped[str] = mapped_column(String(40), nullable=False)
+    environment: Mapped[str] = mapped_column(String(40), nullable=False)
+    action_name: Mapped[str] = mapped_column(String(160), nullable=False)
+    target_domain: Mapped[str] = mapped_column(String(80), nullable=False)
+    target_table: Mapped[str | None] = mapped_column(String(120))
+    target_user_id: Mapped[int | None] = mapped_column(Integer)
+    target_record_id: Mapped[str | None] = mapped_column(String(160))
+    previous_values: Mapped[str | None] = mapped_column(Text)
+    new_values: Mapped[str | None] = mapped_column(Text)
+    quantity_changed: Mapped[int | None] = mapped_column(Integer)
+    reason: Mapped[str | None] = mapped_column(Text)
+    result: Mapped[str] = mapped_column(String(40), default="success")
+    error_info: Mapped[str | None] = mapped_column(Text)
+    session_id: Mapped[str] = mapped_column(String(80), nullable=False)
 
 
 class Discovery(TimestampMixin, Base):

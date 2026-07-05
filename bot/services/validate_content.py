@@ -7,6 +7,16 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
+from bot.config import load_settings
+from bot.services.discord_asset_service import (
+    load_catalog,
+    load_registry,
+    validate_gameplay_asset_references,
+    validate_registry_integrity,
+)
+from bot.services.location_service import LocationService
+from bot.services.potion_service import EXPECTED_POTION_GROUPS, load_potion_content
+
 BASE = Path(__file__).parents[1] / "content"
 RARITIES = ("common", "uncommon", "rare", "epic", "legendary")
 SLOTS = ("weapon", "shield", "helm", "gloves", "armor", "boots", "trinket")
@@ -43,6 +53,10 @@ def validate() -> dict[str, Any]:
         "equipment_descriptions.json",
         "encounters.json",
         "discoveries.json",
+        "potion_items.json",
+        "locations.json",
+        "image_assets.json",
+        "image_asset_registry.json",
     ):
         try:
             parsed[filename] = json.loads((BASE / filename).read_text(encoding="utf-8"))
@@ -59,6 +73,7 @@ def validate() -> dict[str, Any]:
     equipment_descriptions = parsed["equipment_descriptions.json"]
     encounters = parsed["encounters.json"]
     discoveries = parsed["discoveries.json"]
+    potion_document = parsed["potion_items.json"]
 
     # Progression configuration.
     require(progression.get("schema_version") == 2, "progression schema_version must be 2", errors)
@@ -256,6 +271,58 @@ def validate() -> dict[str, Any]:
                 require(ref in discovery_keys, f"encounter {encounter.get('key')} references missing discovery {ref}", errors)
     require(not (discovery_keys - referenced), f"orphan discoveries found: {sorted(discovery_keys - referenced)[:10]}", errors)
 
+    # Timed potion consumables.
+    try:
+        potion_content = load_potion_content(BASE / "potion_items.json")
+    except Exception as exc:
+        errors.append(f"potion_items.json failed validation: {exc}")
+        potion_content = None
+    if potion_content is not None:
+        potion_counts = Counter(item.effect_group for item in potion_content.items if item.enabled)
+        require(sum(potion_counts.values()) == 90, "exactly 90 enabled potion definitions are required", errors)
+        require(
+            set(potion_counts) == set(EXPECTED_POTION_GROUPS),
+            "potion effect groups must match the expected six groups",
+            errors,
+        )
+        require(
+            all(count == 15 for count in potion_counts.values()),
+            "each potion effect group must contain 15 enabled tiers",
+            errors,
+        )
+        require(
+            potion_document.get("drop_rules", {}).get("max_drops_per_exploration") == 1,
+            "potion drops must be capped at one per exploration",
+            errors,
+        )
+    else:
+        potion_counts = {}
+
+    try:
+        location_content = LocationService(BASE / "locations.json").locations
+    except Exception as exc:
+        errors.append(f"locations.json failed validation: {exc}")
+        location_content = ()
+
+    # Discord image assets.
+    try:
+        image_catalog = load_catalog(BASE / "image_assets.json", validate_files=True)
+        image_registry = load_registry(BASE / "image_asset_registry.json")
+        validate_gameplay_asset_references(image_catalog, BASE)
+        settings = load_settings(require_token=False)
+        require_registry = not settings.is_development
+        if require_registry and settings.discord_asset_channel_id is None:
+            errors.append("DISCORD_ASSET_CHANNEL_ID is required outside development")
+        validate_registry_integrity(
+            image_catalog,
+            image_registry,
+            require_required_assets=require_registry,
+        )
+    except Exception as exc:
+        errors.append(f"image assets failed validation: {exc}")
+        image_catalog = None
+        image_registry = None
+
     content_coverage = {}
     for level in range(1, 21):
         eligible_encounters = [e for e in encounters if e.get("enabled", True) and e["min_level"] <= level]
@@ -296,7 +363,12 @@ def validate() -> dict[str, Any]:
             "equipment_descriptions": len(equipment_descriptions),
             "encounters": len(encounters),
             "discoveries": len(discoveries),
+            "potions": sum(potion_counts.values()),
+            "locations": len(location_content),
+            "image_assets": len(image_catalog.assets) if image_catalog else 0,
+            "registered_image_assets": len(image_registry.assets) if image_registry else 0,
         },
+        "potions_by_group": dict(sorted(potion_counts.items())),
         "equipment_by_slot": dict(Counter(item["slot"] for item in equipment)),
         "equipment_by_rarity": dict(Counter(item["rarity"] for item in equipment)),
         "equipment_valid_options": {

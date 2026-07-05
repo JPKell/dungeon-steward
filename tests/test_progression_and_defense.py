@@ -6,15 +6,17 @@ from datetime import timedelta
 
 import pytest
 
+import bot.services.defense_service as defense_module
 import bot.services.progression_service as progression_service
 from bot.config import MAX_ENERGY
 from bot.services.defense_service import AlreadyDefendingError, DefenseService
-from bot.services.enemy_service import DUNGEON_LEVELS, ENEMY_TYPES, generate_enemy, validate_enemy_definitions
+from bot.services.enemy_service import DUNGEON_LEVELS, ENEMY_TYPES, GeneratedEnemy, generate_enemy, validate_enemy_definitions
 from bot.services.energy_service import EnergyService
 from bot.services.equipment_service import EquipmentService, get_effective_combat_stats
 from bot.services.progression_content import PROGRESSION_CONTENT, ExploreLevelingProgression, ScalingProgression
 from bot.services.progression_service import (
     allocate_stat_points,
+    calculate_combat_power,
     calculate_explore_level,
     calculate_max_hp,
     calculate_scaling_amount,
@@ -266,8 +268,41 @@ def test_defense_ends_with_full_hp(db, now):
     assert report.completed_battles == 1
     assert report.unresolved_attacks == 4
     assert report.defeats == 1
+    assert report.ending_hp == 0
+    assert report.max_hp == player.max_hp
     assert not player.is_defending
     assert player.current_hp == player.max_hp
+
+
+def test_defense_report_ending_hp_precedes_equipped_full_recovery(db, now):
+    player = make_player(db, now=now, user_id=1, guild_id=10)
+    player.highest_unlocked_dungeon_level = 20
+    player.highest_completed_dungeon_level = 20
+    player.current_hp = 1
+    player.max_hp = 50
+    player.attack = 1
+    player.defense = 0
+    player.speed = 1
+    equipment = EquipmentService()
+    item = next(item for item in equipment.eligible_for_level(player.combat_level) if item.hp > 0)
+    setattr(player, item.slot, item.key)
+    effective_hp = get_effective_combat_stats(player).max_hp
+
+    service = DefenseService()
+    service.start(db, guild_id=10, user_id=1, display_name="Scout", dungeon_level=20, now=now)
+    report = service.stop(
+        db,
+        guild_id=10,
+        user_id=1,
+        now=now + timedelta(minutes=5),
+        rng=random.Random(11),
+    )
+
+    assert report.defeats == 1
+    assert report.ending_hp == 0
+    assert report.max_hp == effective_hp
+    assert player.current_hp == effective_hp
+    assert player.current_hp > player.max_hp
 
 
 def test_explore_guard_resolves_active_defense(db, now):
@@ -292,6 +327,50 @@ def test_explore_guard_resolves_active_defense(db, now):
     assert report.reason == "exploration"
     assert report.scheduled_battles == 2
     assert not player.is_defending
+
+
+def test_xp_potion_does_not_apply_to_prior_defense_minutes(db, now, monkeypatch):
+    player = make_player(db, now=now, user_id=1, guild_id=10)
+    player.current_hp = 200
+    player.max_hp = 200
+    player.attack = 80
+    player.defense = 80
+    player.speed = 80
+    enemy_power = calculate_combat_power(max_hp=200, attack=80, defense=80, speed=80)
+    enemy = GeneratedEnemy(
+        key="training_dummy",
+        name="Training Dummy",
+        rank="common",
+        dungeon_level=1,
+        level=1,
+        max_hp=1,
+        current_hp=1,
+        attack=0,
+        defense=0,
+        speed=1,
+        gold=0,
+        combat_xp=100,
+        power=enemy_power,
+        max_gold=0,
+        max_combat_xp=100,
+    )
+    monkeypatch.setattr(defense_module, "generate_enemy", lambda dungeon_level, rng: enemy)
+
+    service = DefenseService()
+    service.start(db, guild_id=10, user_id=1, display_name="Scout", dungeon_level=1, now=now)
+    service.potions.add_drop(db, player, "potion_xp_01")
+    service.potions.consume(
+        db,
+        player,
+        "potion_xp_01",
+        idempotency_token="mid-defense",
+        now=now + timedelta(minutes=2, seconds=1),
+    )
+
+    report = service.stop(db, guild_id=10, user_id=1, now=now + timedelta(minutes=4))
+
+    assert report.completed_battles == 4
+    assert report.potion_bonus_combat_xp == 8
 
 
 def test_expired_defense_resolves_lazily(db, now):

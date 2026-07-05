@@ -34,6 +34,7 @@ class EquipmentItem:
     defense: int
     speed: int
     description: str | None = None
+    thumbnail_asset: str | None = None
 
 
 class EquipmentContentError(ValueError):
@@ -41,9 +42,17 @@ class EquipmentContentError(ValueError):
 
 
 class EquipmentService:
-    def __init__(self, content_path: Path | None = None) -> None:
+    def __init__(
+        self,
+        content_path: Path | None = None,
+        *,
+        document: list[Any] | None = None,
+        descriptions_document: dict[str, Any] | None = None,
+    ) -> None:
         self.content_path = content_path or Path(__file__).parents[1] / "content" / "equipment.json"
         self.description_path = self.content_path.with_name("equipment_descriptions.json")
+        self._document = document
+        self._descriptions_document = descriptions_document
         self._descriptions = self._load_descriptions()
         self._items = self._load()
         self._by_key = {item.key: item for item in self._items}
@@ -88,7 +97,11 @@ class EquipmentService:
         return bonuses
 
     def _load(self) -> list[EquipmentItem]:
-        raw = json.loads(self.content_path.read_text(encoding="utf-8"))
+        raw = self._document
+        if raw is None:
+            raw = _EQUIPMENT_DOCUMENT
+        if raw is None:
+            raw = json.loads(self.content_path.read_text(encoding="utf-8"))
         if not isinstance(raw, list):
             raise EquipmentContentError("Equipment content must be a list")
         seen: set[str] = set()
@@ -106,17 +119,19 @@ class EquipmentService:
         return items
 
     def _load_descriptions(self) -> dict[str, str]:
+        raw = self._descriptions_document
+        if raw is None:
+            raw = _EQUIPMENT_DESCRIPTIONS_DOCUMENT
+        if raw is not None:
+            if not isinstance(raw, dict):
+                raise EquipmentContentError("Equipment descriptions content must be an object")
+            return _parse_descriptions(raw)
         if not self.description_path.exists():
             return {}
         raw = json.loads(self.description_path.read_text(encoding="utf-8"))
         if not isinstance(raw, dict):
             raise EquipmentContentError("Equipment descriptions content must be an object")
-        descriptions: dict[str, str] = {}
-        for key, value in raw.items():
-            if not isinstance(key, str) or not isinstance(value, str):
-                raise EquipmentContentError("Equipment descriptions must map item keys to text")
-            descriptions[key] = value.strip()
-        return descriptions
+        return _parse_descriptions(raw)
 
     def scaled_for_combat_level(self, item: EquipmentItem, combat_level: int) -> EquipmentItem:
         level = max(1, combat_level)
@@ -158,6 +173,30 @@ def _entry_key(entry: dict[str, Any]) -> str:
     return value.strip() if isinstance(value, str) else ""
 
 
+def _parse_descriptions(raw: dict[str, Any]) -> dict[str, str]:
+    descriptions: dict[str, str] = {}
+    for key, value in raw.items():
+        if not isinstance(key, str) or not isinstance(value, str):
+            raise EquipmentContentError("Equipment descriptions must map item keys to text")
+        descriptions[key] = value.strip()
+    return descriptions
+
+
+_EQUIPMENT_DOCUMENT: list[Any] | None = None
+_EQUIPMENT_DESCRIPTIONS_DOCUMENT: dict[str, Any] | None = None
+
+
+def refresh_equipment_content(
+    *,
+    equipment_document: list[Any],
+    descriptions_document: dict[str, Any],
+) -> None:
+    global _EQUIPMENT_DESCRIPTIONS_DOCUMENT
+    global _EQUIPMENT_DOCUMENT
+    _EQUIPMENT_DOCUMENT = equipment_document
+    _EQUIPMENT_DESCRIPTIONS_DOCUMENT = descriptions_document
+
+
 def _item(entry: dict[str, Any], *, description: str | None = None) -> EquipmentItem:
     item = EquipmentItem(
         key=_required_str(entry, "key"),
@@ -172,6 +211,7 @@ def _item(entry: dict[str, Any], *, description: str | None = None) -> Equipment
         defense=_required_int(entry, "defense"),
         speed=_required_int(entry, "speed"),
         description=description,
+        thumbnail_asset=_optional_str(entry, "thumbnail_asset"),
     )
     if item.slot not in EQUIPMENT_SLOTS:
         raise EquipmentContentError(f"{item.key} has invalid slot: {item.slot}")
@@ -190,6 +230,15 @@ def _required_str(entry: dict[str, Any], field: str) -> str:
     value = entry.get(field)
     if not isinstance(value, str) or not value.strip():
         raise EquipmentContentError(f"Equipment item missing string field: {field}")
+    return value.strip()
+
+
+def _optional_str(entry: dict[str, Any], field: str) -> str | None:
+    value = entry.get(field)
+    if value is None:
+        return None
+    if not isinstance(value, str) or not value.strip():
+        raise EquipmentContentError(f"Equipment item field must be a string: {field}")
     return value.strip()
 
 

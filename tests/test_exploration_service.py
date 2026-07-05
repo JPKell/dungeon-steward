@@ -6,7 +6,7 @@ from types import SimpleNamespace
 import pytest
 from sqlalchemy import func, select
 
-from bot.models import EncounterHistory, ExplorationSession, Player
+from bot.models import EncounterHistory, ExplorationSession, Player, PotionInventoryStack
 from bot.services.energy_service import InsufficientEnergyError
 from bot.services.exploration_service import (
     ExplorationAlreadyResolvedError,
@@ -17,6 +17,17 @@ from bot.services.exploration_service import (
 )
 from bot.views.exploration import DungeonActionView
 from tests.conftest import make_player
+
+
+class FixedPotionDropRng:
+    def randint(self, low: int, high: int) -> int:
+        return low
+
+    def random(self) -> float:
+        return 0.0
+
+    def choices(self, population, weights, k):
+        return [population[0]]
 
 
 def test_exploration_consumes_one_energy(db, now):
@@ -81,6 +92,38 @@ def test_rewards_recorded_once(db, now):
         now=now,
     )
     assert db.scalar(select(func.count()).select_from(EncounterHistory)) == 1
+
+
+def test_potion_drop_is_recorded_once_with_exploration_resolution(db, now):
+    service = ExplorationService()
+    started = service.start(db, guild_id=10, user_id=1, display_name="Scout", now=now)
+    result = service.resolve(
+        db,
+        resolution_key=started.session.resolution_key,
+        choice_key=started.encounter.choices[0].key,
+        acting_user_id=1,
+        now=now,
+        rng=FixedPotionDropRng(),
+    )
+
+    with pytest.raises(ExplorationAlreadyResolvedError):
+        service.resolve(
+            db,
+            resolution_key=started.session.resolution_key,
+            choice_key=started.encounter.choices[1].key,
+            acting_user_id=1,
+            now=now,
+            rng=FixedPotionDropRng(),
+        )
+
+    history = db.scalar(select(EncounterHistory))
+    stack = db.scalar(select(PotionInventoryStack))
+    assert result.potion_drop is not None
+    assert history is not None
+    assert stack is not None
+    assert history.potion_item_key == result.potion_drop.key
+    assert stack.item_key == result.potion_drop.key
+    assert stack.quantity == 1
 
 
 def test_selected_dungeon_level_is_persisted(db, now):

@@ -3,16 +3,23 @@ from __future__ import annotations
 import discord
 
 from bot.services.defense_service import DefenseReport, StartedDefense
+from bot.services.discord_asset_service import DEFAULT_DISCORD_ASSETS, DiscordAssetService
+from bot.services.location_service import LOCATION_SERVICE
 from bot.utils.embeds import DEEP_NAVY, WARM_GOLD, embed
 from bot.utils.time import discord_relative_timestamp, human_duration
 
 
-def build_defense_started_embed(started: StartedDefense) -> discord.Embed:
+def build_defense_started_embed(
+    started: StartedDefense,
+    *,
+    asset_service: DiscordAssetService = DEFAULT_DISCORD_ASSETS,
+) -> discord.Embed:
     response = embed(
         "Defending the Dungeon",
         f"Dungeon Level {started.dungeon_level} is now covered.",
         colour=DEEP_NAVY,
     )
+    asset_service.apply_banner(response, LOCATION_SERVICE.banner_asset_for("dungeon_selection"))
     response.add_field(name="HP", value=f"{started.current_hp}/{started.stats.max_hp}")
     response.add_field(
         name="Stats",
@@ -75,6 +82,25 @@ def build_defense_report_embed(report: DefenseReport) -> discord.Embed:
         name="HP",
         value=f"Started: {report.starting_hp}\nEnded: {report.ending_hp}/{report.max_hp}",
     )
+    if (
+        report.potion_effects
+        or report.potion_healing
+        or report.potion_luck_procs
+        or report.potion_bonus_combat_xp
+        or report.max_hp_effect_expired
+    ):
+        potion_lines: list[str] = []
+        if report.potion_effects:
+            potion_lines.append("Active: " + ", ".join(report.potion_effects[:6]))
+        if report.potion_healing:
+            potion_lines.append(f"Healing: {report.potion_healing} HP")
+        if report.potion_luck_procs:
+            potion_lines.append(f"Luck procs: {report.potion_luck_procs}")
+        if report.potion_bonus_combat_xp:
+            potion_lines.append(f"Bonus XP: {report.potion_bonus_combat_xp}")
+        if report.max_hp_effect_expired:
+            potion_lines.append("Max HP effect expired during the defense.")
+        response.add_field(name="Potions", value="\n".join(potion_lines), inline=False)
     response.add_field(
         name="Enemies Encountered",
         value=_enemy_summary(report.enemies_encountered),

@@ -10,6 +10,7 @@ from bot.commands.dungeon import DungeonGroup
 from bot.config import load_settings
 from bot.database.session import make_engine, make_session_factory
 from bot.logging_config import configure_logging
+from bot.services.content_runtime import RuntimeContentError, refresh_runtime_content_from_database
 
 log = logging.getLogger(__name__)
 
@@ -27,9 +28,20 @@ class DungeonStewardBot(discord.Client):
         self._synced = False
 
     async def setup_hook(self) -> None:
-        self.tree.add_command(DungeonGroup(session_factory=self.session_factory))
+        try:
+            refresh_runtime_content_from_database(self.session_factory)
+        except Exception as error:
+            raise RuntimeContentError(
+                "Database content is not loaded. Run `python -m scripts.content_db load` after migrations."
+            ) from error
+        dungeon_group = DungeonGroup(session_factory=self.session_factory)
+        self.tree.add_command(dungeon_group)
         self.tree.add_command(
-            DungeonAdminGroup(session_factory=self.session_factory, settings=self.settings)
+            DungeonAdminGroup(
+                session_factory=self.session_factory,
+                settings=self.settings,
+                content_reload_callback=dungeon_group.reload_content,
+            )
         )
         if self.settings.discord_test_guild_id:
             guild = discord.Object(id=self.settings.discord_test_guild_id)
@@ -70,4 +82,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

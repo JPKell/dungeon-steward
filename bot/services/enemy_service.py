@@ -33,6 +33,8 @@ class GeneratedEnemy:
     gold: int
     combat_xp: int
     power: float
+    max_gold: int = 0
+    max_combat_xp: int = 0
 
 
 DUNGEON_OPTIONAL_FIELDS = {
@@ -51,9 +53,16 @@ DUNGEON_OPTIONAL_FIELDS = {
 VALID_RANKS = {"common", "standard", "dangerous", "elite", "boss"}
 
 
-def load_dungeon_levels(path: Path | None = None) -> dict[int, dict[str, float | int | bool]]:
-    content_path = path or _default_content_path("dungeon_levels.json")
-    raw = json.loads(content_path.read_text(encoding="utf-8"))
+def load_dungeon_levels(
+    path: Path | None = None,
+    *,
+    document: list[Any] | None = None,
+) -> dict[int, dict[str, float | int | bool]]:
+    if document is None:
+        content_path = path or _default_content_path("dungeon_levels.json")
+        raw = json.loads(content_path.read_text(encoding="utf-8"))
+    else:
+        raw = document
     if not isinstance(raw, list):
         raise EnemyContentError("Dungeon level content must be a list")
     levels: dict[int, dict[str, float | int | bool]] = {}
@@ -76,9 +85,16 @@ def load_dungeon_levels(path: Path | None = None) -> dict[int, dict[str, float |
     return levels
 
 
-def load_enemy_types(path: Path | None = None) -> dict[str, dict[str, Any]]:
-    content_path = path or _default_content_path("enemies.json")
-    raw = json.loads(content_path.read_text(encoding="utf-8"))
+def load_enemy_types(
+    path: Path | None = None,
+    *,
+    document: list[Any] | None = None,
+) -> dict[str, dict[str, Any]]:
+    if document is None:
+        content_path = path or _default_content_path("enemies.json")
+        raw = json.loads(content_path.read_text(encoding="utf-8"))
+    else:
+        raw = document
     if not isinstance(raw, list):
         raise EnemyContentError("Enemy content must be a list")
     enemies: dict[str, dict[str, Any]] = {}
@@ -282,6 +298,15 @@ def generate_enemy(
         minimum=0,
     )
     combat_xp = _scaled_roll(rng, selected, "xp", reward_scale)
+    max_gold = max(
+        gold,
+        _scaled_value(
+            int(selected["gold_max"]),
+            reward_scale * PROGRESSION_CONTENT.enemy_generation.combat_gold_multiplier,
+            minimum=0,
+        ),
+    )
+    max_combat_xp = max(combat_xp, _scaled_value(int(selected["xp_max"]), reward_scale, minimum=1))
     power = calculate_combat_power(max_hp=hp, attack=attack, defense=defense, speed=speed)
 
     return GeneratedEnemy(
@@ -298,6 +323,8 @@ def generate_enemy(
         gold=gold,
         combat_xp=combat_xp,
         power=power,
+        max_gold=max_gold,
+        max_combat_xp=max_combat_xp,
     )
 
 
@@ -317,6 +344,23 @@ def _eligible_enemies(dungeon_level: int) -> list[dict[str, Any]]:
     ]
 
 
+def refresh_enemy_content(
+    *,
+    dungeon_levels_document: list[Any],
+    enemies_document: list[Any],
+) -> None:
+    global DUNGEON_LEVEL_MAX
+    global DUNGEON_LEVEL_MIN
+    global DUNGEON_LEVELS
+    global ENEMY_TYPES
+
+    DUNGEON_LEVELS = load_dungeon_levels(document=dungeon_levels_document)
+    DUNGEON_LEVEL_MIN = min(DUNGEON_LEVELS)
+    DUNGEON_LEVEL_MAX = max(DUNGEON_LEVELS)
+    ENEMY_TYPES = load_enemy_types(document=enemies_document)
+    validate_enemy_definitions()
+
+
 def _scaled_roll(
     rng: random.Random,
     enemy: dict[str, Any],
@@ -326,6 +370,10 @@ def _scaled_roll(
     minimum: int = 1,
 ) -> int:
     value = rng.randint(int(enemy[f"{prefix}_min"]), int(enemy[f"{prefix}_max"]))
+    return _scaled_value(value, scale, minimum=minimum)
+
+
+def _scaled_value(value: int, scale: float, *, minimum: int = 1) -> int:
     return max(minimum, int(round(value * scale)))
 
 

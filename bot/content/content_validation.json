@@ -8,7 +8,19 @@
     "equipment_generated": 875,
     "equipment_descriptions": 924,
     "encounters": 750,
-    "discoveries": 500
+    "discoveries": 500,
+    "potions": 90,
+    "locations": 3,
+    "image_assets": 5,
+    "registered_image_assets": 0
+  },
+  "potions_by_group": {
+    "attack": 15,
+    "defense": 15,
+    "healing": 15,
+    "luck": 15,
+    "max_hp": 15,
+    "xp": 15
   },
   "equipment_by_slot": {
     "armor": 132,

@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "assets": {
+    "location.stewards_hall": {
+      "type": "location_banner",
+      "path": "assets/discord/locations/stewards_hall.png",
+      "alt_text": "The torchlit Steward's Hall planning room",
+      "required": true
+    },
+    "location.dungeon_selection": {
+      "type": "location_banner",
+      "path": "assets/discord/locations/dungeon_selection.png",
+      "alt_text": "A row of dungeon entrances descending into darkness",
+      "required": false
+    },
+    "location.shop": {
+      "type": "location_banner",
+      "path": "assets/discord/locations/equipment_shop.png",
+      "alt_text": "A compact dungeon equipment shop lit by warm lanterns",
+      "required": false
+    },
+    "item.potion.xp.01": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/xp_potion_01.png",
+      "alt_text": "A small blue experience potion",
+      "required": false
+    },
+    "item.equipment.quilted_vest": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/quilted_vest.png",
+      "alt_text": "A quilted defensive vest",
+      "required": false
+    }
+  }
+}

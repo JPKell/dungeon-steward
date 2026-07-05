@@ -8,7 +8,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from bot.models import Player
-from bot.services.equipment_service import EquipmentItem, EquipmentService
+from bot.services.equipment_service import EQUIPMENT_SLOTS, EquipmentItem, EquipmentService
 from bot.services.player_service import PlayerService
 from bot.services.progression_content import PROGRESSION_CONTENT
 from bot.services.progression_service import sync_combat_progression
@@ -16,6 +16,7 @@ from bot.services.shop_selection import select_shop_items
 from bot.utils.time import ensure_utc, utc_now
 
 SHOP_STOCK_SIZE = PROGRESSION_CONTENT.shop.stock_size
+SLOT_ORDER = {slot: index for index, slot in enumerate(EQUIPMENT_SLOTS)}
 
 
 class ShopError(Exception):
@@ -76,6 +77,7 @@ class ShopService:
         )
         stock = [self.equipment.get(str(item["key"])) for item in selected]
         scaled_stock = [self.equipment.scaled_for_combat_level(item, level) for item in stock]
+        scaled_stock.sort(key=lambda item: (SLOT_ORDER.get(item.slot, len(SLOT_ORDER)), item.cost))
         return ShopStock(
             combat_level=level,
             generated_at=generated_at,

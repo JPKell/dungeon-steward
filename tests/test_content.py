@@ -4,6 +4,7 @@ from bot.services.discovery_service import DiscoveryService
 from bot.services.encounter_service import EncounterService
 from bot.services.enemy_service import DUNGEON_LEVELS, ENEMY_TYPES, validate_enemy_definitions
 from bot.services.equipment_service import EQUIPMENT_SLOTS, EquipmentService
+from bot.services.potion_service import EXPECTED_POTION_GROUPS, PotionService
 from bot.services.progression_content import PROGRESSION_CONTENT, load_progression_content
 
 
@@ -49,3 +50,13 @@ def test_progression_content_is_valid():
     assert loaded.shop.cost_multiplier.base == 1
     assert loaded.shop.stat_multiplier.base == 1
     assert loaded.shop.rarity_bands[-1].min_level == 400
+
+
+def test_potion_content_is_valid():
+    content = PotionService().content
+    enabled = [item for item in content.items if item.enabled]
+
+    assert len(enabled) == 90
+    assert {item.effect_group for item in enabled} == set(EXPECTED_POTION_GROUPS)
+    assert content.activation_rules.max_simultaneous_effect_groups == 3
+    assert content.drop_rules.max_drops_per_exploration == 1

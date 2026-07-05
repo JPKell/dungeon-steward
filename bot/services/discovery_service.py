@@ -12,11 +12,21 @@ from bot.utils.time import utc_now
 
 
 class DiscoveryService:
-    def __init__(self, content_path: Path | None = None) -> None:
+    def __init__(
+        self,
+        content_path: Path | None = None,
+        *,
+        document: list[Any] | None = None,
+    ) -> None:
         self.content_path = content_path or Path(__file__).parents[1] / "content" / "discoveries.json"
+        self._document = document
 
     def load_content(self) -> list[dict[str, Any]]:
-        content = json.loads(self.content_path.read_text(encoding="utf-8"))
+        content = self._document
+        if content is None:
+            content = _DISCOVERY_DOCUMENT
+        if content is None:
+            content = json.loads(self.content_path.read_text(encoding="utf-8"))
         if len(content) < 15:
             raise ValueError("At least 15 discoveries are required")
         keys: set[str] = set()
@@ -63,3 +73,10 @@ class DiscoveryService:
         player.discoveries_found += 1
         return discovery, True
 
+
+_DISCOVERY_DOCUMENT: list[Any] | None = None
+
+
+def refresh_discovery_content(document: list[Any]) -> None:
+    global _DISCOVERY_DOCUMENT
+    _DISCOVERY_DOCUMENT = document

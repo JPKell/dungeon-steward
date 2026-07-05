@@ -26,6 +26,8 @@ class BattleResult:
     combat_xp: int
     gold: int
     rounds: int
+    potion_bonus_xp: int = 0
+    luck_proc: bool = False
 
 
 def resolve_battle(
@@ -34,6 +36,10 @@ def resolve_battle(
     player_hp: int,
     enemy: GeneratedEnemy,
     rng: random.Random | None = None,
+    reward_combat_xp: int | None = None,
+    reward_gold: int | None = None,
+    combat_xp_multiplier: float = 1.0,
+    luck_proc: bool = False,
 ) -> BattleResult:
     rng = rng or random
     _validate_combatant(
@@ -90,13 +96,21 @@ def resolve_battle(
             defense=player_stats.defense,
             speed=player_stats.speed,
         )
-        combat_xp = scale_combat_xp_for_power(
-            enemy.combat_xp,
+        base_combat_xp = enemy.combat_xp if reward_combat_xp is None else max(0, int(reward_combat_xp))
+        base_gold = enemy.gold if reward_gold is None else max(0, int(reward_gold))
+        scaled_combat_xp = scale_combat_xp_for_power(
+            base_combat_xp,
             player_power=player_power,
             enemy_power=max(1.0, enemy.power),
         )
+        if combat_xp_multiplier > 1 and scaled_combat_xp > 0:
+            combat_xp = max(0, int(round(scaled_combat_xp * combat_xp_multiplier)))
+            potion_bonus_xp = max(0, combat_xp - scaled_combat_xp)
+        else:
+            combat_xp = scaled_combat_xp
+            potion_bonus_xp = 0
         gold = scale_combat_gold_for_power(
-            enemy.gold,
+            base_gold,
             player_power=player_power,
             enemy_power=max(1.0, enemy.power),
         )
@@ -104,10 +118,12 @@ def resolve_battle(
         outcome = "defeat"
         combat_xp = 0
         gold = 0
+        potion_bonus_xp = 0
     else:
         outcome = "draw"
         combat_xp = 0
         gold = 0
+        potion_bonus_xp = 0
 
     return BattleResult(
         enemy=enemy,
@@ -117,6 +133,8 @@ def resolve_battle(
         combat_xp=combat_xp,
         gold=gold,
         rounds=rounds,
+        potion_bonus_xp=potion_bonus_xp,
+        luck_proc=luck_proc and outcome == "victory",
     )
 
 

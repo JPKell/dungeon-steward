@@ -11,6 +11,7 @@ Dungeon Steward is a Discord slash-command bot for the Kellrond Games community.
 - Dungeon defense levels 1-20 use content-driven enemy definitions and scaling.
 - Equipment definitions live in `bot/content/equipment.json`, and the shop refreshes 10 Combat Level-appropriate items each hour.
 - Equipment slots are persisted for weapon, shield, helm, armor, gloves, trinket, and boots.
+- Reusable Discord embed images are catalogued locally and synchronized once to a private asset channel.
 - Energy regenerates lazily, capped at 12.
 - Replayable content-driven encounters in `bot/content/encounters.json`.
 - Discoveries and collectibles in `bot/content/discoveries.json`.
@@ -27,6 +28,7 @@ Dungeon Steward is a Discord slash-command bot for the Kellrond Games community.
 - Alembic
 - PostgreSQL or SQLite
 - `python-dotenv`
+- Pillow for offline image preparation
 - `pytest`, `pytest-asyncio`, `ruff`
 
 ## Discord Setup
@@ -59,21 +61,34 @@ DISCORD_STAFF_ROLE_ID=
 DATABASE_URL=sqlite:///./dungeon_steward.sqlite3
 LOG_LEVEL=INFO
 ENVIRONMENT=development
+DISCORD_ASSET_CHANNEL_ID=
 ```
 
 Run migrations:
 
 ```bash
 alembic upgrade head
+python -m scripts.content_db load
 ```
 
 Validate content and run tests:
 
 ```bash
 python -m scripts.validate_content
+python -m scripts.prepare_discord_assets --validate
 ruff check .
 pytest
 ```
+
+Prepare and synchronize Discord embed images:
+
+```bash
+python -m scripts.prepare_discord_assets --prepare
+python -m scripts.sync_discord_assets --dry-run
+python -m scripts.sync_discord_assets
+```
+
+See [docs/DISCORD_IMAGES.md](docs/DISCORD_IMAGES.md) for image dimensions, naming conventions, asset-channel permissions, replacement flow, and local fallback behavior.
 
 Run the bot:
 
@@ -82,6 +97,14 @@ python -m bot.main
 ```
 
 With `DISCORD_TEST_GUILD_ID` set, commands sync to one test server for fast development. For production, unset it and set `ENVIRONMENT=production` to sync global commands.
+
+Run the terminal admin console:
+
+```bash
+python -m dungeon_steward_admin --environment development --admin local-admin
+```
+
+Configure `DUNGEON_ADMIN_IDENTITIES` before launching. See [docs/admin_console.md](docs/admin_console.md) for production read-only mode, write confirmation, audit logging, table CRUD, and custom actions.
 
 ## Commands
 
@@ -125,23 +148,25 @@ Combat progression is independent. Players have `combat_level`, `combat_xp`, `co
 
 `/dungeon stats` shows combat stats. Passing a stat and amount spends unspent points on attack, defense, or speed.
 
-Equipment slots are present in the player record for weapon, shield, helm, armor, gloves, boots, and trinket. The shop offers 10 items at a time from `bot/content/equipment.json`; stock is generated from the current UTC hour rounded down and the player's Combat Level, so players at the same Combat Level see the same stock during the same hour. Shop item costs and stat bonuses can scale by Combat Level through `bot/content/progression.json`. Buying an item spends gold and equips it immediately in the matching slot.
+Equipment slots are present in the player record for weapon, shield, helm, armor, gloves, boots, and trinket. The shop offers 10 items at a time from database-backed equipment content; stock is generated from the current UTC hour rounded down and the player's Combat Level, so players at the same Combat Level see the same stock during the same hour. Shop item costs and stat bonuses can scale by Combat Level through database-backed progression content. Buying an item spends gold and equips it immediately in the matching slot.
 
 SQLite is useful for local development, but production concurrency should use PostgreSQL. The schema uses uniqueness constraints for exploration resolution and player records; PostgreSQL is the recommended database when many interactions can arrive at once.
 
 ## Content Format
 
-Encounters live in `bot/content/encounters.json`. Each encounter has a unique `key`, title, description, category, weight, enabled flag, rarity, and two to four choices. Choices define result text, reward ranges, influence effects, stability changes, optional discovery keys, and success state.
+Runtime content lives in dedicated database tables. The JSON files in `bot/content` are import/export artifacts for editing, review, and version control.
 
-Discoveries live in `bot/content/discoveries.json`. Each discovery has a unique key, name, description, category, rarity, optional image URL, and enabled flag.
+Encounters have a unique `key`, title, description, category, weight, enabled flag, rarity, and two to four choices. Choices define result text, reward ranges, influence effects, stability changes, optional discovery keys, and success state.
 
-Equipment lives in `bot/content/equipment.json`. Each item has a unique key, name, slot, rarity, level range, gold cost, and HP/attack/defense/speed bonuses. Shop stock is deterministic per UTC hour and Combat Level, with optional curve scaling for displayed cost and stats.
+Discoveries have a unique key, name, description, category, rarity, optional image URL, and enabled flag.
 
-Enemies live in `bot/content/enemies.json`. Each enemy has a dungeon level range, base stat ranges, stage modifiers, reward ranges, weight, and enabled flag.
+Equipment items have a unique key, name, slot, rarity, level range, gold cost, and HP/attack/defense/speed bonuses. Shop stock is deterministic per UTC hour and Combat Level, with optional curve scaling for displayed cost and stats.
 
-Dungeon defense scaling lives in `bot/content/dungeon_levels.json`. Each level defines the possible enemy level range plus stat and reward modifiers.
+Enemies have a dungeon level range, base stat ranges, stage modifiers, reward ranges, weight, and enabled flag.
 
-Progression and combat tuning lives in `bot/content/progression.json`, including exploration cooldowns, Explore Level XP curves, exploration gold/XP reward multipliers, new-player combat defaults, Combat Level XP requirements, scalable HP gained per Combat Level, scalable stat points per Combat Level, defense duration growth, defense recovery, combat round limits, enemy generation scaling, and shop rarity, cost, and stat scaling. Explore Level and the reusable scale blocks support `linear`, `quadratic`, and `exponential` curves while preserving the current balance by default.
+Dungeon defense scaling defines the possible enemy level range plus stat and reward modifiers for each level.
+
+Progression and combat tuning includes exploration cooldowns, Explore Level XP curves, exploration gold/XP reward multipliers, new-player combat defaults, Combat Level XP requirements, scalable HP gained per Combat Level, scalable stat points per Combat Level, defense duration growth, defense recovery, combat round limits, enemy generation scaling, and shop rarity, cost, and stat scaling. Explore Level and the reusable scale blocks support `linear`, `quadratic`, and `exponential` curves while preserving the current balance by default.
 
 After editing content:
 
@@ -149,7 +174,14 @@ After editing content:
 python -m scripts.validate_content
 ```
 
-Then use `/dungeon-admin reload-content` to sync discoveries into the database.
+Load the JSON files into the database after migrations, and dump database content back to JSON when you want to review or commit it:
+
+```bash
+python -m scripts.content_db load
+python -m scripts.content_db dump --content-dir bot/content
+```
+
+The bot hydrates runtime content from the database at startup. `/dungeon-admin reload-content` refreshes the running bot from the database without reading JSON files.
 
 ## PostgreSQL Production Setup
 
@@ -164,12 +196,14 @@ Set:
 
 ```dotenv
 DATABASE_URL=postgresql+psycopg://kellrond_bot:password@localhost:5432/kellrond_discord_bot
+DISCORD_ASSET_CHANNEL_ID=
 ```
 
 Run:
 
 ```bash
 alembic upgrade head
+python -m scripts.content_db load
 ```
 
 ## Ubuntu Deployment
@@ -219,6 +253,9 @@ cd /var/www/kellrond-discord-bot
 sudo -u kellrond-bot git pull
 sudo -u kellrond-bot .venv/bin/pip install -r requirements.txt
 sudo -u kellrond-bot .venv/bin/alembic upgrade head
+sudo -u kellrond-bot .venv/bin/python -m scripts.content_db load
+sudo -u kellrond-bot .venv/bin/python -m scripts.prepare_discord_assets --validate
+sudo -u kellrond-bot .venv/bin/python -m scripts.sync_discord_assets --dry-run
 sudo systemctl restart kellrond-discord-bot
 ```
 
