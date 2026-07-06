@@ -457,6 +457,8 @@ def test_shop_purchase_uses_net_trade_in_cost_for_affordability(db, now):
     )
 
     assert quote.trade_in_value > 0
+    assert quote.replaced_item is not None
+    assert quote.trade_in_value == int(quote.replaced_item.cost * 0.1)
     assert quote.purchase_cost < item.cost
     assert purchase.purchase_cost == quote.purchase_cost
     assert player.gold == 0

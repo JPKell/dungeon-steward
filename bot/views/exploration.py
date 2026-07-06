@@ -1575,7 +1575,7 @@ class ShopPurchaseSelect(discord.ui.Select):
         selected_stock_number: int | None = None,
     ) -> None:
         super().__init__(
-            placeholder="Choose equipment",
+            placeholder="Browse Shop",
             min_values=1,
             max_values=1,
             options=_shop_select_options(
@@ -1640,11 +1640,10 @@ def _shop_option_label(index: int, item: EquipmentItem) -> str:
 
 
 def _shop_option_description(quote: ShopPurchaseQuote) -> str:
-    trade = f" after {format_gold(quote.trade_in_value)} trade" if quote.trade_in_value > 0 else ""
     return _limit_component_text(
         (
             f"{rarity_badge(quote.item.rarity)} {quote.item.slot.title()} | "
-            f"{format_item_stats(quote.item)} | Buy {format_gold(quote.purchase_cost)}{trade}"
+            f"{format_item_stats(quote.item)} | Price {format_gold(quote.item.cost)}"
         ),
         100,
     )

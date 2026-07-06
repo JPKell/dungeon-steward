@@ -49,13 +49,11 @@ def build_shop_embed(
     )
     response.add_field(name=format_gold(player.gold), value="\u200b")
     response.add_field(name="Equipped", value=_equipped_summary(player, equipment), inline=False)
-    response.add_field(name="Stock", value=_stock_summary(stock), inline=False)
     if selected_quote is not None:
         response.add_field(name="Selected Purchase", value=_selected_purchase_summary(selected_quote, player), inline=False)
     asset_service.apply_banner(response, LOCATION_SERVICE.banner_asset_for("equipment_shop"))
     thumbnail_asset = selected_quote.item.thumbnail_asset if selected_quote is not None else _first_stock_thumbnail(stock)
     asset_service.apply_thumbnail(response, thumbnail_asset)
-    response.timestamp = stock.refreshes_at
     response.set_footer(text="Buying an item equips it immediately and replaces the matching slot.")
     return response
 
@@ -126,30 +124,26 @@ def _stock_summary(stock: ShopStock) -> str:
 def _equipped_summary(player: Player, equipment: EquipmentService) -> str:
     equipped = []
     for slot in ("weapon", "shield", "helm", "armor", "gloves", "boots", "trinket"):
+        emoji = SLOT_EMOJIS.get(slot, "📦")
         item = equipment.get_or_none(getattr(player, slot))
         if item is None:
-            equipped.append(f"{SLOT_EMOJIS.get(slot, '📦')} empty")
+            equipped.append(f"{emoji} Empty")
             continue
-        trade_value = max(0, int(item.cost * 0.1))
+        trade_value = int(item.cost * 0.1)
         equipped.append(
-            f"{SLOT_EMOJIS.get(slot, '📦')} {format_item_stats(item)} | {rarity_badge(item.rarity)} {item.name}"
-            f" | Trade {format_gold(trade_value)}"
+            f"{emoji} {item.name} {rarity_badge(item.rarity)}\n"
+            f"{format_item_stats(item)} | Trade-in {format_gold(trade_value)}"
         )
-    return "\n".join(equipped)
+    return "\n\n".join(equipped)
 
 
 def _selected_purchase_summary(quote: ShopPurchaseQuote, player: Player) -> str:
     lines = [
-        f"{SLOT_EMOJIS.get(quote.item.slot, '📦')} {format_item_stats(quote.item)}",
-        f"{rarity_badge(quote.item.rarity)} {quote.item.name}",
-        f"Sticker {format_gold(quote.item.cost)}",
+        f"{SLOT_EMOJIS.get(quote.item.slot, '📦')} {quote.item.name} {rarity_badge(quote.item.rarity)}",
+        format_item_stats(quote.item),
+        f"Purchase Price After Trade-in {format_gold(quote.purchase_cost)}",
     ]
-    if quote.trade_in_value > 0:
-        lines.append(f"Trade-in -{format_gold(quote.trade_in_value)}")
-    lines.append(f"Purchase Price {format_gold(quote.purchase_cost)}")
-    if player.gold >= quote.purchase_cost:
-        lines.append(f"After Purchase {format_gold(player.gold - quote.purchase_cost)}")
-    else:
+    if player.gold < quote.purchase_cost:
         lines.append(f"Short {format_gold(quote.purchase_cost - player.gold)}")
     return "\n".join(lines)
 

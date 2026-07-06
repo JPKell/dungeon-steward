@@ -62,24 +62,22 @@ def test_shop_embed_shows_equipped_stats_and_rarity_badges() -> None:
     embed = build_shop_embed(stock, player=player, equipment=StubEquipmentService(item))
 
     equipped_field = next(field for field in embed.fields if field.name == "Equipped")
-    stock_field = next(field for field in embed.fields if field.name == "Stock")
     gold_field = next(field for field in embed.fields if field.name == "🪙 250")
 
     assert "Heroic Blade" in equipped_field.value
-    assert equipped_field.value.startswith("⚔️ HP 4")
-    assert equipped_field.value.index("HP 4") < equipped_field.value.index("Heroic Blade")
+    assert equipped_field.value.startswith("⚔️ Heroic Blade 🟡")
+    assert equipped_field.value.index("Heroic Blade") < equipped_field.value.index("HP 4")
     assert "HP 4" in equipped_field.value
     assert "ATK 8" in equipped_field.value
     assert "DEF 3" in equipped_field.value
     assert "SPD 2" in equipped_field.value
-    assert "Trade 🪙 14" in equipped_field.value
+    assert "Trade-in 🪙 14" in equipped_field.value
+    assert "🛡️ Empty" in equipped_field.value
+    assert "No item equipped" not in equipped_field.value
     assert gold_field.value == "\u200b"
-    assert "**⚔️ Weapon ⚔️**" in stock_field.value
-    assert "1. HP 1 | ATK 3 | DEF 0 | SPD 1 | ⚪ Rusty Axe | 🪙 60" in stock_field.value
-    assert "⚔️ 1." not in stock_field.value
-    assert stock_field.value.index("Rusty Axe") < stock_field.value.index("Heroic Blade")
-    assert "weapon" not in stock_field.value
-    assert "gold" not in stock_field.value.lower()
+    assert embed.timestamp is None
+    assert all(field.name != "Stock" for field in embed.fields)
+    assert "Rusty Axe" not in "\n".join(field.value for field in embed.fields)
 
 
 def test_shop_embed_selected_purchase_shows_net_trade_in_price() -> None:
@@ -126,17 +124,23 @@ def test_shop_embed_selected_purchase_shows_net_trade_in_price() -> None:
         item=item,
         replaced_item=replaced_item,
         stock=stock,
-        trade_in_value=14,
-        purchase_cost=126,
+        trade_in_value=5,
+        purchase_cost=135,
     )
 
     embed = build_shop_embed(stock, player=player, equipment=StubEquipmentService(replaced_item), selected_quote=quote)
 
     selected_field = next(field for field in embed.fields if field.name == "Selected Purchase")
+    lines = selected_field.value.splitlines()
 
-    assert "Sticker 🪙 140" in selected_field.value
-    assert "Trade-in -🪙 14" in selected_field.value
-    assert "Purchase Price 🪙 126" in selected_field.value
+    assert lines[0] == "⚔️ Heroic Blade 🟡"
+    assert lines[1] == "HP 4 | ATK 8 | DEF 3 | SPD 2"
+    assert lines[2] == "---"
+    assert lines[3] == "Purchase Price After Trade-in 🪙 135"
+    assert "Purchase Price After Trade-in 🪙 135" in selected_field.value
+    assert "Sticker" not in selected_field.value
+    assert "Trade-in -" not in selected_field.value
+    assert "After Purchase" not in selected_field.value
 
 
 def test_purchase_embed_uses_embed_timestamp_for_refreshes() -> None:

@@ -153,7 +153,7 @@ class ShopService:
             raise InvalidShopSelectionError("That shop item is no longer available") from error
 
         replaced_item = self.equipment.get_or_none(getattr(player, item.slot), combat_level=player.combat_level)
-        trade_in_value = _trade_in_value(item, replaced_item)
+        trade_in_value = _trade_in_value(replaced_item)
         purchase_cost = max(0, item.cost - trade_in_value)
         return ShopPurchaseQuote(
             item=item,
@@ -164,10 +164,10 @@ class ShopService:
         )
 
 
-def _trade_in_value(item: EquipmentItem, replaced_item: EquipmentItem | None) -> int:
+def _trade_in_value(replaced_item: EquipmentItem | None) -> int:
     if replaced_item is None:
         return 0
-    return int(item.cost * 0.1)
+    return int(replaced_item.cost * 0.1)
 
 
 def shop_hour(when: datetime) -> datetime:

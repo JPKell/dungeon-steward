@@ -254,7 +254,8 @@ def test_shop_view_uses_dropdown_and_confirm_button() -> None:
     select = next(child for child in view.children if isinstance(child, discord.ui.Select))
 
     assert len(select.options) == 1
-    assert "Buy 🪙 60" in (select.options[0].description or "")
+    assert select.placeholder == "Browse Shop"
+    assert "Price 🪙 60" in (select.options[0].description or "")
     assert all(button.label not in {str(number) for number in range(1, 11)} for button in buttons)
     assert "Buy Selected" not in [button.label for button in buttons]
 
