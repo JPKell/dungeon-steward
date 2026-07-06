@@ -23,6 +23,7 @@ from bot.services.progression_service import (
     calculate_combat_power,
     calculate_explore_level,
     migrate_explore_progression,
+    roll_exploration_base_reward,
     scale_exploration_gold,
     scale_exploration_xp,
 )
@@ -171,8 +172,19 @@ class ExplorationService:
         )
         expected_power = _expected_player_power(session, dungeon_level)
         power_ratio = player_power / max(1.0, expected_power)
-        base_gold = rng.randint(choice.gold_min, choice.gold_max)
-        base_experience = rng.randint(choice.xp_min, choice.xp_max)
+        dungeon = self.players.get_or_create_guild(session, guild_id=exploration.guild_id)
+        base_gold = roll_exploration_base_reward(
+            rng,
+            choice.gold_min,
+            choice.gold_max,
+            dungeon_stability=dungeon.stability,
+        )
+        base_experience = roll_exploration_base_reward(
+            rng,
+            choice.xp_min,
+            choice.xp_max,
+            dungeon_stability=dungeon.stability,
+        )
         gold = scale_exploration_gold(
             base_gold,
             reward_explore_level,
@@ -212,7 +224,6 @@ class ExplorationService:
         )
         player.explore_level = calculate_explore_level(player.experience)
 
-        dungeon = self.players.get_or_create_guild(session, guild_id=exploration.guild_id)
         self.guilds.apply_choice(
             dungeon,
             gold=gold,
@@ -221,11 +232,18 @@ class ExplorationService:
             stability_effect=choice.stability_effect,
             discovery_category=discovery.category if discovery else None,
         )
-        self.weekly.add_progress(
+        self.weekly.record_exploration_result(
             session,
             guild_id=exploration.guild_id,
-            player=player,
-            amount=choice.weekly_progress,
+            user_id=player.discord_user_id,
+            event_id=f"exploration:{exploration.id}",
+            gold=gold,
+            xp=experience,
+            hero_delta=choice.hero_effect,
+            villain_delta=choice.villain_effect,
+            stability_delta=choice.stability_effect,
+            discovery_key=choice.discovery_key,
+            new_discovery=is_new,
         )
         session.add(
             EncounterHistory(

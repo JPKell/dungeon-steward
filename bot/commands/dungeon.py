@@ -45,6 +45,7 @@ from bot.utils.time import discord_relative_timestamp, human_duration
 from bot.views.exploration import (
     STAT_ALLOCATION_PROFILE,
     STAT_ALLOCATION_SUMMARY,
+    DefenseResolvedActionView,
     ExplorationView,
     PostExplorationView,
     ShopView,
@@ -65,11 +66,11 @@ class DungeonGroup(app_commands.Group):
         self.energy = EnergyService()
         self.players = PlayerService()
         self.potions = PotionService()
-        self.exploration = ExplorationService(potions=self.potions)
-        self.defense = DefenseService(players=self.players, potions=self.potions)
+        self.weekly = WeeklyObjectiveService(players=self.players)
+        self.exploration = ExplorationService(players=self.players, weekly=self.weekly, potions=self.potions)
+        self.defense = DefenseService(players=self.players, potions=self.potions, weekly=self.weekly)
         self.shop = ShopService(players=self.players)
         self.discoveries = DiscoveryService()
-        self.weekly = WeeklyObjectiveService()
 
     def _action_view(
         self,
@@ -110,13 +111,15 @@ class DungeonGroup(app_commands.Group):
             )
         return bool(value)
 
-    def _defense_report_view(self, user_id: int, report) -> PostExplorationView | None:
-        if report.stat_points_earned <= 0:
-            return None
-        return self._action_view(
-            user_id,
-            is_defending=False,
-            stat_allocation_context=STAT_ALLOCATION_SUMMARY,
+    def _defense_report_view(self, user_id: int, report) -> DefenseResolvedActionView:
+        stat_context = STAT_ALLOCATION_SUMMARY if report.stat_points_earned > 0 else None
+        return DefenseResolvedActionView(
+            session_factory=self.session_factory,
+            exploration_service=self.exploration,
+            defense_service=self.defense,
+            shop_service=self.shop,
+            owner_user_id=user_id,
+            stat_allocation_context=stat_context,
         )
 
     async def _resolve_defense_before_explore(self, interaction: discord.Interaction) -> bool:
@@ -146,11 +149,38 @@ class DungeonGroup(app_commands.Group):
                     view=self._defense_report_view(interaction.user.id, report),
                 ),
             )
+            return False
         return True
 
     @app_commands.command(name="hall", description="Visit the Steward's Hall to choose your next dungeon action")
     async def hall(self, interaction: discord.Interaction) -> None:
-        hall_embed = build_hall_embed()
+        if interaction.guild_id is None:
+            hall_embed = build_hall_embed()
+        else:
+            with self.session_factory() as db:
+                dungeon = self.players.get_or_create_guild(db, guild_id=interaction.guild_id)
+                objective = self.weekly.get_active(db, guild_id=interaction.guild_id)
+                player = self.players.get_or_create(
+                    db,
+                    guild_id=interaction.guild_id,
+                    user_id=interaction.user.id,
+                    display_name=interaction.user.display_name,
+                )
+                contributor_count = self.weekly._participant_count(db, objective)
+                player_contribution = self.weekly.player_contribution(db, objective, player_id=player.id)
+                player_qualifies = self.weekly.qualifies_for_reward(objective, player_contribution)
+                estimated_reward = self.weekly.reward_preview(player, objective).gold_awarded
+                contribution_leaders = [(name, value) for name, value in self.weekly.contribution_rows(db, objective, limit=5)]
+                db.commit()
+                hall_embed = build_hall_embed(
+                    dungeon=dungeon,
+                    objective=objective,
+                    contributor_count=contributor_count,
+                    player_contribution=player_contribution,
+                    player_qualifies=player_qualifies,
+                    estimated_reward=estimated_reward,
+                    contribution_leaders=contribution_leaders,
+                )
         await interaction.response.send_message(
             **banner_first_message_payload(hall_embed),
             view=self._hall_view(
@@ -550,23 +580,30 @@ class DungeonGroup(app_commands.Group):
         with self.session_factory() as db:
             dungeon = self.players.get_or_create_guild(db, guild_id=interaction.guild_id)
             objective = self.weekly.get_active(db, guild_id=interaction.guild_id)
-            db.commit()
-            status_embed = embed(dungeon.name, "The shared dungeon prefers balance over conquest.", colour=DEEP_NAVY)
-            status_embed.add_field(name="Level", value=str(dungeon.level))
-            status_embed.add_field(name="Gold", value=str(dungeon.gold))
-            status_embed.add_field(name="Hero Influence", value=str(dungeon.hero_influence))
-            status_embed.add_field(name="Villain Influence", value=str(dungeon.villain_influence))
-            status_embed.add_field(name="Stability", value=f"{dungeon.stability}/100")
-            status_embed.add_field(name="Weekly Objective", value=objective.title, inline=False)
-            status_embed.add_field(
-                name="Progress",
-                value=f"{objective.progress_value}/{objective.target_value} | Ends {discord_relative_timestamp(objective.ends_at)}",
-                inline=False,
+            player = self.players.get_or_create(
+                db,
+                guild_id=interaction.guild_id,
+                user_id=interaction.user.id,
+                display_name=interaction.user.display_name,
             )
-            DEFAULT_DISCORD_ASSETS.apply_banner(status_embed, LOCATION_SERVICE.banner_asset_for("community_dungeon"))
+            contributor_count = self.weekly._participant_count(db, objective)
+            player_contribution = self.weekly.player_contribution(db, objective, player_id=player.id)
+            player_qualifies = self.weekly.qualifies_for_reward(objective, player_contribution)
+            estimated_reward = self.weekly.reward_preview(player, objective).gold_awarded
+            contribution_leaders = [(name, value) for name, value in self.weekly.contribution_rows(db, objective, limit=5)]
+            db.commit()
+            hall_embed = build_hall_embed(
+                dungeon=dungeon,
+                objective=objective,
+                contributor_count=contributor_count,
+                player_contribution=player_contribution,
+                player_qualifies=player_qualifies,
+                estimated_reward=estimated_reward,
+                contribution_leaders=contribution_leaders,
+            )
         await interaction.response.send_message(
-            **banner_first_message_payload(status_embed),
-            view=self._action_view(
+            **banner_first_message_payload(hall_embed),
+            view=self._hall_view(
                 interaction.user.id,
                 is_defending=self._is_defending(interaction.guild_id, interaction.user.id),
             ),
@@ -587,9 +624,15 @@ class DungeonGroup(app_commands.Group):
             await interaction.response.send_message("Leaderboards are server-specific.", ephemeral=True)
             return
         selected = category.value if category else "experience"
+        weekly_objective_title = None
+        weekly_target = 1
+        weekly_contributors = 0
         with self.session_factory() as db:
             if selected == "weekly":
                 objective = self.weekly.get_active(db, guild_id=interaction.guild_id)
+                weekly_objective_title = objective.title
+                weekly_target = max(1, int(objective.target_value or 1))
+                weekly_contributors = self.weekly._participant_count(db, objective)
                 rows = db.execute(
                     select(Player.display_name, WeeklyPlayerContribution.contribution_value)
                     .join(WeeklyPlayerContribution, WeeklyPlayerContribution.player_id == Player.id)
@@ -607,9 +650,22 @@ class DungeonGroup(app_commands.Group):
                 ).all()
         board = embed("Dungeon Leaderboard", colour=WARM_GOLD)
         if rows:
-            board.description = "\n".join(f"{index}. {name}: {value}" for index, (name, value) in enumerate(rows, start=1))
+            if selected == "weekly":
+                board.description = "\n".join(
+                    f"{index}. {name}: {value} ({min(100, (int(value) / weekly_target) * 100):.0f}% of target)"
+                    for index, (name, value) in enumerate(rows, start=1)
+                )
+                board.add_field(name="Weekly Objective", value=weekly_objective_title or "Active Objective")
+                board.add_field(name="Contributors", value=str(weekly_contributors))
+            else:
+                board.description = "\n".join(
+                    f"{index}. {name}: {value}" for index, (name, value) in enumerate(rows, start=1)
+                )
         else:
             board.description = "No entries yet. The dungeon awaits its first questionable decision."
+            if selected == "weekly":
+                board.add_field(name="Weekly Objective", value=weekly_objective_title or "Active Objective")
+                board.add_field(name="Contributors", value=str(weekly_contributors))
         DEFAULT_DISCORD_ASSETS.apply_banner(board, LOCATION_SERVICE.banner_asset_for("leaderboard"))
         await interaction.response.send_message(
             **banner_first_message_payload(board),

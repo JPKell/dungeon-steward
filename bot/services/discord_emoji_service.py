@@ -90,6 +90,9 @@ class DiscordEmojiService:
         entry = self.registry.get(asset_key)
         return entry.markdown if entry is not None else None
 
+    def registry_entry_for(self, asset_key: str | None) -> EmojiRegistryEntry | None:
+        return self.registry.get(asset_key)
+
 
 def load_emoji_catalog(
     path: Path | None = None,

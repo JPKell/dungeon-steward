@@ -33,6 +33,8 @@ from bot.models.game import (
     PotionActivation,
     PotionInventoryStack,
     WeeklyObjective,
+    WeeklyObjectiveEvent,
+    WeeklyObjectiveReward,
     WeeklyPlayerContribution,
 )
 
@@ -69,5 +71,7 @@ __all__ = [
     "PotionActivation",
     "PotionInventoryStack",
     "WeeklyObjective",
+    "WeeklyObjectiveEvent",
+    "WeeklyObjectiveReward",
     "WeeklyPlayerContribution",
 ]

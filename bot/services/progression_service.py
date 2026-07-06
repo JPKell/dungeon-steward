@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+import random
 from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any
@@ -14,6 +15,8 @@ from bot.services.progression_content import (
 
 ALLOCATABLE_STATS = {"attack", "defense", "speed"}
 RARITIES = ("common", "uncommon", "rare", "epic", "legendary")
+LOW_STABILITY_REWARD_THRESHOLD = 50
+HIGH_STABILITY_REWARD_THRESHOLD = 90
 
 
 @dataclass(frozen=True)
@@ -261,6 +264,31 @@ def get_exploration_reward_multiplier(
             outcome_multiplier *= config.failure_xp_multiplier
 
     return level_multiplier * dungeon_multiplier * rarity_multiplier * power_multiplier * outcome_multiplier
+
+
+def roll_exploration_base_reward(
+    rng: random.Random | Any,
+    minimum: int,
+    maximum: int,
+    *,
+    dungeon_stability: int,
+) -> int:
+    minimum = int(minimum)
+    maximum = int(maximum)
+    if maximum <= minimum:
+        return minimum
+
+    roll = rng.randint(minimum, maximum)
+    stability = max(0, min(100, int(dungeon_stability)))
+    if stability < LOW_STABILITY_REWARD_THRESHOLD:
+        bias_chance = (LOW_STABILITY_REWARD_THRESHOLD - stability) / LOW_STABILITY_REWARD_THRESHOLD
+        if rng.random() < bias_chance:
+            roll = min(roll, rng.randint(minimum, maximum))
+    elif stability > HIGH_STABILITY_REWARD_THRESHOLD:
+        bias_chance = (stability - HIGH_STABILITY_REWARD_THRESHOLD) / (100 - HIGH_STABILITY_REWARD_THRESHOLD)
+        if rng.random() < bias_chance:
+            roll = max(roll, rng.randint(minimum, maximum))
+    return roll
 
 
 def scale_exploration_gold(

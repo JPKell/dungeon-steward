@@ -26,6 +26,7 @@ from bot.services.progression_service import (
     get_max_defense_minutes,
     get_stat_points_for_combat_level,
     grant_combat_xp,
+    roll_exploration_base_reward,
     scale_exploration_gold,
     scale_exploration_xp,
     scale_shop_item_cost,
@@ -114,6 +115,25 @@ def test_exploration_reward_scaling_uses_tuned_growth():
     assert scale_exploration_gold(100, 1) == 115
     assert scale_exploration_gold(100, 110) > scale_exploration_gold(100, 91)
     assert scale_exploration_xp(100, 20) > 100
+
+
+class RewardRollRng:
+    def __init__(self, rolls: list[int], chances: list[float] | None = None) -> None:
+        self.rolls = rolls
+        self.chances = chances or []
+
+    def randint(self, _low: int, _high: int) -> int:
+        return self.rolls.pop(0)
+
+    def random(self) -> float:
+        return self.chances.pop(0)
+
+
+def test_exploration_reward_rolls_are_biased_by_dungeon_stability():
+    assert roll_exploration_base_reward(RewardRollRng([8]), 1, 10, dungeon_stability=50) == 8
+    assert roll_exploration_base_reward(RewardRollRng([8]), 1, 10, dungeon_stability=90) == 8
+    assert roll_exploration_base_reward(RewardRollRng([8, 2], [0.0]), 1, 10, dungeon_stability=0) == 2
+    assert roll_exploration_base_reward(RewardRollRng([2, 8], [0.0]), 1, 10, dungeon_stability=100) == 8
 
 
 def test_shop_scaling_defaults_preserve_base_items():

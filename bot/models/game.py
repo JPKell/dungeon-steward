@@ -7,12 +7,14 @@ from sqlalchemy import (
     Boolean,
     CheckConstraint,
     DateTime,
+    Float,
     ForeignKey,
     Index,
     Integer,
     String,
     Text,
     UniqueConstraint,
+    text,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -102,6 +104,7 @@ class GuildDungeon(TimestampMixin, Base):
     heroes_defeated: Mapped[int] = mapped_column(Integer, default=0)
     rooms_discovered: Mapped[int] = mapped_column(Integer, default=0)
     current_week_started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
+    weekly_difficulty_index: Mapped[float] = mapped_column(Float, default=1.0)
 
 
 class ExplorationSession(TimestampMixin, Base):
@@ -232,7 +235,16 @@ class PlayerDiscovery(TimestampMixin, Base):
 
 class WeeklyObjective(TimestampMixin, Base):
     __tablename__ = "weekly_objectives"
-    __table_args__ = (Index("ix_weekly_guild_active", "guild_id", "resolved_at"),)
+    __table_args__ = (
+        Index("ix_weekly_guild_active", "guild_id", "resolved_at"),
+        Index(
+            "uq_weekly_guild_active_unresolved",
+            "guild_id",
+            unique=True,
+            sqlite_where=text("resolved_at IS NULL"),
+            postgresql_where=text("resolved_at IS NULL"),
+        ),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
     guild_id: Mapped[int] = mapped_column(BigInteger, nullable=False)
@@ -246,6 +258,18 @@ class WeeklyObjective(TimestampMixin, Base):
     ends_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     rewards_granted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    metric: Mapped[str] = mapped_column(String(80), default="explorations")
+    mode: Mapped[str] = mapped_column(String(40), default="explore")
+    effort_tier: Mapped[int] = mapped_column(Integer, default=1)
+    difficulty_index: Mapped[float] = mapped_column(Float, default=1.0)
+    previous_participant_count: Mapped[int] = mapped_column(Integer, default=1)
+    participant_factor: Mapped[float] = mapped_column(Float, default=1.0)
+    raw_target_value: Mapped[float] = mapped_column(Float, default=1.0)
+    rounded_target_value: Mapped[int] = mapped_column(Integer, default=1)
+    succeeded: Mapped[bool | None] = mapped_column(Boolean)
+    schema_version: Mapped[int] = mapped_column(Integer, default=2)
+    reward_policy_version: Mapped[int] = mapped_column(Integer, default=1)
+    participant_count: Mapped[int] = mapped_column(Integer, default=0)
 
 
 class WeeklyPlayerContribution(TimestampMixin, Base):
@@ -259,3 +283,44 @@ class WeeklyPlayerContribution(TimestampMixin, Base):
     weekly_objective_id: Mapped[int] = mapped_column(ForeignKey("weekly_objectives.id"))
     player_id: Mapped[int] = mapped_column(ForeignKey("players.id"))
     contribution_value: Mapped[int] = mapped_column(Integer, default=0)
+
+
+class WeeklyObjectiveEvent(TimestampMixin, Base):
+    __tablename__ = "weekly_objective_events"
+    __table_args__ = (
+        UniqueConstraint("weekly_objective_id", "event_id", name="uq_weekly_objective_event"),
+        Index("ix_weekly_objective_events_metric", "weekly_objective_id", "metric"),
+        Index("ix_weekly_objective_events_unique", "weekly_objective_id", "metric", "unique_key"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    weekly_objective_id: Mapped[int] = mapped_column(ForeignKey("weekly_objectives.id"), nullable=False)
+    guild_id: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    player_id: Mapped[int] = mapped_column(ForeignKey("players.id"), nullable=False)
+    metric: Mapped[str] = mapped_column(String(80), nullable=False)
+    amount: Mapped[int] = mapped_column(Integer, nullable=False)
+    event_id: Mapped[str] = mapped_column(String(160), nullable=False)
+    source: Mapped[str] = mapped_column(String(80), nullable=False)
+    unique_key: Mapped[str | None] = mapped_column(String(160))
+    metadata_json: Mapped[str | None] = mapped_column(Text)
+
+
+class WeeklyObjectiveReward(TimestampMixin, Base):
+    __tablename__ = "weekly_objective_rewards"
+    __table_args__ = (
+        UniqueConstraint("objective_id", "user_id", name="uq_weekly_objective_reward_user"),
+        Index("ix_weekly_objective_rewards_objective", "objective_id", "awarded_at"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    objective_id: Mapped[int] = mapped_column(ForeignKey("weekly_objectives.id"), nullable=False)
+    guild_id: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    user_id: Mapped[int] = mapped_column(ForeignKey("players.id"), nullable=False)
+    explore_level_used: Mapped[int] = mapped_column(Integer, nullable=False)
+    reference_equipment_cost: Mapped[int] = mapped_column(Integer, nullable=False)
+    effort_multiplier: Mapped[float] = mapped_column(Float, nullable=False)
+    difficulty_multiplier: Mapped[float] = mapped_column(Float, nullable=False)
+    contribution: Mapped[int] = mapped_column(Integer, nullable=False)
+    minimum_required_contribution: Mapped[int] = mapped_column(Integer, nullable=False)
+    gold_awarded: Mapped[int] = mapped_column(Integer, nullable=False)
+    awarded_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)

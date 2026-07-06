@@ -23,6 +23,7 @@ from bot.services.progression_service import (
     grant_combat_xp,
     sync_combat_progression,
 )
+from bot.services.weekly_objective_service import WeeklyObjectiveService
 from bot.utils.time import ensure_utc, utc_now
 
 
@@ -96,9 +97,16 @@ class DefenseReport:
 
 
 class DefenseService:
-    def __init__(self, *, players: PlayerService | None = None, potions: PotionService | None = None) -> None:
+    def __init__(
+        self,
+        *,
+        players: PlayerService | None = None,
+        potions: PotionService | None = None,
+        weekly: WeeklyObjectiveService | None = None,
+    ) -> None:
         self.players = players or PlayerService()
         self.potions = potions or PotionService()
+        self.weekly = weekly or WeeklyObjectiveService(players=self.players)
 
     def start(
         self,
@@ -458,6 +466,36 @@ class DefenseService:
                 dungeon_level,
             )
         sync_player_dungeon_progression(player)
+        self.weekly.record_defense_result(
+            session,
+            guild_id=player.guild_id,
+            user_id=player.discord_user_id,
+            report=DefenseReport(
+                player_id=player.id,
+                session_id=session_id,
+                dungeon_level=dungeon_level,
+                started_at=started_at,
+                ended_at=now,
+                reason=reason,
+                elapsed_seconds=elapsed_seconds,
+                capped_seconds=capped_seconds,
+                scheduled_battles=scheduled_battles,
+                completed_battles=completed_battles,
+                victories=victories,
+                defeats=defeats,
+                draws=draws,
+                unresolved_attacks=max(0, scheduled_battles - completed_battles),
+                combat_xp_earned=combat_xp_earned,
+                gold_earned=gold_earned,
+                combat_levels_gained=levels_gained,
+                stat_points_earned=stat_points_earned,
+                starting_hp=starting_hp,
+                ending_hp=min(report_stats.max_hp, battle_ending_hp),
+                max_hp=report_stats.max_hp,
+                enemies_encountered=dict(enemies),
+                notable_battles=tuple(notable_battles),
+            ),
+        )
 
         max_hp = report_stats.max_hp
         unresolved_attacks = max(0, scheduled_battles - completed_battles)

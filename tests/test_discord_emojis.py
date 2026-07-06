@@ -12,7 +12,7 @@ from bot.services.discord_emoji_service import (
     EmojiRegistryEntry,
 )
 from bot.services.potion_service import PotionInventoryEntry, PotionService
-from bot.views.exploration import _potion_inventory_line
+from bot.views.exploration import PotionConsumeSelect, _potion_inventory_line
 
 
 def test_potion_inventory_line_uses_registered_custom_emoji(tmp_path) -> None:
@@ -47,6 +47,45 @@ def test_potion_inventory_line_uses_registered_custom_emoji(tmp_path) -> None:
     entry = PotionInventoryEntry(stack=SimpleNamespace(quantity=1), item=item)
 
     assert _potion_inventory_line(service, entry, emoji_service).startswith("<:ds_p_hp_02:123456789>")
+
+
+def test_potion_select_option_uses_registered_custom_emoji(tmp_path) -> None:
+    service = PotionService()
+    item = service.content.get("potion_max_hp_02")
+    emoji_service = DiscordEmojiService(
+        catalog=EmojiCatalog(
+            version=1,
+            emojis={
+                "item.potion.max_hp.02": EmojiDefinition(
+                    key="item.potion.max_hp.02",
+                    name="ds_p_hp_02",
+                    path=tmp_path / "hp_02.png",
+                    alt_text="HP potion",
+                )
+            },
+        ),
+        registry=EmojiRegistry(
+            version=1,
+            emojis={
+                "item.potion.max_hp.02": EmojiRegistryEntry(
+                    key="item.potion.max_hp.02",
+                    name="ds_p_hp_02",
+                    emoji_id="123456789",
+                    sha256="a" * 64,
+                    animated=False,
+                    uploaded_at="2026-07-06T00:00:00+00:00",
+                )
+            },
+        ),
+    )
+    entry = PotionInventoryEntry(stack=SimpleNamespace(quantity=3), item=item)
+
+    select = PotionConsumeSelect((entry,), emoji_service=emoji_service)
+
+    assert select.options[0].label == "Ironberry Draught x3"
+    assert select.options[0].emoji is not None
+    assert select.options[0].emoji.name == "ds_p_hp_02"
+    assert select.options[0].emoji.id == 123456789
 
 
 def test_potion_inventory_line_uses_runtime_default_emoji_service(tmp_path, monkeypatch) -> None:

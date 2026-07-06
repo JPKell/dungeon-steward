@@ -62,8 +62,9 @@ def test_shop_embed_shows_equipped_stats_and_rarity_badges() -> None:
     embed = build_shop_embed(stock, player=player, equipment=StubEquipmentService(item))
 
     equipped_field = next(field for field in embed.fields if field.name == "Equipped")
-    gold_field = next(field for field in embed.fields if field.name == "🪙 250")
 
+    assert embed.title == "Dungeon Equipment Shop                    🪙 250"
+    assert embed.description is None
     assert "Heroic Blade" in equipped_field.value
     assert equipped_field.value.startswith("⚔️ Heroic Blade 🟡")
     assert equipped_field.value.index("Heroic Blade") < equipped_field.value.index("HP 4")
@@ -74,8 +75,13 @@ def test_shop_embed_shows_equipped_stats_and_rarity_badges() -> None:
     assert "Trade-in 🪙 14" in equipped_field.value
     assert "🛡️ Empty" in equipped_field.value
     assert "No item equipped" not in equipped_field.value
-    assert gold_field.value == "\u200b"
     assert embed.timestamp is None
+    assert embed.footer.text is not None
+    footer_lines = embed.footer.text.splitlines()
+    assert footer_lines[0] == "Buying an item equips it immediately and replaces the matching slot."
+    assert footer_lines[1] == "Items you already own are hidden."
+    assert footer_lines[2].startswith("Combat Level 5 stock. Refreshes today at ")
+    assert "<t:" not in footer_lines[2]
     assert all(field.name != "Stock" for field in embed.fields)
     assert "Rusty Axe" not in "\n".join(field.value for field in embed.fields)
 
@@ -130,13 +136,12 @@ def test_shop_embed_selected_purchase_shows_net_trade_in_price() -> None:
 
     embed = build_shop_embed(stock, player=player, equipment=StubEquipmentService(replaced_item), selected_quote=quote)
 
-    selected_field = next(field for field in embed.fields if field.name == "Selected Purchase")
+    selected_field = next(field for field in embed.fields if field.name.endswith("Selected Purchase"))
     lines = selected_field.value.splitlines()
 
     assert lines[0] == "⚔️ Heroic Blade 🟡"
     assert lines[1] == "HP 4 | ATK 8 | DEF 3 | SPD 2"
-    assert lines[2] == "---"
-    assert lines[3] == "Purchase Price After Trade-in 🪙 135"
+    assert lines[2] == "Purchase Price After Trade-in 🪙 135"
     assert "Purchase Price After Trade-in 🪙 135" in selected_field.value
     assert "Sticker" not in selected_field.value
     assert "Trade-in -" not in selected_field.value

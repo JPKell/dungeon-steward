@@ -25,7 +25,7 @@ from bot.services.dungeon_progression_service import (
 from bot.services.encounter_service import Encounter
 from bot.services.enemy_service import DUNGEON_LEVEL_MAX, DUNGEON_LEVEL_MIN
 from bot.services.energy_service import InsufficientEnergyError
-from bot.services.equipment_service import EquipmentItem, get_effective_combat_stats
+from bot.services.equipment_service import EQUIPMENT_SLOTS, EquipmentItem, get_effective_combat_stats
 from bot.services.exploration_service import (
     ExplorationAlreadyResolvedError,
     ExplorationExpiredError,
@@ -187,28 +187,67 @@ class ExplorationButton(discord.ui.Button):
         await view.resolve_choice(interaction, self.choice_key)
 
 
-def build_hall_embed(*, asset_service: DiscordAssetService = DEFAULT_DISCORD_ASSETS) -> discord.Embed:
+def build_hall_embed(
+    *,
+    dungeon=None,
+    objective=None,
+    contributor_count: int = 0,
+    player_contribution: int = 0,
+    player_qualifies: bool | None = None,
+    estimated_reward: int | None = None,
+    contribution_leaders: list[tuple[str, int]] | None = None,
+    asset_service: DiscordAssetService = DEFAULT_DISCORD_ASSETS,
+) -> discord.Embed:
     hall = embed(
         "Steward's Hall",
-        "The planning table is covered in maps, candle stubs, and exactly one mug labelled 'do not polymorph.' Choose what to do next.",
+        (
+            "The Steward's Hall is the dungeon's nerve center: a long chamber of annotated maps, "
+            "ledger chains, brass speaking tubes, and candlelit tables where every expedition, guard "
+            "shift, and questionable renovation eventually becomes paperwork.\nDungeon stability will "
+            "affect the dungeon's performance in combat and exploration. Keep the dungeon stable to "
+            "avoid missing out on gold and xp."
+        ),
         colour=DEEP_NAVY,
     )
-    hall.add_field(
-        name="Available Actions",
-        value=(
-            "Explore the dungeon\n"
-            "Defend a dungeon level\n"
-            "Visit the equipment shop\n"
-            "Open your potion inventory\n"
-            "Check your profile\n"
-            "Review combat stats\n"
-            "Review energy\n"
-            "Inspect the shared dungeon\n"
-            "View the leaderboard\n"
-            "Read help"
-        ),
-        inline=False,
-    )
+    if dungeon is not None:
+        hall.add_field(name="\u200b", value="**Shared community dungeon**", inline=False)
+        hall.add_field(name="Level", value=str(dungeon.level))
+        hall.add_field(name="Gold", value=str(dungeon.gold))
+        hall.add_field(name="\u200b", value="\u200b")
+        hall.add_field(name="Hero / Villain Influence", value=f"{dungeon.hero_influence} : {dungeon.villain_influence}")
+        hall.add_field(name="Stability", value=f"{dungeon.stability}/100")
+    if objective is not None:
+        objective_description = getattr(objective, "description", "")
+        target = max(1, int(objective.target_value))
+        displayed_progress = min(target, int(objective.progress_value or 0))
+        percent = min(100.0, (displayed_progress / target) * 100)
+        hall.add_field(
+            name=f"\nWeekly Objective: {objective.title}",
+            value=(
+                f"{objective_description}\n"
+                f"Progress: {displayed_progress}/{target} ({percent:.0f}%)   |   "
+                f"Ends {discord_relative_timestamp(objective.ends_at)}"
+            ),
+            inline=False,
+        )
+        hall.add_field(name="Mode", value=str(getattr(objective, "mode", "mixed")).title())
+        hall.add_field(name="Contributors", value=str(contributor_count))
+        hall.add_field(name="Difficulty", value=f"{float(getattr(objective, 'difficulty_index', 1.0)):.2f}x")
+        if contribution_leaders:
+            lines = [
+                f"{index}. {name}: {value} ({min(100.0, (value / target) * 100):.0f}%)"
+                for index, (name, value) in enumerate(contribution_leaders[:5], start=1)
+            ]
+            hall.add_field(name="Contribution Leaders", value="\n".join(lines), inline=False)
+
+        if player_qualifies is not None:
+            qualification = "Qualifies" if player_qualifies else "Not yet"
+            reward_text = f" | Est. reward {estimated_reward} gold" if estimated_reward is not None else ""
+            hall.add_field(
+                name="Your Contribution",
+                value=f"{player_contribution}/{target} | {qualification}{reward_text}",
+                inline=False,
+            )
     asset_service.apply_banner(hall, LOCATION_SERVICE.banner_asset_for("stewards_hall"))
     return hall
 
@@ -440,6 +479,7 @@ class DungeonActionView(discord.ui.View):
             await interaction.followup.send(
                 **banner_first_message_payload(report_embed, view=self.defense_report_view(report)),
             )
+            return False
         return True
 
     async def show_defense_selector(self, interaction: discord.Interaction) -> None:
@@ -455,6 +495,7 @@ class DungeonActionView(discord.ui.View):
             )
             sync_player_dungeon_progression(player)
             options = _dungeon_select_options(player)
+            potion_entries = self.potion_service.inventory_entries(db, player)
             db.commit()
         selector = embed(
             "Choose Defense Level",
@@ -471,6 +512,7 @@ class DungeonActionView(discord.ui.View):
                 shop_service=self.shop_service,
                 owner_user_id=self.owner_user_id,
                 options=options,
+                potion_entries=potion_entries,
                 is_defending=self.is_defending,
             ),
         )
@@ -760,10 +802,65 @@ class DungeonActionView(discord.ui.View):
             allow_defense_return_button=allow_defense_return_button,
         )
 
-    def defense_report_view(self, report) -> PostExplorationView | None:
-        if report.stat_points_earned <= 0:
-            return None
-        return self.compact_view(is_defending=False, stat_allocation_context=STAT_ALLOCATION_SUMMARY)
+    def defense_report_view(self, report) -> DefenseResolvedActionView:
+        stat_context = STAT_ALLOCATION_SUMMARY if report.stat_points_earned > 0 else None
+        return DefenseResolvedActionView(
+            session_factory=self.session_factory,
+            exploration_service=self.exploration_service,
+            defense_service=self.defense_service,
+            shop_service=self.shop_service,
+            owner_user_id=self.owner_user_id,
+            stat_allocation_context=stat_context,
+        )
+
+    async def show_hall(self, interaction: discord.Interaction, *, is_defending: bool | None = None) -> None:
+        if interaction.guild_id is None:
+            hall_embed = build_hall_embed()
+        else:
+            with self.session_factory() as db:
+                dungeon = self.exploration_service.players.get_or_create_guild(
+                    db,
+                    guild_id=interaction.guild_id,
+                )
+                objective = self.exploration_service.weekly.get_active(
+                    db,
+                    guild_id=interaction.guild_id,
+                )
+                player = self.exploration_service.players.get_or_create(
+                    db,
+                    guild_id=interaction.guild_id,
+                    user_id=interaction.user.id,
+                    display_name=interaction.user.display_name,
+                )
+                contributor_count = self.exploration_service.weekly._participant_count(db, objective)
+                player_contribution = self.exploration_service.weekly.player_contribution(db, objective, player_id=player.id)
+                player_qualifies = self.exploration_service.weekly.qualifies_for_reward(objective, player_contribution)
+                estimated_reward = self.exploration_service.weekly.reward_preview(player, objective).gold_awarded
+                contribution_leaders = [
+                    (name, value)
+                    for name, value in self.exploration_service.weekly.contribution_rows(db, objective, limit=5)
+                ]
+                db.commit()
+                hall_embed = build_hall_embed(
+                    dungeon=dungeon,
+                    objective=objective,
+                    contributor_count=contributor_count,
+                    player_contribution=player_contribution,
+                    player_qualifies=player_qualifies,
+                    estimated_reward=estimated_reward,
+                    contribution_leaders=contribution_leaders,
+                )
+        await interaction.response.edit_message(
+            **banner_first_message_payload(hall_embed, attachment_parameter="attachments"),
+            view=StewardsHallView(
+                session_factory=self.session_factory,
+                exploration_service=self.exploration_service,
+                defense_service=self.defense_service,
+                shop_service=self.shop_service,
+                owner_user_id=self.owner_user_id,
+                is_defending=self.is_defending if is_defending is None else is_defending,
+            ),
+        )
 
 
 class StatAllocationButton(discord.ui.Button):
@@ -813,18 +910,33 @@ class PostExplorationView(DungeonActionView):
         interaction: discord.Interaction,
         _button: discord.ui.Button,
     ) -> None:
-        hall_embed = build_hall_embed()
-        await interaction.response.edit_message(
-            **banner_first_message_payload(hall_embed, attachment_parameter="attachments"),
-            view=StewardsHallView(
-                session_factory=self.session_factory,
-                exploration_service=self.exploration_service,
-                defense_service=self.defense_service,
-                shop_service=self.shop_service,
-                owner_user_id=self.owner_user_id,
-                is_defending=self.is_defending,
-            ),
-        )
+        await self.show_hall(interaction)
+
+
+class DefenseResolvedActionView(DungeonActionView):
+    @discord.ui.button(label="Explore", style=discord.ButtonStyle.primary)
+    async def explore(
+        self,
+        interaction: discord.Interaction,
+        _button: discord.ui.Button,
+    ) -> None:
+        await self.show_exploration_selector(interaction)
+
+    @discord.ui.button(label="Defend", style=discord.ButtonStyle.success)
+    async def defend(
+        self,
+        interaction: discord.Interaction,
+        _button: discord.ui.Button,
+    ) -> None:
+        await self.show_defense_selector(interaction)
+
+    @discord.ui.button(label="Steward's Hall", style=discord.ButtonStyle.secondary)
+    async def hall(
+        self,
+        interaction: discord.Interaction,
+        _button: discord.ui.Button,
+    ) -> None:
+        await self.show_hall(interaction, is_defending=False)
 
 
 class StewardsHallView(DungeonActionView):
@@ -941,50 +1053,6 @@ class StewardsHallView(DungeonActionView):
             return
         await self.show_defense_selector(interaction)
 
-    @discord.ui.button(label="Dungeon", style=discord.ButtonStyle.secondary, row=1)
-    async def dungeon(
-        self,
-        interaction: discord.Interaction,
-        _button: discord.ui.Button,
-    ) -> None:
-        if interaction.guild_id is None:
-            await interaction.response.send_message(
-                "Dungeon status is server-specific.",
-                ephemeral=True,
-            )
-            return
-        with self.session_factory() as db:
-            dungeon = self.exploration_service.players.get_or_create_guild(
-                db,
-                guild_id=interaction.guild_id,
-            )
-            objective = self.exploration_service.weekly.get_active(
-                db,
-                guild_id=interaction.guild_id,
-            )
-            db.commit()
-            status_embed = embed(
-                dungeon.name,
-                "The shared dungeon prefers balance over conquest.",
-                colour=DEEP_NAVY,
-            )
-            status_embed.add_field(name="Level", value=str(dungeon.level))
-            status_embed.add_field(name="Gold", value=str(dungeon.gold))
-            status_embed.add_field(name="Hero Influence", value=str(dungeon.hero_influence))
-            status_embed.add_field(name="Villain Influence", value=str(dungeon.villain_influence))
-            status_embed.add_field(name="Stability", value=f"{dungeon.stability}/100")
-            status_embed.add_field(name="Weekly Objective", value=objective.title, inline=False)
-            status_embed.add_field(
-                name="Progress",
-                value=(f"{objective.progress_value}/{objective.target_value} | Ends {discord_relative_timestamp(objective.ends_at)}"),
-                inline=False,
-            )
-            DEFAULT_DISCORD_ASSETS.apply_banner(status_embed, LOCATION_SERVICE.banner_asset_for("community_dungeon"))
-        await interaction.response.edit_message(
-            **banner_first_message_payload(status_embed, attachment_parameter="attachments"),
-            view=self.compact_view(),
-        )
-
     @discord.ui.button(label="Leaderboard", style=discord.ButtonStyle.secondary, row=1)
     async def leaderboard(
         self,
@@ -1056,6 +1124,7 @@ class DefenseLevelSelectView(DungeonActionView):
         shop_service: ShopService,
         owner_user_id: int,
         options: list[discord.SelectOption],
+        potion_entries: tuple[PotionInventoryEntry, ...] = (),
         is_defending: bool = False,
     ) -> None:
         super().__init__(
@@ -1067,7 +1136,10 @@ class DefenseLevelSelectView(DungeonActionView):
             is_defending=is_defending,
             allow_defense_return_button=False,
         )
+        self.origin = "defense"
         self.add_item(DefenseLevelSelect(options))
+        if potion_entries:
+            self.add_item(PotionConsumeSelect(potion_entries[:25], row=1))
 
     async def start_defense(self, interaction: discord.Interaction, dungeon_level: int) -> None:
         if interaction.guild_id is None:
@@ -1110,32 +1182,13 @@ class DefenseLevelSelectView(DungeonActionView):
             view=self.compact_view(is_defending=True, allow_defense_return_button=False),
         )
 
-    @discord.ui.button(label="Inventory", style=discord.ButtonStyle.secondary, row=1)
-    async def inventory(
-        self,
-        interaction: discord.Interaction,
-        _button: discord.ui.Button,
-    ) -> None:
-        await self.show_inventory(interaction, origin="defense")
-
-    @discord.ui.button(label="Back", style=discord.ButtonStyle.secondary, row=1)
+    @discord.ui.button(label="Back", style=discord.ButtonStyle.secondary, row=2)
     async def back(
         self,
         interaction: discord.Interaction,
         _button: discord.ui.Button,
     ) -> None:
-        hall_embed = build_hall_embed()
-        await interaction.response.edit_message(
-            **banner_first_message_payload(hall_embed, attachment_parameter="attachments"),
-            view=StewardsHallView(
-                session_factory=self.session_factory,
-                exploration_service=self.exploration_service,
-                defense_service=self.defense_service,
-                shop_service=self.shop_service,
-                owner_user_id=self.owner_user_id,
-                is_defending=self.is_defending,
-            ),
-        )
+        await self.show_hall(interaction)
 
 
 class DefenseLevelSelect(discord.ui.Select):
@@ -1165,6 +1218,7 @@ class ExploreLevelSelectView(DungeonActionView):
         shop_service: ShopService,
         owner_user_id: int,
         options: list[discord.SelectOption],
+        potion_entries: tuple[PotionInventoryEntry, ...] = (),
         is_defending: bool = False,
     ) -> None:
         super().__init__(
@@ -1176,34 +1230,18 @@ class ExploreLevelSelectView(DungeonActionView):
             is_defending=is_defending,
             allow_defense_return_button=False,
         )
+        self.origin = "explore"
         self.add_item(ExploreLevelSelect(options))
+        if potion_entries:
+            self.add_item(PotionConsumeSelect(potion_entries[:25], row=1))
 
-    @discord.ui.button(label="Inventory", style=discord.ButtonStyle.secondary, row=1)
-    async def inventory(
-        self,
-        interaction: discord.Interaction,
-        _button: discord.ui.Button,
-    ) -> None:
-        await self.show_inventory(interaction, origin="explore")
-
-    @discord.ui.button(label="Back", style=discord.ButtonStyle.secondary, row=1)
+    @discord.ui.button(label="Back", style=discord.ButtonStyle.secondary, row=2)
     async def back(
         self,
         interaction: discord.Interaction,
         _button: discord.ui.Button,
     ) -> None:
-        hall_embed = build_hall_embed()
-        await interaction.response.edit_message(
-            **banner_first_message_payload(hall_embed, attachment_parameter="attachments"),
-            view=StewardsHallView(
-                session_factory=self.session_factory,
-                exploration_service=self.exploration_service,
-                defense_service=self.defense_service,
-                shop_service=self.shop_service,
-                owner_user_id=self.owner_user_id,
-                is_defending=self.is_defending,
-            ),
-        )
+        await self.show_hall(interaction)
 
 
 class ExploreLevelSelect(discord.ui.Select):
@@ -1240,6 +1278,8 @@ def _dungeon_select_options(player: Player) -> list[discord.SelectOption]:
                 description=description,
             )
         )
+        if not unlocked:
+            break
     return options
 
 
@@ -1316,7 +1356,7 @@ class PotionInventoryView(DungeonActionView):
         if confirm_item_key is not None:
             self.add_item(ConfirmPotionReplacementButton(confirm_item_key))
 
-    @discord.ui.button(label="Back", style=discord.ButtonStyle.secondary, row=3)
+    @discord.ui.button(label="Back", style=discord.ButtonStyle.secondary, row=2)
     async def back(
         self,
         interaction: discord.Interaction,
@@ -1325,41 +1365,30 @@ class PotionInventoryView(DungeonActionView):
         if self.origin == "defense":
             await self.show_defense_selector(interaction)
             return
-        hall_embed = build_hall_embed()
-        await interaction.response.edit_message(
-            **banner_first_message_payload(hall_embed, attachment_parameter="attachments"),
-            view=StewardsHallView(
-                session_factory=self.session_factory,
-                exploration_service=self.exploration_service,
-                defense_service=self.defense_service,
-                shop_service=self.shop_service,
-                owner_user_id=self.owner_user_id,
-                is_defending=self.is_defending,
-            ),
-        )
+        await self.show_hall(interaction)
 
 
 class PotionConsumeSelect(discord.ui.Select):
-    def __init__(self, entries: tuple[PotionInventoryEntry, ...]) -> None:
-        options = [
-            discord.SelectOption(
-                label=_potion_option_label(entry),
-                value=entry.item.key,
-                description=_potion_option_description(entry),
-            )
-            for entry in entries
-        ]
+    def __init__(
+        self,
+        entries: tuple[PotionInventoryEntry, ...],
+        *,
+        row: int = 0,
+        emoji_service: DiscordEmojiService | None = None,
+    ) -> None:
+        emoji_service = emoji_service or DEFAULT_DISCORD_EMOJIS
+        options = [_potion_select_option(entry, emoji_service) for entry in entries]
         super().__init__(
             placeholder="Consume a potion",
             min_values=1,
             max_values=1,
             options=options,
-            row=0,
+            row=row,
         )
 
     async def callback(self, interaction: discord.Interaction) -> None:
         view = self.view
-        if not isinstance(view, PotionInventoryView):
+        if not isinstance(view, DungeonActionView):
             await interaction.response.send_message("This potion satchel is no longer available.", ephemeral=True)
             return
         await view.consume_potion(interaction, self.values[0])
@@ -1483,9 +1512,31 @@ def _potion_inventory_line(
     )
 
 
-def _potion_option_label(entry: PotionInventoryEntry) -> str:
+def _potion_select_option(entry: PotionInventoryEntry, emoji_service: DiscordEmojiService) -> discord.SelectOption:
+    custom_emoji = _potion_select_emoji(entry.item, emoji_service)
+    return discord.SelectOption(
+        label=_potion_option_label(entry, include_fallback_emoji=custom_emoji is None),
+        value=entry.item.key,
+        description=_potion_option_description(entry),
+        emoji=custom_emoji,
+    )
+
+
+def _potion_select_emoji(item: PotionItem, emoji_service: DiscordEmojiService) -> discord.PartialEmoji | None:
+    registry_entry = emoji_service.registry_entry_for(_potion_asset_key(item))
+    if registry_entry is None:
+        return None
+    return discord.PartialEmoji(
+        name=registry_entry.name,
+        id=int(registry_entry.emoji_id),
+        animated=registry_entry.animated,
+    )
+
+
+def _potion_option_label(entry: PotionInventoryEntry, *, include_fallback_emoji: bool = True) -> str:
     emoji = POTION_TYPE_EMOJIS.get(entry.item.effect_group, "🧪")
-    return _limit_component_text(f"{emoji} {entry.item.name} x{entry.stack.quantity}", 100)
+    prefix = f"{emoji} " if include_fallback_emoji else ""
+    return _limit_component_text(f"{prefix}{entry.item.name} x{entry.stack.quantity}", 100)
 
 
 def _potion_option_description(entry: PotionInventoryEntry) -> str:
@@ -1541,49 +1592,52 @@ class ShopView(DungeonActionView):
             owner_user_id=owner_user_id,
             is_defending=is_defending,
         )
-        self.add_item(ShopPurchaseSelect(stock, player, shop_service, selected_stock_number=selected_stock_number))
+        options = _shop_select_options(
+            stock,
+            player,
+            shop_service,
+            selected_stock_number=selected_stock_number,
+        )
+        if options:
+            self.add_item(ShopPurchaseSelect(options))
         if selected_stock_number is not None:
             self.add_item(ShopBuySelectedButton(selected_stock_number))
 
-    @discord.ui.button(label="Back", style=discord.ButtonStyle.secondary, row=3)
+    @discord.ui.button(label="Explore", style=discord.ButtonStyle.primary, row=2)
+    async def explore(
+        self,
+        interaction: discord.Interaction,
+        _button: discord.ui.Button,
+    ) -> None:
+        await self.show_exploration_selector(interaction)
+
+    @discord.ui.button(label="Defend", style=discord.ButtonStyle.success, row=2)
+    async def defend(
+        self,
+        interaction: discord.Interaction,
+        _button: discord.ui.Button,
+    ) -> None:
+        if self.is_defending:
+            await self.stop_defending(interaction)
+            return
+        await self.show_defense_selector(interaction)
+
+    @discord.ui.button(label="Back", style=discord.ButtonStyle.secondary, row=2)
     async def back(
         self,
         interaction: discord.Interaction,
         _button: discord.ui.Button,
     ) -> None:
-        hall_embed = build_hall_embed()
-        await interaction.response.edit_message(
-            **banner_first_message_payload(hall_embed, attachment_parameter="attachments"),
-            view=StewardsHallView(
-                session_factory=self.session_factory,
-                exploration_service=self.exploration_service,
-                defense_service=self.defense_service,
-                shop_service=self.shop_service,
-                owner_user_id=self.owner_user_id,
-                is_defending=self.is_defending,
-            ),
-        )
+        await self.show_hall(interaction)
 
 
 class ShopPurchaseSelect(discord.ui.Select):
-    def __init__(
-        self,
-        stock: ShopStock,
-        player: Player,
-        shop_service: ShopService,
-        *,
-        selected_stock_number: int | None = None,
-    ) -> None:
+    def __init__(self, options: list[discord.SelectOption]) -> None:
         super().__init__(
             placeholder="Browse Shop",
             min_values=1,
             max_values=1,
-            options=_shop_select_options(
-                stock,
-                player,
-                shop_service,
-                selected_stock_number=selected_stock_number,
-            ),
+            options=options,
             row=0,
         )
 
@@ -1621,11 +1675,14 @@ def _shop_select_options(
     selected_stock_number: int | None = None,
 ) -> list[discord.SelectOption]:
     options: list[discord.SelectOption] = []
+    owned_item_keys = _owned_equipment_keys(player)
     for index, item in enumerate(stock.items, start=1):
+        if item.key in owned_item_keys:
+            continue
         quote = shop_service.quote_stock_item(player, stock=stock, stock_number=index)
         options.append(
             discord.SelectOption(
-                label=_shop_option_label(index, item),
+                label=_shop_option_label(item),
                 value=str(index),
                 description=_shop_option_description(quote),
                 emoji=SLOT_EMOJIS.get(item.slot, "📦"),
@@ -1635,8 +1692,16 @@ def _shop_select_options(
     return options
 
 
-def _shop_option_label(index: int, item: EquipmentItem) -> str:
-    return _limit_component_text(f"{index}. {item.name}", 100)
+def _owned_equipment_keys(player: Player) -> set[str]:
+    return {
+        item_key
+        for slot in EQUIPMENT_SLOTS
+        if (item_key := getattr(player, slot, None))
+    }
+
+
+def _shop_option_label(item: EquipmentItem) -> str:
+    return _limit_component_text(item.name, 100)
 
 
 def _shop_option_description(quote: ShopPurchaseQuote) -> str:

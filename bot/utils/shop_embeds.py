@@ -8,7 +8,7 @@ from bot.services.equipment_service import EquipmentItem, EquipmentService
 from bot.services.location_service import LOCATION_SERVICE
 from bot.services.shop_service import PurchasedEquipment, ShopPurchaseQuote, ShopStock
 from bot.utils.embeds import DEEP_NAVY, WARM_GOLD, embed
-from bot.utils.time import discord_timestamp
+from bot.utils.time import discord_timestamp, local_clock_time
 
 RARITY_BADGES = {
     "common": "⚪",
@@ -40,21 +40,22 @@ def build_shop_embed(
     asset_service: DiscordAssetService = DEFAULT_DISCORD_ASSETS,
 ) -> discord.Embed:
     response = embed(
-        "Dungeon Equipment Shop",
-        (
-            f"Combat Level {stock.combat_level} stock. "
-            f"Refreshes today at {discord_timestamp(stock.refreshes_at, 't')}."
-        ),
+        _shop_title(player),
         colour=DEEP_NAVY,
     )
-    response.add_field(name=format_gold(player.gold), value="\u200b")
     response.add_field(name="Equipped", value=_equipped_summary(player, equipment), inline=False)
     if selected_quote is not None:
-        response.add_field(name="Selected Purchase", value=_selected_purchase_summary(selected_quote, player), inline=False)
+        response.add_field(name="____________\nSelected Purchase", value=_selected_purchase_summary(selected_quote, player), inline=False)
     asset_service.apply_banner(response, LOCATION_SERVICE.banner_asset_for("equipment_shop"))
     thumbnail_asset = selected_quote.item.thumbnail_asset if selected_quote is not None else _first_stock_thumbnail(stock)
     asset_service.apply_thumbnail(response, thumbnail_asset)
-    response.set_footer(text="Buying an item equips it immediately and replaces the matching slot.")
+    response.set_footer(
+        text=(
+            "Buying an item equips it immediately and replaces the matching slot.\n"
+            "Items you already own are hidden.\n"
+            f"Combat Level {stock.combat_level} stock. Refreshes today at {local_clock_time(stock.refreshes_at)}."
+        )
+    )
     return response
 
 
@@ -101,6 +102,10 @@ def format_item_stats(item: EquipmentItem) -> str:
 
 def format_gold(amount: int) -> str:
     return f"{GOLD_EMOJI} {amount}"
+
+
+def _shop_title(player: Player) -> str:
+    return f"Dungeon Equipment Shop                    {format_gold(player.gold)}"
 
 
 def rarity_badge(rarity: str) -> str:

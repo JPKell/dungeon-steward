@@ -43,6 +43,11 @@ def discord_timestamp(when: datetime | None, style: str = "R") -> str:
     return f"<t:{int(ensure_utc(when).timestamp())}:{style}>"
 
 
+def local_clock_time(when: datetime | None) -> str:
+    if when is None:
+        return "now"
+    return ensure_utc(when).astimezone().strftime("%I:%M %p").lstrip("0")
+
+
 def add_seconds(when: datetime, seconds: int) -> datetime:
     return ensure_utc(when) + timedelta(seconds=seconds)
-
