@@ -79,6 +79,7 @@ def build_purchase_embed(
         response.add_field(name="Description", value=purchase.item.description, inline=False)
     if purchase.replaced_item is not None:
         response.add_field(name="Replaced", value=purchase.replaced_item.name, inline=False)
+    asset_service.apply_banner(response, LOCATION_SERVICE.banner_asset_for("item_purchased"))
     asset_service.apply_thumbnail(response, purchase.item.thumbnail_asset)
     response.timestamp = purchase.stock.refreshes_at
     response.set_footer(text="Shop refreshes")

@@ -362,7 +362,7 @@ def scale_combat_gold_for_power(
     if amount <= 0:
         return 0
     return max(
-        0,
+        1,
         int(
             round(
                 amount

@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-from typing import Any
-
-from sqlalchemy import JSON, Boolean, Float, Index, Integer, String, Text, UniqueConstraint
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import Boolean, Float, ForeignKey, Index, Integer, String, Text, UniqueConstraint
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from bot.database.base import Base, TimestampMixin
 
@@ -32,7 +30,6 @@ class ContentDungeonLevel(TimestampMixin, Base):
     required_discoveries: Mapped[int] = mapped_column(Integer, nullable=False)
     required_defense_wins: Mapped[int] = mapped_column(Integer, nullable=False)
     requires_previous_completion: Mapped[bool] = mapped_column(Boolean, nullable=False)
-    payload: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
 
 
 class ContentEnemy(TimestampMixin, Base):
@@ -66,7 +63,6 @@ class ContentEnemy(TimestampMixin, Base):
     weight: Mapped[int] = mapped_column(Integer, nullable=False)
     enabled: Mapped[bool] = mapped_column(Boolean, nullable=False)
     rank: Mapped[str] = mapped_column(String(40), nullable=False)
-    payload: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
 
 
 class ContentEquipmentItem(TimestampMixin, Base):
@@ -91,7 +87,6 @@ class ContentEquipmentItem(TimestampMixin, Base):
     defense: Mapped[int] = mapped_column(Integer, nullable=False)
     speed: Mapped[int] = mapped_column(Integer, nullable=False)
     thumbnail_asset: Mapped[str | None] = mapped_column(String(160))
-    payload: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
 
 
 class ContentEquipmentDescription(TimestampMixin, Base):
@@ -122,8 +117,38 @@ class ContentEncounter(TimestampMixin, Base):
     enabled: Mapped[bool] = mapped_column(Boolean, nullable=False)
     min_level: Mapped[int] = mapped_column(Integer, nullable=False)
     rarity: Mapped[str] = mapped_column(String(40), nullable=False)
-    choices: Mapped[list[dict[str, Any]]] = mapped_column(JSON, nullable=False)
-    payload: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+    choices: Mapped[list[ContentEncounterChoice]] = relationship(
+        back_populates="encounter",
+        cascade="all, delete-orphan",
+        order_by="ContentEncounterChoice.sort_order",
+    )
+
+
+class ContentEncounterChoice(TimestampMixin, Base):
+    __tablename__ = "content_encounter_choices"
+    __table_args__ = (
+        UniqueConstraint("encounter_id", "key", name="uq_content_encounter_choices_encounter_key"),
+        Index("ix_content_encounter_choices_encounter", "encounter_id", "sort_order"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    encounter_id: Mapped[int] = mapped_column(ForeignKey("content_encounters.id"), nullable=False)
+    sort_order: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    key: Mapped[str] = mapped_column(String(120), nullable=False)
+    label: Mapped[str] = mapped_column(String(160), nullable=False)
+    result_text: Mapped[str] = mapped_column(Text, nullable=False)
+    gold_min: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    gold_max: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    xp_min: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    xp_max: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    hero_effect: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    villain_effect: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    stability_effect: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    success: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    discovery_key: Mapped[str | None] = mapped_column(String(160))
+    weekly_progress: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
+
+    encounter: Mapped[ContentEncounter] = relationship(back_populates="choices")
 
 
 class ContentDiscovery(TimestampMixin, Base):
@@ -143,7 +168,6 @@ class ContentDiscovery(TimestampMixin, Base):
     rarity: Mapped[str] = mapped_column(String(40), nullable=False)
     image_url: Mapped[str | None] = mapped_column(String(500))
     enabled: Mapped[bool] = mapped_column(Boolean, nullable=False)
-    payload: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
 
 
 class ContentPotionDocument(TimestampMixin, Base):
@@ -153,9 +177,43 @@ class ContentPotionDocument(TimestampMixin, Base):
     schema_version: Mapped[int] = mapped_column(Integer, nullable=False)
     content_type: Mapped[str] = mapped_column(String(120), nullable=False)
     balance_intent: Mapped[str] = mapped_column(Text, nullable=False)
-    drop_rules: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
-    activation_rules: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
-    payload: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+    drop_eligibility_stat: Mapped[str] = mapped_column(String(80), nullable=False)
+    base_drop_chance: Mapped[float] = mapped_column(Float, nullable=False)
+    successful_choice_bonus: Mapped[float] = mapped_column(Float, nullable=False)
+    failed_choice_multiplier: Mapped[float] = mapped_column(Float, nullable=False)
+    dungeon_level_bonus_per_level_after_one: Mapped[float] = mapped_column(Float, nullable=False)
+    maximum_drop_chance: Mapped[float] = mapped_column(Float, nullable=False)
+    max_drops_per_exploration: Mapped[int] = mapped_column(Integer, nullable=False)
+    drop_selection_method: Mapped[str] = mapped_column(String(120), nullable=False)
+    drop_item_weight_field: Mapped[str] = mapped_column(String(120), nullable=False)
+    drop_award_timing: Mapped[str] = mapped_column(String(120), nullable=False)
+    activation_clock: Mapped[str] = mapped_column(String(80), nullable=False)
+    duration_runs_while_offline: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    max_simultaneous_effect_groups: Mapped[int] = mapped_column(Integer, nullable=False)
+    same_effect_group_policy: Mapped[str] = mapped_column(String(120), nullable=False)
+    replacement_requires_confirmation: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    effects_are_not_retroactive: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    active_at_boundary_rule: Mapped[str] = mapped_column(String(160), nullable=False)
+    healing_occurs_after_victory_only: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    xp_potions_affect_defense_combat_xp_only: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    luck_affects_enemy_gold_and_combat_xp: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    encounter_rarity_bonuses: Mapped[list[ContentPotionRarityBonus]] = relationship(
+        back_populates="document",
+        cascade="all, delete-orphan",
+        order_by="ContentPotionRarityBonus.rarity",
+    )
+
+
+class ContentPotionRarityBonus(TimestampMixin, Base):
+    __tablename__ = "content_potion_rarity_bonuses"
+    __table_args__ = (UniqueConstraint("document_id", "rarity", name="uq_content_potion_rarity_bonus"),)
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    document_id: Mapped[int] = mapped_column(ForeignKey("content_potion_documents.id"), nullable=False)
+    rarity: Mapped[str] = mapped_column(String(40), nullable=False)
+    bonus: Mapped[float] = mapped_column(Float, nullable=False)
+
+    document: Mapped[ContentPotionDocument] = relationship(back_populates="encounter_rarity_bonuses")
 
 
 class ContentPotionItem(TimestampMixin, Base):
@@ -186,9 +244,38 @@ class ContentPotionItem(TimestampMixin, Base):
     consumable: Mapped[bool] = mapped_column(Boolean, nullable=False)
     enabled: Mapped[bool] = mapped_column(Boolean, nullable=False)
     sort_order_value: Mapped[int] = mapped_column("sort_order_content", Integer, nullable=False)
-    effect: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+    effect_kind: Mapped[str] = mapped_column(String(80), nullable=False)
+    effect_operation: Mapped[str] = mapped_column(String(80), nullable=False)
+    effect_bonus: Mapped[float | None] = mapped_column(Float)
+    effect_final_multiplier: Mapped[float | None] = mapped_column(Float)
+    effect_chance: Mapped[float | None] = mapped_column(Float)
+    effect_max_hp_percent: Mapped[float | None] = mapped_column(Float)
+    effect_flat_cap: Mapped[int | None] = mapped_column(Integer)
+    effect_minimum_heal: Mapped[int | None] = mapped_column(Integer)
+    effect_heals_on_activation: Mapped[bool | None] = mapped_column(Boolean)
+    effect_trigger: Mapped[str | None] = mapped_column(String(120))
+    effect_proc_scope: Mapped[str | None] = mapped_column(String(120))
     thumbnail_asset: Mapped[str | None] = mapped_column(String(160))
-    payload: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+    effect_targets: Mapped[list[ContentPotionEffectTarget]] = relationship(
+        back_populates="item",
+        cascade="all, delete-orphan",
+        order_by="ContentPotionEffectTarget.sort_order",
+    )
+
+
+class ContentPotionEffectTarget(TimestampMixin, Base):
+    __tablename__ = "content_potion_effect_targets"
+    __table_args__ = (
+        UniqueConstraint("potion_item_id", "target", name="uq_content_potion_effect_targets_item_target"),
+        Index("ix_content_potion_effect_targets_item", "potion_item_id", "sort_order"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    potion_item_id: Mapped[int] = mapped_column(ForeignKey("content_potion_items.id"), nullable=False)
+    sort_order: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    target: Mapped[str] = mapped_column(String(120), nullable=False)
+
+    item: Mapped[ContentPotionItem] = relationship(back_populates="effect_targets")
 
 
 class ContentProgressionDocument(TimestampMixin, Base):
@@ -196,13 +283,151 @@ class ContentProgressionDocument(TimestampMixin, Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, default=1)
     schema_version: Mapped[int] = mapped_column(Integer, nullable=False)
-    exploration: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
-    new_player: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
-    combat_leveling: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
-    defense: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
-    enemy_generation: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
-    shop: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
-    payload: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+    exploration_base_cooldown_minutes: Mapped[int] = mapped_column(Integer, nullable=False)
+    exploration_min_cooldown_minutes: Mapped[int] = mapped_column(Integer, nullable=False)
+    exploration_cooldown_reduction_per_level: Mapped[int] = mapped_column(Integer, nullable=False)
+    exploration_cooldown_cap_level: Mapped[int] = mapped_column(Integer, nullable=False)
+    exploration_dungeon_gold_growth: Mapped[float] = mapped_column(Float, nullable=False)
+    exploration_dungeon_xp_growth: Mapped[float] = mapped_column(Float, nullable=False)
+    exploration_post_cap_gold_growth: Mapped[float] = mapped_column(Float, nullable=False)
+    exploration_underpowered_reward_floor: Mapped[float] = mapped_column(Float, nullable=False)
+    exploration_risk_gold_bonus: Mapped[float] = mapped_column(Float, nullable=False)
+    exploration_failure_xp_multiplier: Mapped[float] = mapped_column(Float, nullable=False)
+    new_player_base_hp: Mapped[int] = mapped_column(Integer, nullable=False)
+    new_player_attack: Mapped[int] = mapped_column(Integer, nullable=False)
+    new_player_defense: Mapped[int] = mapped_column(Integer, nullable=False)
+    new_player_speed: Mapped[int] = mapped_column(Integer, nullable=False)
+    combat_hp_milestone_interval: Mapped[int] = mapped_column(Integer, nullable=False)
+    combat_hp_milestone_bonus: Mapped[int] = mapped_column(Integer, nullable=False)
+    combat_stat_milestone_interval: Mapped[int] = mapped_column(Integer, nullable=False)
+    combat_stat_milestone_bonus: Mapped[int] = mapped_column(Integer, nullable=False)
+    defense_base_minutes: Mapped[int] = mapped_column(Integer, nullable=False)
+    defense_max_minutes: Mapped[int] = mapped_column(Integer, nullable=False)
+    defense_duration_cap_level: Mapped[int] = mapped_column(Integer, nullable=False)
+    defense_restore_full_hp_on_start: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    defense_post_defeat_hp_percent: Mapped[float] = mapped_column(Float, nullable=False)
+    defense_minimum_damage: Mapped[int] = mapped_column(Integer, nullable=False)
+    defense_max_battle_rounds: Mapped[int] = mapped_column(Integer, nullable=False)
+    defense_maximum_elapsed_days: Mapped[int] = mapped_column(Integer, nullable=False)
+    enemy_generation_level_stat_scale: Mapped[float] = mapped_column(Float, nullable=False)
+    enemy_generation_level_reward_scale: Mapped[float] = mapped_column(Float, nullable=False)
+    enemy_generation_power_xp_floor: Mapped[float] = mapped_column(Float, nullable=False)
+    enemy_generation_power_xp_ceiling: Mapped[float] = mapped_column(Float, nullable=False)
+    enemy_generation_trivial_enemy_ratio: Mapped[float] = mapped_column(Float, nullable=False)
+    enemy_generation_trivial_enemy_xp_multiplier: Mapped[float] = mapped_column(Float, nullable=False)
+    enemy_generation_combat_gold_multiplier: Mapped[float] = mapped_column(Float, nullable=False)
+    enemy_generation_trivial_enemy_gold_multiplier: Mapped[float] = mapped_column(Float, nullable=False)
+    shop_stock_size: Mapped[int] = mapped_column(Integer, nullable=False)
+
+    curves: Mapped[list[ContentProgressionCurve]] = relationship(
+        back_populates="document",
+        cascade="all, delete-orphan",
+        order_by="ContentProgressionCurve.key",
+    )
+    rarity_multipliers: Mapped[list[ContentProgressionRarityMultiplier]] = relationship(
+        back_populates="document",
+        cascade="all, delete-orphan",
+        order_by="ContentProgressionRarityMultiplier.id",
+    )
+    shop_rarity_weights: Mapped[list[ContentProgressionShopRarityWeight]] = relationship(
+        back_populates="document",
+        cascade="all, delete-orphan",
+        order_by="ContentProgressionShopRarityWeight.rarity",
+    )
+    shop_rarity_bands: Mapped[list[ContentProgressionShopRarityBand]] = relationship(
+        back_populates="document",
+        cascade="all, delete-orphan",
+        order_by="ContentProgressionShopRarityBand.sort_order",
+    )
+
+
+class ContentProgressionCurve(TimestampMixin, Base):
+    __tablename__ = "content_progression_curves"
+    __table_args__ = (
+        UniqueConstraint("document_id", "key", name="uq_content_progression_curves_key"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    document_id: Mapped[int] = mapped_column(ForeignKey("content_progression_documents.id"), nullable=False)
+    key: Mapped[str] = mapped_column(String(120), nullable=False)
+    curve: Mapped[str] = mapped_column(String(40), nullable=False)
+    base: Mapped[float] = mapped_column(Float, nullable=False)
+    linear_growth: Mapped[float] = mapped_column(Float, nullable=False)
+    quadratic_growth: Mapped[float] = mapped_column(Float, nullable=False)
+    exponential_growth: Mapped[float] = mapped_column(Float, nullable=False)
+    minimum: Mapped[float | None] = mapped_column(Float)
+    maximum: Mapped[float | None] = mapped_column(Float)
+    max_level: Mapped[int | None] = mapped_column(Integer)
+
+    document: Mapped[ContentProgressionDocument] = relationship(back_populates="curves")
+
+
+class ContentProgressionRarityMultiplier(TimestampMixin, Base):
+    __tablename__ = "content_progression_rarity_multipliers"
+    __table_args__ = (
+        UniqueConstraint(
+            "document_id",
+            "reward_type",
+            "rarity",
+            name="uq_content_progression_rarity_multiplier",
+        ),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    document_id: Mapped[int] = mapped_column(ForeignKey("content_progression_documents.id"), nullable=False)
+    reward_type: Mapped[str] = mapped_column(String(20), nullable=False)
+    rarity: Mapped[str] = mapped_column(String(40), nullable=False)
+    multiplier: Mapped[float] = mapped_column(Float, nullable=False)
+
+    document: Mapped[ContentProgressionDocument] = relationship(back_populates="rarity_multipliers")
+
+
+class ContentProgressionShopRarityWeight(TimestampMixin, Base):
+    __tablename__ = "content_progression_shop_rarity_weights"
+    __table_args__ = (
+        UniqueConstraint("document_id", "rarity", name="uq_content_progression_shop_rarity_weight"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    document_id: Mapped[int] = mapped_column(ForeignKey("content_progression_documents.id"), nullable=False)
+    rarity: Mapped[str] = mapped_column(String(40), nullable=False)
+    weight: Mapped[int] = mapped_column(Integer, nullable=False)
+
+    document: Mapped[ContentProgressionDocument] = relationship(back_populates="shop_rarity_weights")
+
+
+class ContentProgressionShopRarityBand(TimestampMixin, Base):
+    __tablename__ = "content_progression_shop_rarity_bands"
+    __table_args__ = (
+        UniqueConstraint("document_id", "min_level", name="uq_content_progression_shop_rarity_band_level"),
+        Index("ix_content_progression_shop_rarity_bands_document", "document_id", "sort_order"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    document_id: Mapped[int] = mapped_column(ForeignKey("content_progression_documents.id"), nullable=False)
+    sort_order: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    min_level: Mapped[int] = mapped_column(Integer, nullable=False)
+
+    document: Mapped[ContentProgressionDocument] = relationship(back_populates="shop_rarity_bands")
+    weights: Mapped[list[ContentProgressionShopRarityBandWeight]] = relationship(
+        back_populates="band",
+        cascade="all, delete-orphan",
+        order_by="ContentProgressionShopRarityBandWeight.rarity",
+    )
+
+
+class ContentProgressionShopRarityBandWeight(TimestampMixin, Base):
+    __tablename__ = "content_progression_shop_rarity_band_weights"
+    __table_args__ = (
+        UniqueConstraint("band_id", "rarity", name="uq_content_progression_shop_rarity_band_weight"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    band_id: Mapped[int] = mapped_column(ForeignKey("content_progression_shop_rarity_bands.id"), nullable=False)
+    rarity: Mapped[str] = mapped_column(String(40), nullable=False)
+    weight: Mapped[int] = mapped_column(Integer, nullable=False)
+
+    band: Mapped[ContentProgressionShopRarityBand] = relationship(back_populates="weights")
 
 
 class ContentLocation(TimestampMixin, Base):
@@ -214,7 +439,6 @@ class ContentLocation(TimestampMixin, Base):
     key: Mapped[str] = mapped_column(String(120), nullable=False)
     name: Mapped[str] = mapped_column(String(160), nullable=False)
     banner_asset: Mapped[str] = mapped_column(String(160), nullable=False)
-    payload: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
 
 
 class ContentImageAssetDocument(TimestampMixin, Base):
@@ -222,7 +446,6 @@ class ContentImageAssetDocument(TimestampMixin, Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, default=1)
     version: Mapped[int] = mapped_column(Integer, nullable=False)
-    payload: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
 
 
 class ContentImageAsset(TimestampMixin, Base):
@@ -240,7 +463,6 @@ class ContentImageAsset(TimestampMixin, Base):
     alt_text: Mapped[str] = mapped_column(Text, nullable=False)
     required: Mapped[bool] = mapped_column(Boolean, nullable=False)
     source_path: Mapped[str | None] = mapped_column(String(500))
-    payload: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
 
 
 class ContentImageAssetRegistryDocument(TimestampMixin, Base):
@@ -248,7 +470,6 @@ class ContentImageAssetRegistryDocument(TimestampMixin, Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, default=1)
     version: Mapped[int] = mapped_column(Integer, nullable=False)
-    payload: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
 
 
 class ContentImageAssetRegistryEntry(TimestampMixin, Base):
@@ -269,31 +490,3 @@ class ContentImageAssetRegistryEntry(TimestampMixin, Base):
     attachment_id: Mapped[str | None] = mapped_column(String(80))
     cdn_url: Mapped[str | None] = mapped_column(String(1000))
     uploaded_at: Mapped[str | None] = mapped_column(String(80))
-    payload: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
-
-
-class ContentValidationReport(TimestampMixin, Base):
-    __tablename__ = "content_validation_reports"
-
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, default=1)
-    passed: Mapped[bool] = mapped_column(Boolean, nullable=False)
-    errors: Mapped[list[Any]] = mapped_column(JSON, nullable=False)
-    counts: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
-    potions_by_group: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
-    equipment_by_slot: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
-    equipment_by_rarity: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
-    equipment_valid_options: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
-    shop_rarity_percentages: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
-    content_coverage: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
-    payload: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
-
-
-class ContentSimulationResult(TimestampMixin, Base):
-    __tablename__ = "content_simulation_results"
-
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, default=1)
-    assumptions: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
-    shop_rarity_percentages: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
-    profiles: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
-    target_evaluation: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
-    payload: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)

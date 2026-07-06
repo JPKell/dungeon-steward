@@ -231,7 +231,7 @@ def test_atomic_registry_write_creates_backup(tmp_path: Path) -> None:
 def test_thumbnail_and_banner_application_to_embed(tmp_path: Path) -> None:
     project = _project(tmp_path)
     thumb = _write_png(project / "assets/discord/thumbnails/items/test_item.png", 256, 256)
-    banner = _write_png(project / "assets/discord/locations/test_hall.png", 1200, 400)
+    banner = _write_png(project / "assets/discord/locations/test_hall.png", 1200, 300)
     catalog = load_catalog(
         _write_catalog(
             project,
@@ -284,7 +284,69 @@ def test_thumbnail_and_banner_application_to_embed(tmp_path: Path) -> None:
     service.apply_banner(embed, "location.test")
 
     assert embed.thumbnail.url == "https://cdn.discordapp.com/attachments/1/3/test_item.png"
-    assert embed.image.url == "https://cdn.discordapp.com/attachments/1/5/test_hall.png"
+    assert embed.image.url == "attachment://test_hall.png"
+
+    payload = service.message_payload_with_banner_attachment(embed)
+    files = payload["files"]
+    try:
+        assert sorted(payload) == ["embed", "files"]
+        assert payload["embed"].title == "Assets"
+        assert payload["embed"].image.url is None
+        assert payload["embed"].thumbnail.url == "https://cdn.discordapp.com/attachments/1/3/test_item.png"
+        assert [file.filename for file in files] == ["test_hall.png"]
+    finally:
+        for file in files:
+            file.close()
+
+
+def test_message_payload_omits_none_view() -> None:
+    service = DiscordAssetService(catalog=load_catalog(document={"version": 1, "assets": {}}), registry=AssetRegistry(version=1, assets={}))
+    embed = discord.Embed(title="Report")
+    view = discord.ui.View()
+
+    without_view = service.message_payload_with_banner_attachment(embed, view=None)
+    with_view = service.message_payload_with_banner_attachment(embed, view=view)
+
+    assert "view" not in without_view
+    assert with_view["view"] is view
+
+
+def test_development_fallback_uses_local_attachments_for_unregistered_images(tmp_path: Path) -> None:
+    project = _project(tmp_path)
+    _write_png(project / "assets/discord/locations/test_hall.png", 1200, 300)
+    catalog = load_catalog(
+        _write_catalog(
+            project,
+            {
+                "location.test": {
+                    "type": "location_banner",
+                    "path": "assets/discord/locations/test_hall.png",
+                    "alt_text": "A test hall",
+                    "required": True,
+                }
+            },
+        ),
+        asset_root=project / "assets/discord",
+    )
+    service = DiscordAssetService(
+        catalog=catalog,
+        registry=AssetRegistry(version=1, assets={}),
+        environment="development",
+    )
+    embed = discord.Embed(title="No registry yet")
+
+    service.apply_banner(embed, "location.test")
+
+    assert embed.image.url == "attachment://test_hall.png"
+    payload = service.message_payload_with_banner_attachment(embed)
+    files = payload["files"]
+    try:
+        assert payload["embed"].title == "No registry yet"
+        assert payload["embed"].image.url is None
+        assert [file.filename for file in files] == ["test_hall.png"]
+    finally:
+        for file in files:
+            file.close()
 
 
 def test_malicious_relative_paths_are_rejected(tmp_path: Path) -> None:

@@ -199,7 +199,7 @@ def test_enemy_definitions_cover_all_levels():
     enemy = generate_enemy(10, rng=random.Random(7))
     assert enemy.current_hp == enemy.max_hp
     assert enemy.combat_xp > 0
-    assert enemy.gold >= 0
+    assert enemy.gold > 0
 
 
 def test_defense_resolves_completed_minutes_and_rewards(db, now):
@@ -232,7 +232,7 @@ def test_defense_resolves_completed_minutes_and_rewards(db, now):
     assert report.completed_battles == 3
     assert report.victories == 3
     assert report.combat_xp_earned > 0
-    assert report.gold_earned >= 0
+    assert report.gold_earned > 0
     assert player.gold == starting_gold + report.gold_earned
     assert player.defense_wins == report.victories
     assert player.highest_completed_dungeon_level >= 1

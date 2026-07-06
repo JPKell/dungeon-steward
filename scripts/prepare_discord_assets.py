@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import argparse
+import shutil
+import subprocess
 from pathlib import Path
 
 from bot.services.discord_asset_service import (
@@ -17,7 +19,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Prepare and validate Dungeon Steward Discord image assets.")
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--validate", action="store_true", help="Validate prepared images without modifying files.")
-    mode.add_argument("--prepare", action="store_true", help="Resize/crop source images into prepared asset files.")
+    mode.add_argument("--prepare", action="store_true", help="Resize and crop source images into prepared asset files.")
     parser.add_argument("--catalog", type=Path, default=DEFAULT_CATALOG_PATH)
     parser.add_argument("--key", help="Prepare or validate one logical asset key.")
     parser.add_argument("--prefix", help="Prepare or validate all keys under a prefix.")
@@ -82,44 +84,86 @@ def _prepare(definition: AssetDefinition, *, quality: int) -> None:
     if not definition.source_path.exists():
         raise AssetValidationError(f"{definition.key} source image is missing")
 
+    spec = definition.spec
+    if spec.width <= 0 or spec.height <= 0:
+        raise AssetValidationError(f"{definition.key} does not have a fixed target size")
+    before_info = inspect_image_file(definition.source_path)
+    before = definition.source_path.stat().st_size
+    definition.path.parent.mkdir(parents=True, exist_ok=True)
+
     try:
         from PIL import Image, ImageOps, UnidentifiedImageError
-    except Exception as error:
-        raise SystemExit("Pillow is required for --prepare. Install project dependencies first.") from error
+    except Exception:
+        _prepare_with_imagemagick(definition, quality=quality)
+    else:
+        try:
+            with Image.open(definition.source_path) as image:
+                image = ImageOps.exif_transpose(image)
+                if image.width < spec.width or image.height < spec.height:
+                    print(
+                        f"WARN {definition.key}: source is {image.width}x{image.height}; "
+                        f"target is {spec.width}x{spec.height}"
+                    )
+                resized = _resize_to_canvas(image, (spec.width, spec.height), spec_name=spec.name)
+                resized.save(definition.path, **_save_kwargs(definition.path.suffix.lower(), quality=quality))
+        except UnidentifiedImageError as error:
+            raise AssetValidationError(f"{definition.key} source image is invalid") from error
 
-    try:
-        with Image.open(definition.source_path) as image:
-            image = ImageOps.exif_transpose(image)
-            spec = definition.spec
-            if image.width < spec.width or image.height < spec.height:
-                print(
-                    f"WARN {definition.key}: source is {image.width}x{image.height}; "
-                    f"target is {spec.width}x{spec.height}"
-                )
-            resized = ImageOps.fit(image, (spec.width, spec.height), method=Image.Resampling.LANCZOS, centering=(0.5, 0.5))
-            if resized.mode not in {"RGB", "RGBA"}:
-                resized = resized.convert("RGBA" if _has_alpha(resized) and spec.name == "thumbnail" else "RGB")
-            elif spec.name != "thumbnail" and resized.mode == "RGBA":
-                resized = resized.convert("RGB")
-
-            definition.path.parent.mkdir(parents=True, exist_ok=True)
-            before = definition.source_path.stat().st_size
-            save_kwargs = _save_kwargs(definition.path.suffix.lower(), quality=quality)
-            resized.save(definition.path, **save_kwargs)
-            after_info = inspect_image_file(definition.path)
-            savings = 100 - ((after_info.size_bytes / before) * 100) if before else 0
-            print(
-                f"PREP {definition.key}: {image.width}x{image.height} {before} bytes -> "
-                f"{after_info.width}x{after_info.height} {after_info.size_bytes} bytes ({savings:.1f}% savings)"
-            )
-    except UnidentifiedImageError as error:
-        raise AssetValidationError(f"{definition.key} source image is invalid") from error
+    after_info = inspect_image_file(definition.path)
+    savings = 100 - ((after_info.size_bytes / before) * 100) if before else 0
+    print(
+        f"PREP {definition.key}: {before_info.width}x{before_info.height} {before} bytes -> "
+        f"{after_info.width}x{after_info.height} {after_info.size_bytes} bytes ({savings:.1f}% savings)"
+    )
 
 
 def _has_alpha(image) -> bool:
     if image.mode in {"RGBA", "LA"}:
         return True
     return image.mode == "P" and "transparency" in image.info
+
+
+def _resize_to_canvas(image, size: tuple[int, int], *, spec_name: str):
+    from PIL import Image, ImageOps
+
+    background = (10, 16, 30)
+    if _has_alpha(image):
+        base = Image.new("RGBA", image.size, background + (255,))
+        base.alpha_composite(image.convert("RGBA"))
+        image = base
+    mode = "RGBA" if spec_name == "thumbnail" and _has_alpha(image) else "RGB"
+    if image.mode != mode:
+        image = image.convert(mode)
+
+    centering = (0.0, 0.5) if spec_name == "location_banner" else (0.5, 0.5)
+    return ImageOps.fit(image, size, method=Image.Resampling.LANCZOS, centering=centering)
+
+
+def _prepare_with_imagemagick(definition: AssetDefinition, *, quality: int) -> None:
+    convert = shutil.which("convert")
+    if convert is None:
+        raise SystemExit("Pillow is required for --prepare. Install project dependencies first.")
+    spec = definition.spec
+    command = [
+        convert,
+        str(definition.source_path),
+        "-auto-orient",
+        "-resize",
+        f"{spec.width}x{spec.height}^",
+        "-background",
+        "#0a101e",
+        "-gravity",
+        "west" if spec.name == "location_banner" else "center",
+        "-extent",
+        f"{spec.width}x{spec.height}",
+        "-quality",
+        str(quality),
+        str(definition.path),
+    ]
+    try:
+        subprocess.run(command, check=True)
+    except subprocess.CalledProcessError as error:
+        raise AssetValidationError(f"{definition.key} could not be prepared with ImageMagick") from error
 
 
 def _save_kwargs(suffix: str, *, quality: int) -> dict[str, object]:

@@ -6,6 +6,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from sqlalchemy import func, select
+from sqlalchemy.orm import Session, selectinload
+
+from bot.models import ContentEncounter, ContentEncounterChoice
+
 
 @dataclass(frozen=True)
 class Choice:
@@ -59,12 +64,17 @@ class EncounterService:
     def select(
         self,
         *,
+        session: Session | None = None,
         explore_level: int = 1,
         dungeon_level: int | None = None,
         rng: random.Random | None = None,
     ) -> Encounter:
         rng = rng or random
         content_level = max(1, int(dungeon_level if dungeon_level is not None else min(explore_level, 20)))
+        if session is not None:
+            encounter = self._select_from_database(session, content_level=content_level, rng=rng)
+            if encounter is not None:
+                return encounter
         choices = [
             encounter
             for encounter in self._encounters
@@ -74,11 +84,84 @@ class EncounterService:
             raise ContentValidationError("No enabled encounters are available")
         return rng.choices(choices, weights=[encounter.weight for encounter in choices], k=1)[0]
 
-    def get(self, key: str) -> Encounter:
+    def get(self, key: str, *, session: Session | None = None) -> Encounter:
+        if session is not None:
+            encounter = self._get_from_database(session, key)
+            if encounter is not None:
+                return encounter
         for encounter in self._encounters:
             if encounter.key == key:
                 return encounter
         raise KeyError(key)
+
+    def get_resolution(
+        self,
+        session: Session,
+        *,
+        encounter_key: str,
+        choice_key: str,
+    ) -> tuple[Encounter, Choice]:
+        row = session.execute(
+            select(ContentEncounter, ContentEncounterChoice)
+            .join(ContentEncounterChoice, ContentEncounterChoice.encounter_id == ContentEncounter.id)
+            .where(
+                ContentEncounter.key == encounter_key,
+                ContentEncounterChoice.key == choice_key,
+            )
+        ).one_or_none()
+        if row is not None:
+            encounter_row, choice_row = row
+            choice = _choice_from_database_row(choice_row)
+            return _encounter_from_database_row(encounter_row, [choice]), choice
+
+        if _database_has_encounters(session):
+            raise KeyError(choice_key)
+
+        encounter = self.get(encounter_key)
+        choice = next((candidate for candidate in encounter.choices if candidate.key == choice_key), None)
+        if choice is None:
+            raise KeyError(choice_key)
+        return encounter, choice
+
+    def _select_from_database(
+        self,
+        session: Session,
+        *,
+        content_level: int,
+        rng: random.Random | Any,
+    ) -> Encounter | None:
+        rows = session.scalars(
+            select(ContentEncounter)
+            .where(ContentEncounter.enabled.is_(True), ContentEncounter.min_level <= content_level)
+            .order_by(ContentEncounter.sort_order, ContentEncounter.id)
+        ).all()
+        if not rows:
+            return None
+        selected = rng.choices(rows, weights=[row.weight for row in rows], k=1)[0]
+        choices = session.scalars(
+            select(ContentEncounterChoice)
+            .where(ContentEncounterChoice.encounter_id == selected.id)
+            .order_by(ContentEncounterChoice.sort_order, ContentEncounterChoice.id)
+        ).all()
+        if not choices:
+            raise ContentValidationError(f"{selected.key} has no normalized choices")
+        return _encounter_from_database_row(
+            selected,
+            [_choice_from_database_row(choice) for choice in choices],
+        )
+
+    def _get_from_database(self, session: Session, key: str) -> Encounter | None:
+        row = session.scalar(
+            select(ContentEncounter)
+            .options(selectinload(ContentEncounter.choices))
+            .where(ContentEncounter.key == key)
+        )
+        if row is None:
+            return None
+        return _encounter_from_database_row(
+            row,
+            [_choice_from_database_row(choice) for choice in row.choices],
+        )
 
     def _load(self) -> list[Encounter]:
         raw = self._document
@@ -130,6 +213,43 @@ def _choice(item: dict[str, Any]) -> Choice:
         discovery_key=item.get("discovery_key"),
         weekly_progress=int(item.get("weekly_progress", 1)),
     )
+
+
+def _encounter_from_database_row(row: ContentEncounter, choices: list[Choice]) -> Encounter:
+    return Encounter(
+        key=row.key,
+        title=row.title,
+        description=row.description,
+        category=row.category,
+        weight=row.weight,
+        enabled=row.enabled,
+        min_level=row.min_level,
+        rarity=row.rarity,
+        choices=choices,
+    )
+
+
+def _choice_from_database_row(row: ContentEncounterChoice) -> Choice:
+    return Choice(
+        key=row.key,
+        label=row.label,
+        result_text=row.result_text,
+        gold_min=row.gold_min,
+        gold_max=row.gold_max,
+        xp_min=row.xp_min,
+        xp_max=row.xp_max,
+        hero_effect=row.hero_effect,
+        villain_effect=row.villain_effect,
+        stability_effect=row.stability_effect,
+        success=row.success,
+        discovery_key=row.discovery_key,
+        weekly_progress=row.weekly_progress,
+    )
+
+
+def _database_has_encounters(session: Session) -> bool:
+    count = session.scalar(select(func.count()).select_from(ContentEncounter))
+    return bool(count)
 
 
 def _required_str(item: dict[str, Any], key: str) -> str:

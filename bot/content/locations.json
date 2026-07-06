@@ -10,8 +10,78 @@
     "banner_asset": "location.dungeon_selection"
   },
   {
+    "key": "explore_dungeon",
+    "name": "Explore Dungeon",
+    "banner_asset": "location.explore_dungeon"
+  },
+  {
+    "key": "explore_results",
+    "name": "Exploration Results",
+    "banner_asset": "location.explore_results"
+  },
+  {
+    "key": "defend",
+    "name": "Defense Selection",
+    "banner_asset": "location.defend"
+  },
+  {
+    "key": "defending_the_dungeon",
+    "name": "Defending the Dungeon",
+    "banner_asset": "location.defending_the_dungeon"
+  },
+  {
+    "key": "returned_from_dungeon",
+    "name": "Returned from Dungeon",
+    "banner_asset": "location.returned_from_dungeon"
+  },
+  {
+    "key": "dungeon_energy",
+    "name": "Dungeon Energy",
+    "banner_asset": "location.dungeon_energy"
+  },
+  {
+    "key": "out_of_energy",
+    "name": "Out of Energy",
+    "banner_asset": "location.out_of_energy"
+  },
+  {
     "key": "equipment_shop",
     "name": "Dungeon Equipment Shop",
     "banner_asset": "location.shop"
+  },
+  {
+    "key": "item_purchased",
+    "name": "Item Purchased",
+    "banner_asset": "location.item_purchased"
+  },
+  {
+    "key": "inventory",
+    "name": "Potion Inventory",
+    "banner_asset": "location.inventory"
+  },
+  {
+    "key": "user_profile",
+    "name": "User Profile",
+    "banner_asset": "location.user_profile"
+  },
+  {
+    "key": "combat_stats",
+    "name": "Combat Stats",
+    "banner_asset": "location.user_profile"
+  },
+  {
+    "key": "community_dungeon",
+    "name": "Community Dungeon",
+    "banner_asset": "location.community_dungeon"
+  },
+  {
+    "key": "leaderboard",
+    "name": "Leaderboard",
+    "banner_asset": "location.leaderboard"
+  },
+  {
+    "key": "dungeon_help",
+    "name": "Dungeon Help",
+    "banner_asset": "location.stewards_hall"
   }
 ]

@@ -4,8 +4,10 @@ import discord
 
 from bot.config import MAX_ENERGY
 from bot.models import Player
+from bot.services.discord_asset_service import DEFAULT_DISCORD_ASSETS, DiscordAssetService
 from bot.services.energy_service import EnergyState
 from bot.services.equipment_service import CombatStats
+from bot.services.location_service import LOCATION_SERVICE
 from bot.services.player_service import title_for_player
 from bot.utils.embeds import WARM_GOLD, embed
 from bot.utils.time import human_duration
@@ -17,6 +19,7 @@ def build_profile_embed(
     player: Player,
     energy_state: EnergyState,
     stats: CombatStats,
+    asset_service: DiscordAssetService = DEFAULT_DISCORD_ASSETS,
 ) -> discord.Embed:
     response = embed(display_name, f"{title_for_player(player)}\n⚔️ Combat ⚔️", colour=WARM_GOLD)
     response.add_field(name="Level", value=str(player.combat_level))
@@ -37,6 +40,7 @@ def build_profile_embed(
     response.add_field(name="Discoveries", value=str(player.discoveries_found))
     response.add_field(name="Hero / Villain Influence", value=f"{player.hero_influence} : {player.villain_influence}")
     response.add_field(name="Defending", value=_defending_value(player), inline=False)
+    asset_service.apply_banner(response, LOCATION_SERVICE.banner_asset_for("user_profile"))
     return response
 
 

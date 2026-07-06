@@ -19,7 +19,7 @@ def build_defense_started_embed(
         f"Dungeon Level {started.dungeon_level} is now covered.",
         colour=DEEP_NAVY,
     )
-    asset_service.apply_banner(response, LOCATION_SERVICE.banner_asset_for("dungeon_selection"))
+    asset_service.apply_banner(response, LOCATION_SERVICE.banner_asset_for("defending_the_dungeon"))
     response.add_field(name="HP", value=f"{started.current_hp}/{started.stats.max_hp}")
     response.add_field(
         name="Stats",
@@ -38,12 +38,17 @@ def build_defense_started_embed(
     return response
 
 
-def build_defense_report_embed(report: DefenseReport) -> discord.Embed:
+def build_defense_report_embed(
+    report: DefenseReport,
+    *,
+    asset_service: DiscordAssetService = DEFAULT_DISCORD_ASSETS,
+) -> discord.Embed:
     response = embed(
         "Defense Complete",
         f"Dungeon Level {report.dungeon_level} | Ended by {report.reason}",
         colour=WARM_GOLD,
     )
+    asset_service.apply_banner(response, LOCATION_SERVICE.banner_asset_for("returned_from_dungeon"))
     response.add_field(
         name="Duration",
         value=(

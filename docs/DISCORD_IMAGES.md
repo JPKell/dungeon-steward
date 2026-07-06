@@ -1,16 +1,16 @@
 # Discord Image Assets
 
-Dungeon Steward uses a static Discord asset channel for reusable embed images. Gameplay messages resolve logical asset keys to previously uploaded Discord CDN URLs, so the bot does not upload the same decorative image during every player interaction.
+Dungeon Steward uses prepared local WebP assets for gameplay banners so the image can appear as a normal attachment in the same Discord message as the embed. The static Discord asset registry is still available for reusable CDN-backed thumbnails and other embed images.
 
 ## Standards
 
 | Type | Use | Size | Preferred Format | Warning | Hard Limit |
 | --- | --- | --- | --- | --- | --- |
 | `thumbnail` | Items, potions, equipment, enemies, NPCs, discoveries, status effects, portraits | `256x256` | WebP, PNG allowed for transparency | 150 KB | 250 KB |
-| `location_banner` | Steward's Hall, dungeon entrances, shops, inns, crypts, forests, ruins | `1200x400` | WebP | 500 KB | 750 KB |
+| `location_banner` | Steward's Hall, dungeon entrances, shops, inns, crypts, forests, ruins | `1200x300` | WebP | 500 KB | 750 KB |
 | `encounter_artwork` | Optional future full encounter artwork | `1200x675` | WebP | 750 KB | 1 MB |
 
-Keep important subjects centered. Do not put small text in thumbnails, and do not put location names in banners unless the art specifically requires it; the embed title carries the name.
+Keep important banner labels and symbols on the left half of the artwork; banner preparation preserves the left edge when cropping wide sources. Do not put small text in thumbnails.
 
 ## Files
 
@@ -61,7 +61,7 @@ Dungeon Steward static asset
 Key: location.stewards_hall
 Type: location_banner
 SHA-256: ...
-Dimensions: 1200x400
+Dimensions: 1200x300
 ```
 
 ## Commands
@@ -72,7 +72,7 @@ Validate prepared local files:
 python -m scripts.prepare_discord_assets --validate
 ```
 
-Prepare files from `source_path` entries in the catalog:
+Prepare files from `source_path` entries in the catalog. Source art is scaled and cropped to fill the target canvas; location banners preserve the left edge so labels and icons stay visible:
 
 ```bash
 python -m scripts.prepare_discord_assets --prepare
@@ -110,7 +110,7 @@ Replacing an image changes its SHA-256 hash. The sync script uploads the changed
 
 ## Local Development
 
-When no registry entry exists in development, the runtime service can fall back to an `attachment://filename` URL for local testing. Optional missing images are omitted. Required production assets should be caught by validation and sync before deployment.
+Gameplay banners are sent from prepared local files as message attachments. When no registry entry exists for thumbnails or other embed-only images in development, the runtime service can fall back to an `attachment://filename` URL for local testing. Optional missing images are omitted. Required production assets should be caught by validation and sync before deployment.
 
 ## Recovery
 

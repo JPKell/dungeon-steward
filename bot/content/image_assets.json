@@ -1,33 +1,122 @@
 {
   "version": 1,
   "assets": {
-    "location.stewards_hall": {
+    "location.community_dungeon": {
       "type": "location_banner",
-      "path": "assets/discord/locations/stewards_hall.png",
-      "alt_text": "The torchlit Steward's Hall planning room",
-      "required": true
+      "path": "assets/discord/locations/community_dungeon.webp",
+      "source_path": "assets/discord/locations/community_dungeon.png",
+      "alt_text": "The shared community dungeon status board",
+      "required": false
+    },
+    "location.defend": {
+      "type": "location_banner",
+      "path": "assets/discord/locations/defend.webp",
+      "source_path": "assets/discord/locations/defend.png",
+      "alt_text": "A dungeon defense level selection scene",
+      "required": false
+    },
+    "location.defending_the_dungeon": {
+      "type": "location_banner",
+      "path": "assets/discord/locations/defending_the_dungeon.webp",
+      "source_path": "assets/discord/locations/defending_the_dungeon.png",
+      "alt_text": "A dungeon line actively being defended",
+      "required": false
+    },
+    "location.dungeon_energy": {
+      "type": "location_banner",
+      "path": "assets/discord/locations/dungeon_energy.webp",
+      "source_path": "assets/discord/locations/dungeon_energy.png",
+      "alt_text": "A glowing dungeon energy meter",
+      "required": false
     },
     "location.dungeon_selection": {
       "type": "location_banner",
-      "path": "assets/discord/locations/dungeon_selection.png",
+      "path": "assets/discord/locations/dungeon_selection.webp",
+      "source_path": "assets/discord/source/dungeon_selection_source.png",
       "alt_text": "A row of dungeon entrances descending into darkness",
+      "required": false
+    },
+    "location.explore_dungeon": {
+      "type": "location_banner",
+      "path": "assets/discord/locations/explore_dungeon.webp",
+      "source_path": "assets/discord/locations/explore_dungeon.png",
+      "alt_text": "An adventurer entering the dungeon to explore",
+      "required": false
+    },
+    "location.explore_results": {
+      "type": "location_banner",
+      "path": "assets/discord/locations/explore_results.webp",
+      "source_path": "assets/discord/locations/explore_results.png",
+      "alt_text": "A dungeon exploration result report",
+      "required": false
+    },
+    "location.inventory": {
+      "type": "location_banner",
+      "path": "assets/discord/locations/inventory.webp",
+      "source_path": "assets/discord/locations/inventory.png",
+      "alt_text": "A potion inventory satchel opened on a dungeon table",
+      "required": false
+    },
+    "location.item_purchased": {
+      "type": "location_banner",
+      "path": "assets/discord/locations/item_purchased.webp",
+      "source_path": "assets/discord/locations/item_purchased.png",
+      "alt_text": "A newly purchased dungeon item on display",
+      "required": false
+    },
+    "location.leaderboard": {
+      "type": "location_banner",
+      "path": "assets/discord/locations/leaderboard.webp",
+      "source_path": "assets/discord/locations/leaderboard.png",
+      "alt_text": "A dungeon leaderboard carved into a notice board",
+      "required": false
+    },
+    "location.out_of_energy": {
+      "type": "location_banner",
+      "path": "assets/discord/locations/out_of_energy.webp",
+      "source_path": "assets/discord/locations/out_of_energy.png",
+      "alt_text": "A depleted dungeon energy meter",
+      "required": false
+    },
+    "location.returned_from_dungeon": {
+      "type": "location_banner",
+      "path": "assets/discord/locations/returned_from_dungeon.webp",
+      "source_path": "assets/discord/locations/returned_from_dungeon.png",
+      "alt_text": "A defender returning from the dungeon",
       "required": false
     },
     "location.shop": {
       "type": "location_banner",
-      "path": "assets/discord/locations/equipment_shop.png",
+      "path": "assets/discord/locations/shop.webp",
+      "source_path": "assets/discord/source/shop_source.png",
       "alt_text": "A compact dungeon equipment shop lit by warm lanterns",
+      "required": false
+    },
+    "location.stewards_hall": {
+      "type": "location_banner",
+      "path": "assets/discord/locations/stewards_hall.webp",
+      "source_path": "assets/discord/source/stewards_hall_source.png",
+      "alt_text": "The torchlit Steward's Hall planning room",
+      "required": true
+    },
+    "location.user_profile": {
+      "type": "location_banner",
+      "path": "assets/discord/locations/user_profile.webp",
+      "source_path": "assets/discord/locations/user_profile.png",
+      "alt_text": "A dungeon steward profile ledger",
       "required": false
     },
     "item.potion.xp.01": {
       "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/xp_potion_01.png",
+      "path": "assets/discord/thumbnails/items/xp_potion_01.webp",
+      "source_path": "assets/discord/thumbnails/items/xp_potion_01.png",
       "alt_text": "A small blue experience potion",
       "required": false
     },
     "item.equipment.quilted_vest": {
       "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/quilted_vest.png",
+      "path": "assets/discord/thumbnails/items/quilted_vest.webp",
+      "source_path": "assets/discord/thumbnails/items/quilted_vest.png",
       "alt_text": "A quilted defensive vest",
       "required": false
     }

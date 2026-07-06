@@ -16,7 +16,7 @@ from bot.services.defense_service import (
     InvalidDungeonLevelError,
     NotDefendingError,
 )
-from bot.services.discord_asset_service import DEFAULT_DISCORD_ASSETS
+from bot.services.discord_asset_service import DEFAULT_DISCORD_ASSETS, banner_first_message_payload
 from bot.services.discovery_service import DiscoveryService
 from bot.services.energy_service import EnergyService, InsufficientEnergyError
 from bot.services.equipment_service import get_effective_combat_stats
@@ -139,16 +139,20 @@ class DungeonGroup(app_commands.Group):
             )
             return False
         if report is not None:
+            report_embed = build_defense_report_embed(report)
             await interaction.followup.send(
-                embed=build_defense_report_embed(report),
-                view=self._defense_report_view(interaction.user.id, report),
+                **banner_first_message_payload(
+                    report_embed,
+                    view=self._defense_report_view(interaction.user.id, report),
+                ),
             )
         return True
 
     @app_commands.command(name="hall", description="Visit the Steward's Hall to choose your next dungeon action")
     async def hall(self, interaction: discord.Interaction) -> None:
+        hall_embed = build_hall_embed()
         await interaction.response.send_message(
-            embed=build_hall_embed(),
+            **banner_first_message_payload(hall_embed),
             view=self._hall_view(
                 interaction.user.id,
                 is_defending=self._is_defending(interaction.guild_id, interaction.user.id),
@@ -190,11 +194,21 @@ class DungeonGroup(app_commands.Group):
                 state = self.energy.recalculate(player)
                 cooldown_seconds = get_explore_cooldown_minutes(player.explore_level) * 60
                 db.commit()
+            out_of_energy = embed(
+                "Out of Energy",
+                "You do not currently have enough energy to explore.",
+                colour=MIDNIGHT_BLUE,
+            )
+            out_of_energy.add_field(name="Energy", value=f"{state.energy}/{MAX_ENERGY}")
+            out_of_energy.add_field(name="Next Energy", value=human_duration(state.seconds_until_next))
+            out_of_energy.add_field(
+                name="Regeneration",
+                value=f"1 energy every {human_duration(cooldown_seconds)}",
+                inline=False,
+            )
+            DEFAULT_DISCORD_ASSETS.apply_banner(out_of_energy, LOCATION_SERVICE.banner_asset_for("out_of_energy"))
             await interaction.followup.send(
-                "You do not currently have enough energy to explore.\n\n"
-                f"Energy: {state.energy}/{MAX_ENERGY}\n"
-                f"Next energy: {human_duration(state.seconds_until_next)}\n"
-                f"Energy regenerates every {human_duration(cooldown_seconds)} and can accumulate for up to 24 hours.",
+                **banner_first_message_payload(out_of_energy),
                 ephemeral=True,
             )
             return
@@ -206,9 +220,9 @@ class DungeonGroup(app_commands.Group):
         encounter_embed = embed(started.encounter.title, started.encounter.description, colour=DEEP_NAVY)
         encounter_embed.add_field(name="Cost", value="Entering the dungeon consumes 1 energy.")
         encounter_embed.add_field(name="Remaining Energy", value=f"{started.energy_state.energy}/{MAX_ENERGY}")
-        DEFAULT_DISCORD_ASSETS.apply_banner(encounter_embed, LOCATION_SERVICE.banner_asset_for("dungeon_selection"))
+        DEFAULT_DISCORD_ASSETS.apply_banner(encounter_embed, LOCATION_SERVICE.banner_asset_for("explore_dungeon"))
         await interaction.followup.send(
-            embed=encounter_embed,
+            **banner_first_message_payload(encounter_embed),
             view=ExplorationView(
                 session_factory=self.session_factory,
                 exploration_service=self.exploration,
@@ -258,12 +272,15 @@ class DungeonGroup(app_commands.Group):
             if target.id == interaction.user.id and player.unspent_stat_points > 0:
                 stat_context = STAT_ALLOCATION_PROFILE
         if report is not None:
+            report_embed = build_defense_report_embed(report)
             await interaction.followup.send(
-                embed=build_defense_report_embed(report),
-                view=self._defense_report_view(interaction.user.id, report),
+                **banner_first_message_payload(
+                    report_embed,
+                    view=self._defense_report_view(interaction.user.id, report),
+                ),
             )
         await interaction.followup.send(
-            embed=profile_embed,
+            **banner_first_message_payload(profile_embed),
             view=self._action_view(
                 interaction.user.id,
                 is_defending=action_is_defending,
@@ -294,8 +311,9 @@ class DungeonGroup(app_commands.Group):
         response.add_field(name="Next Energy", value=discord_relative_timestamp(state.next_energy_at))
         response.add_field(name="Full Energy", value=discord_relative_timestamp(state.full_energy_at))
         response.set_footer(text=f"Energy cap: {MAX_ENERGY} | Explore Level: {player.explore_level}")
+        DEFAULT_DISCORD_ASSETS.apply_banner(response, LOCATION_SERVICE.banner_asset_for("dungeon_energy"))
         await interaction.response.send_message(
-            embed=response,
+            **banner_first_message_payload(response),
             view=self._action_view(interaction.user.id, is_defending=action_is_defending),
             ephemeral=True,
         )
@@ -333,12 +351,16 @@ class DungeonGroup(app_commands.Group):
             await interaction.followup.send("The guard roster fell off the wall. Please try again.", ephemeral=True)
             return
         if result.resolved_previous is not None:
+            report_embed = build_defense_report_embed(result.resolved_previous)
             await interaction.followup.send(
-                embed=build_defense_report_embed(result.resolved_previous),
-                view=self._defense_report_view(interaction.user.id, result.resolved_previous),
+                **banner_first_message_payload(
+                    report_embed,
+                    view=self._defense_report_view(interaction.user.id, result.resolved_previous),
+                ),
             )
+        started_embed = build_defense_started_embed(result.started)
         await interaction.followup.send(
-            embed=build_defense_started_embed(result.started),
+            **banner_first_message_payload(started_embed),
             view=self._action_view(interaction.user.id, is_defending=True),
         )
 
@@ -363,8 +385,9 @@ class DungeonGroup(app_commands.Group):
             log.exception("Stop defending command failed")
             await interaction.followup.send("The defense ledger would not close. Please try again.", ephemeral=True)
             return
+        report_embed = build_defense_report_embed(report)
         await interaction.followup.send(
-            embed=build_defense_report_embed(report),
+            **banner_first_message_payload(report_embed),
             view=self._defense_report_view(interaction.user.id, report)
             or self._action_view(interaction.user.id, is_defending=False),
         )
@@ -386,7 +409,7 @@ class DungeonGroup(app_commands.Group):
             db.commit()
             shop_embed = build_shop_embed(stock, player=player, equipment=self.shop.equipment)
         await interaction.response.send_message(
-            embed=shop_embed,
+            **banner_first_message_payload(shop_embed),
             view=ShopView(
                 session_factory=self.session_factory,
                 exploration_service=self.exploration,
@@ -424,8 +447,9 @@ class DungeonGroup(app_commands.Group):
             log.exception("Buy command failed")
             await interaction.response.send_message("The shop ledger jammed. Please try again.", ephemeral=True)
             return
+        purchase_embed = build_purchase_embed(purchase)
         await interaction.response.send_message(
-            embed=build_purchase_embed(purchase),
+            **banner_first_message_payload(purchase_embed),
             view=self._action_view(
                 interaction.user.id,
                 is_defending=self._is_defending(interaction.guild_id, interaction.user.id),
@@ -505,8 +529,9 @@ class DungeonGroup(app_commands.Group):
         )
         if selected_stat is not None:
             stats_embed.description = f"Added {amount} point(s) to {selected_stat}."
+        DEFAULT_DISCORD_ASSETS.apply_banner(stats_embed, LOCATION_SERVICE.banner_asset_for("combat_stats"))
         await interaction.response.send_message(
-            embed=stats_embed,
+            **banner_first_message_payload(stats_embed),
             view=self._action_view(
                 interaction.user.id,
                 is_defending=action_is_defending,
@@ -536,8 +561,9 @@ class DungeonGroup(app_commands.Group):
                 value=f"{objective.progress_value}/{objective.target_value} | Ends {discord_relative_timestamp(objective.ends_at)}",
                 inline=False,
             )
+            DEFAULT_DISCORD_ASSETS.apply_banner(status_embed, LOCATION_SERVICE.banner_asset_for("community_dungeon"))
         await interaction.response.send_message(
-            embed=status_embed,
+            **banner_first_message_payload(status_embed),
             view=self._action_view(
                 interaction.user.id,
                 is_defending=self._is_defending(interaction.guild_id, interaction.user.id),
@@ -582,8 +608,9 @@ class DungeonGroup(app_commands.Group):
             board.description = "\n".join(f"{index}. {name}: {value}" for index, (name, value) in enumerate(rows, start=1))
         else:
             board.description = "No entries yet. The dungeon awaits its first questionable decision."
+        DEFAULT_DISCORD_ASSETS.apply_banner(board, LOCATION_SERVICE.banner_asset_for("leaderboard"))
         await interaction.response.send_message(
-            embed=board,
+            **banner_first_message_payload(board),
             view=self._action_view(
                 interaction.user.id,
                 is_defending=self._is_defending(interaction.guild_id, interaction.user.id),
@@ -610,8 +637,9 @@ class DungeonGroup(app_commands.Group):
             inline=False,
         )
         help_embed.add_field(name="Version", value=__version__)
+        DEFAULT_DISCORD_ASSETS.apply_banner(help_embed, LOCATION_SERVICE.banner_asset_for("dungeon_help"))
         await interaction.response.send_message(
-            embed=help_embed,
+            **banner_first_message_payload(help_embed),
             view=self._action_view(
                 interaction.user.id,
                 is_defending=self._is_defending(interaction.guild_id, interaction.user.id),

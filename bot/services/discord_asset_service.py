@@ -26,6 +26,7 @@ DISCORD_ATTACHMENT_HOSTS = frozenset({"cdn.discordapp.com", "media.discordapp.ne
 GAMEPLAY_ASSET_FIELDS = frozenset({"thumbnail_asset", "banner_asset", "artwork_asset", "image_asset"})
 _FILENAME_RE = re.compile(r"^[a-z0-9]+(?:_[a-z0-9]+)*(?:\.[a-z0-9]+)?$")
 _SHA256_RE = re.compile(r"^[a-fA-F0-9]{64}$")
+_MISSING = object()
 
 
 class AssetConfigError(ValueError):
@@ -57,6 +58,16 @@ class AssetTypeSpec:
 
 
 ASSET_TYPE_SPECS: dict[str, AssetTypeSpec] = {
+    "command_image": AssetTypeSpec(
+        name="command_image",
+        width=0,
+        height=0,
+        preferred_format="png",
+        allowed_formats=frozenset({"png", "webp", "jpeg"}),
+        warning_max_bytes=2 * 1024 * 1024,
+        hard_max_bytes=8 * 1024 * 1024,
+        target_size_label="local command art",
+    ),
     "thumbnail": AssetTypeSpec(
         name="thumbnail",
         width=256,
@@ -70,7 +81,7 @@ ASSET_TYPE_SPECS: dict[str, AssetTypeSpec] = {
     "location_banner": AssetTypeSpec(
         name="location_banner",
         width=1200,
-        height=400,
+        height=300,
         preferred_format="webp",
         allowed_formats=frozenset({"webp", "png", "jpeg"}),
         warning_max_bytes=500 * 1024,
@@ -267,7 +278,7 @@ def validate_asset_file(definition: AssetDefinition) -> AssetValidationResult:
         raise AssetValidationError(f"{definition.key} extension does not match actual image format")
     if image.format not in spec.allowed_formats:
         raise AssetValidationError(f"{definition.key} must use one of {sorted(spec.allowed_formats)}")
-    if image.width != spec.width or image.height != spec.height:
+    if spec.width > 0 and spec.height > 0 and (image.width != spec.width or image.height != spec.height):
         raise AssetValidationError(f"{definition.key} must be {spec.width}x{spec.height}, found {image.width}x{image.height}")
     if image.size_bytes > spec.hard_max_bytes:
         raise AssetValidationError(f"{definition.key} is too large: {image.size_bytes} bytes")
@@ -440,7 +451,71 @@ class DiscordAssetService:
         self._apply(embed, asset_key, expected_types={"thumbnail"}, method_name="set_thumbnail")
 
     def apply_banner(self, embed: Any, asset_key: str | None) -> None:
-        self._apply(embed, asset_key, expected_types={"location_banner", "encounter_artwork"}, method_name="set_image")
+        if not asset_key:
+            return
+        definition = self.catalog.get(asset_key)
+        expected_types = {"location_banner", "encounter_artwork", "command_image"}
+        if definition.type not in expected_types:
+            raise AssetConfigError(f"{asset_key} is {definition.type}, not one of {sorted(expected_types)}")
+        if definition.path.exists():
+            embed.set_image(url=f"attachment://{definition.filename}")
+            return
+        url = self.get_url(asset_key)
+        if url:
+            embed.set_image(url=url)
+
+    def files_for_embed(self, embed: Any) -> list[Any]:
+        return self.files_for_embeds(embed)
+
+    def files_for_embeds(self, *embeds_or_sequences: Any) -> list[Any]:
+        filenames: set[str] = set()
+        for embed in _flatten_embeds(embeds_or_sequences):
+            filenames.update(_embed_attachment_filenames(embed))
+        return self._files_for_filenames(filenames)
+
+    def files_for_message_embed(self, embed: Any) -> list[Any]:
+        filenames = _embed_attachment_filenames(embed)
+        filenames.update(self._banner_attachment_filenames(embed))
+        return self._files_for_filenames(filenames)
+
+    def message_payload_with_banner_attachment(
+        self,
+        embed: Any,
+        *,
+        attachment_parameter: str = "files",
+        view: Any = _MISSING,
+    ) -> dict[str, Any]:
+        content = embed.copy()
+        if self._banner_attachment_filenames(embed):
+            content.set_image(url=None)
+        payload = {
+            "embed": content,
+            attachment_parameter: self.files_for_message_embed(embed),
+        }
+        if view is not _MISSING and view is not None:
+            payload["view"] = view
+        return payload
+
+    def _files_for_filenames(self, filenames: set[str]) -> list[Any]:
+        if not filenames:
+            return []
+        import discord
+
+        files = []
+        seen: set[str] = set()
+        for definition in self.catalog.assets.values():
+            filename = definition.filename
+            if filename not in filenames or filename in seen or not definition.path.exists():
+                continue
+            seen.add(filename)
+            files.append(discord.File(definition.path, filename=filename))
+        return files
+
+    def _banner_attachment_filenames(self, embed: Any) -> set[str]:
+        image_url = _embed_image_url(embed)
+        if image_url and image_url.startswith("attachment://"):
+            return {image_url.removeprefix("attachment://")}
+        return set()
 
     def _apply(self, embed: Any, asset_key: str | None, *, expected_types: set[str], method_name: str) -> None:
         if not asset_key:
@@ -620,6 +695,34 @@ def _collect_asset_keys(value: Any, keys: set[str]) -> None:
             _collect_asset_keys(item, keys)
 
 
+def _embed_attachment_filenames(embed: Any) -> set[str]:
+    filenames: set[str] = set()
+    for section_name in ("image", "thumbnail"):
+        section = getattr(embed, section_name, None)
+        url = getattr(section, "url", None)
+        if isinstance(url, str) and url.startswith("attachment://"):
+            filenames.add(url.removeprefix("attachment://"))
+    return filenames
+
+
+def _embed_image_url(embed: Any) -> str | None:
+    image = getattr(embed, "image", None)
+    url = getattr(image, "url", None)
+    return url if isinstance(url, str) and url else None
+
+
+def _flatten_embeds(values: tuple[Any, ...]) -> list[Any]:
+    flattened: list[Any] = []
+    for value in values:
+        if value is None:
+            continue
+        if isinstance(value, (list, tuple)):
+            flattened.extend(_flatten_embeds(tuple(value)))
+        else:
+            flattened.append(value)
+    return flattened
+
+
 def _configured_environment() -> str:
     try:
         from bot.config import load_settings
@@ -630,6 +733,23 @@ def _configured_environment() -> str:
 
 
 DEFAULT_DISCORD_ASSETS = DiscordAssetService()
+
+
+def local_asset_files_for(*embeds_or_sequences: Any) -> list[Any]:
+    return DEFAULT_DISCORD_ASSETS.files_for_embeds(*embeds_or_sequences)
+
+
+def banner_first_message_payload(
+    embed: Any,
+    *,
+    attachment_parameter: str = "files",
+    view: Any = _MISSING,
+) -> dict[str, Any]:
+    return DEFAULT_DISCORD_ASSETS.message_payload_with_banner_attachment(
+        embed,
+        attachment_parameter=attachment_parameter,
+        view=view,
+    )
 
 
 def refresh_default_discord_assets(

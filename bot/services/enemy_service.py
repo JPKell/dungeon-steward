@@ -295,7 +295,7 @@ def generate_enemy(
         selected,
         "gold",
         reward_scale * PROGRESSION_CONTENT.enemy_generation.combat_gold_multiplier,
-        minimum=0,
+        minimum=1,
     )
     combat_xp = _scaled_roll(rng, selected, "xp", reward_scale)
     max_gold = max(
@@ -303,7 +303,7 @@ def generate_enemy(
         _scaled_value(
             int(selected["gold_max"]),
             reward_scale * PROGRESSION_CONTENT.enemy_generation.combat_gold_multiplier,
-            minimum=0,
+            minimum=1,
         ),
     )
     max_combat_xp = max(combat_xp, _scaled_value(int(selected["xp_max"]), reward_scale, minimum=1))

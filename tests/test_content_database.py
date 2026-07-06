@@ -2,9 +2,18 @@ from __future__ import annotations
 
 import json
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 
-from bot.models import ContentEncounter, ContentPotionItem, ContentProgressionDocument, Discovery
+from bot.models import (
+    ContentEncounter,
+    ContentEncounterChoice,
+    ContentPotionEffectTarget,
+    ContentPotionItem,
+    ContentPotionRarityBonus,
+    ContentProgressionCurve,
+    ContentProgressionDocument,
+    Discovery,
+)
 from bot.services import location_service
 from bot.services.content_database import CONTENT_DIR, CONTENT_FILENAMES, dump_content_to_files, load_content_from_files
 from bot.services.content_runtime import refresh_runtime_content_from_database
@@ -15,13 +24,24 @@ def test_content_json_loads_to_database_and_dumps_round_trip(db, tmp_path):
     load_result = load_content_from_files(db, content_dir=CONTENT_DIR)
 
     assert load_result.rows["equipment.json"] >= 30
-    assert load_result.rows["potion_items.json"] == 91
+    assert load_result.rows["progression.json"] > 1
+    assert load_result.rows["potion_items.json"] > 91
     assert db.get(ContentProgressionDocument, 1).schema_version == 2
+    assert db.scalar(select(func.count()).select_from(ContentProgressionCurve)) == 9
     assert db.scalar(select(ContentPotionItem).where(ContentPotionItem.key == "potion_xp_01")) is not None
+    assert db.scalar(select(func.count()).select_from(ContentPotionRarityBonus)) == 5
+    assert db.scalar(select(func.count()).select_from(ContentPotionEffectTarget)) > 0
 
     encounter = db.scalar(select(ContentEncounter).where(ContentEncounter.key.is_not(None)))
     assert encounter is not None
-    assert len(encounter.choices) >= 2
+    assert (
+        db.scalar(
+            select(func.count())
+            .select_from(ContentEncounterChoice)
+            .where(ContentEncounterChoice.encounter_id == encounter.id)
+        )
+        >= 2
+    )
 
     first_discovery = json.loads((CONTENT_DIR / "discoveries.json").read_text(encoding="utf-8"))[0]
     runtime_discovery = db.scalar(select(Discovery).where(Discovery.key == first_discovery["key"]))

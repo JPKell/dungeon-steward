@@ -176,7 +176,12 @@ def validate() -> dict[str, Any]:
     # Equipment schemas and continuous coverage.
     unique(equipment, "key", "equipment", errors)
     unique(equipment, "name", "equipment", errors)
-    generated = [item for item in equipment if str(item.get("key", "")).startswith("generated_")]
+    generated_description_keys = {
+        str(key).removeprefix("generated_")
+        for key in equipment_descriptions
+        if str(key).startswith("generated_")
+    }
+    generated = [item for item in equipment if str(item.get("key", "")) in generated_description_keys]
     require(len(generated) >= 400, "at least 400 generated equipment items are required", errors)
     for item in equipment:
         require(item.get("slot") in SLOTS, f"item {item.get('key')} has invalid slot", errors)
@@ -195,13 +200,14 @@ def validate() -> dict[str, Any]:
             errors,
         )
         require(item_power(item) > 0, f"item {item.get('key')} has no power", errors)
-        if str(item.get("key", "")).startswith("generated_") and item["min_level"] < 300:
+        is_generated = str(item.get("key", "")) in generated_description_keys
+        if is_generated and item["min_level"] < 300:
             require(
                 10 <= item["max_level"] - item["min_level"] + 1 <= 20,
                 f"generated item {item['key']} has invalid sub-300 availability span",
                 errors,
             )
-        if str(item.get("key", "")).startswith("generated_") and item["min_level"] >= 300:
+        if is_generated and item["min_level"] >= 300:
             require(item["max_level"] - item["min_level"] + 1 >= 25, f"endgame item {item['key']} should have a wider range", errors)
     equipment_coverage: dict[int, int] = {}
     for level in range(1, 401):
@@ -214,8 +220,9 @@ def validate() -> dict[str, Any]:
             require(any(item["rarity"] == rarity for item in valid), f"rarity {rarity} has no item at level {level}", errors)
 
     equipment_keys = {item["key"] for item in equipment}
+    equipment_description_keys = {str(key).removeprefix("generated_") for key in equipment_descriptions}
     require(isinstance(equipment_descriptions, dict), "equipment descriptions must be an object", errors)
-    require(set(equipment_descriptions) == equipment_keys, "equipment descriptions must cover every item exactly once", errors)
+    require(equipment_description_keys == equipment_keys, "equipment descriptions must cover every item exactly once", errors)
     require(
         all(isinstance(text, str) and len(text) >= 40 for text in equipment_descriptions.values()),
         "equipment descriptions must be meaningful strings",

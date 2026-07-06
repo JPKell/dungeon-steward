@@ -11,9 +11,11 @@ from bot.views.exploration import (
     STAT_ALLOCATION_PROFILE,
     DefenseLevelSelectView,
     ExplorationView,
+    ExploreLevelSelectView,
     PostExplorationView,
     PotionInventoryView,
     StewardsHallView,
+    _stat_allocation_summary_embed,
 )
 
 
@@ -90,6 +92,83 @@ def test_action_view_can_include_stat_allocation_buttons() -> None:
         "DEF +1",
         "SPD +1",
     ]
+
+
+def test_defending_action_view_keeps_return_button_by_default() -> None:
+    view = PostExplorationView(
+        session_factory=DummySessionFactory(),
+        exploration_service=DummyExplorationService(),
+        defense_service=DummyDefenseService(),
+        shop_service=DummyShopService(),
+        owner_user_id=1,
+        is_defending=True,
+    )
+
+    labels = [button.label for button in view.children if isinstance(button, discord.ui.Button)]
+
+    assert "Return from Dungeon" in labels
+    assert "Defend" not in labels
+    assert labels == ["Explore", "Return from Dungeon", "Shop", "Steward's Hall"]
+
+
+def test_defending_result_view_can_suppress_return_button() -> None:
+    view = PostExplorationView(
+        session_factory=DummySessionFactory(),
+        exploration_service=DummyExplorationService(),
+        defense_service=DummyDefenseService(),
+        shop_service=DummyShopService(),
+        owner_user_id=1,
+        is_defending=True,
+        allow_defense_return_button=False,
+    )
+
+    labels = [button.label for button in view.children if isinstance(button, discord.ui.Button)]
+
+    assert "Return from Dungeon" not in labels
+    assert "Defend" not in labels
+    assert labels == ["Explore", "Shop", "Steward's Hall"]
+
+
+def test_dungeon_level_selectors_do_not_include_return_buttons() -> None:
+    options = [discord.SelectOption(label="Level 1", value="1")]
+    explore = ExploreLevelSelectView(
+        session_factory=DummySessionFactory(),
+        exploration_service=DummyExplorationService(),
+        defense_service=DummyDefenseService(),
+        shop_service=DummyShopService(),
+        owner_user_id=1,
+        options=options,
+        is_defending=True,
+    )
+    defense = DefenseLevelSelectView(
+        session_factory=DummySessionFactory(),
+        exploration_service=DummyExplorationService(),
+        defense_service=DummyDefenseService(),
+        shop_service=DummyShopService(),
+        owner_user_id=1,
+        options=options,
+        is_defending=True,
+    )
+
+    for view in (explore, defense):
+        labels = [button.label for button in view.children if isinstance(button, discord.ui.Button)]
+        assert "Return from Dungeon" not in labels
+        assert "Stop Defending" not in labels
+        assert "Defend" not in labels
+
+
+def test_stat_allocation_summary_ignores_image_only_banner_embed() -> None:
+    banner = discord.Embed()
+    banner.set_image(url="attachment://banner.png")
+    content = discord.Embed(title="Profile")
+    content.add_field(name="Level", value="3")
+    interaction = SimpleNamespace(message=SimpleNamespace(embeds=[banner, content]))
+
+    response = _stat_allocation_summary_embed(interaction, stat="attack", remaining_points=2)
+
+    assert response.title == "Profile"
+    assert response.image.url is None
+    assert any(field.name == "Stat Allocation" for field in response.fields)
 
 
 def test_hall_and_defense_selector_include_inventory_button() -> None:

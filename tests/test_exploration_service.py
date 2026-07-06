@@ -6,7 +6,15 @@ from types import SimpleNamespace
 import pytest
 from sqlalchemy import func, select
 
-from bot.models import EncounterHistory, ExplorationSession, Player, PotionInventoryStack
+from bot.models import (
+    ContentEncounter,
+    ContentEncounterChoice,
+    EncounterHistory,
+    ExplorationSession,
+    Player,
+    PotionInventoryStack,
+)
+from bot.services.content_database import CONTENT_DIR, load_content_from_files
 from bot.services.energy_service import InsufficientEnergyError
 from bot.services.exploration_service import (
     ExplorationAlreadyResolvedError,
@@ -28,6 +36,11 @@ class FixedPotionDropRng:
 
     def choices(self, population, weights, k):
         return [population[0]]
+
+
+class NoPotionDropRng(FixedPotionDropRng):
+    def random(self) -> float:
+        return 1.0
 
 
 def test_exploration_consumes_one_energy(db, now):
@@ -124,6 +137,41 @@ def test_potion_drop_is_recorded_once_with_exploration_resolution(db, now):
     assert history.potion_item_key == result.potion_drop.key
     assert stack.item_key == result.potion_drop.key
     assert stack.quantity == 1
+
+
+def test_resolution_uses_normalized_choice_row(db, now):
+    load_content_from_files(db, content_dir=CONTENT_DIR)
+    service = ExplorationService()
+    started = service.start(db, guild_id=10, user_id=1, display_name="Scout", now=now)
+    selected = started.encounter.choices[0]
+    choice_row = db.scalar(
+        select(ContentEncounterChoice)
+        .join(ContentEncounter, ContentEncounter.id == ContentEncounterChoice.encounter_id)
+        .where(
+            ContentEncounter.key == started.encounter.key,
+            ContentEncounterChoice.key == selected.key,
+        )
+    )
+    assert choice_row is not None
+    choice_row.result_text = "DB-normalized choice row was used"
+    choice_row.gold_min = 123
+    choice_row.gold_max = 123
+    choice_row.xp_min = 7
+    choice_row.xp_max = 7
+    db.flush()
+
+    result = service.resolve(
+        db,
+        resolution_key=started.session.resolution_key,
+        choice_key=selected.key,
+        acting_user_id=1,
+        now=now,
+        rng=NoPotionDropRng(),
+    )
+
+    assert result.choice.result_text == "DB-normalized choice row was used"
+    assert result.choice.gold_min == 123
+    assert result.choice.xp_min == 7
 
 
 def test_selected_dungeon_level_is_persisted(db, now):

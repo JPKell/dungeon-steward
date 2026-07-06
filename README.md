@@ -71,6 +71,12 @@ alembic upgrade head
 python -m scripts.content_db load
 ```
 
+Or build a fresh local SQLite development database in one step:
+
+```bash
+python -m scripts.build_dev_db --reset
+```
+
 Validate content and run tests:
 
 ```bash

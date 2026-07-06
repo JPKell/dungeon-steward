@@ -9,7 +9,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from bot.config import EXPLORATION_TIMEOUT_SECONDS
-from bot.models import EncounterHistory, ExplorationSession, Player
+from bot.models import ContentDungeonLevel, EncounterHistory, ExplorationSession, Player
 from bot.services.discovery_service import DiscoveryService
 from bot.services.dungeon_progression_service import can_enter_dungeon, sync_player_dungeon_progression
 from bot.services.encounter_service import Choice, Encounter, EncounterService
@@ -107,6 +107,7 @@ class ExplorationService:
         self.players.get_or_create_guild(session, guild_id=guild_id)
         energy_state = self.energy.spend(player, now=now)
         encounter = self.encounters.select(
+            session=session,
             explore_level=player.explore_level,
             dungeon_level=dungeon_level,
         )
@@ -146,10 +147,14 @@ class ExplorationService:
             exploration.expired_at = now
             raise ExplorationExpiredError
 
-        encounter = self.encounters.get(exploration.encounter_key)
-        choice = next((candidate for candidate in encounter.choices if candidate.key == choice_key), None)
-        if choice is None:
-            raise ExplorationError("Invalid choice")
+        try:
+            encounter, choice = self.encounters.get_resolution(
+                session,
+                encounter_key=exploration.encounter_key,
+                choice_key=choice_key,
+            )
+        except KeyError as error:
+            raise ExplorationError("Invalid choice") from error
 
         migrate_explore_progression(player)
         reward_explore_level = player.explore_level
@@ -164,7 +169,7 @@ class ExplorationService:
             defense=stats.defense,
             speed=stats.speed,
         )
-        expected_power = float(DUNGEON_LEVELS[dungeon_level].get("expected_player_power", 1.0))
+        expected_power = _expected_player_power(session, dungeon_level)
         power_ratio = player_power / max(1.0, expected_power)
         base_gold = rng.randint(choice.gold_min, choice.gold_max)
         base_experience = rng.randint(choice.xp_min, choice.xp_max)
@@ -256,3 +261,12 @@ def _validate_player_dungeon_access(player: Player, dungeon_level: int) -> None:
         missing = snapshot.next_unlock.missing if snapshot.next_unlock is not None else ()
         detail = f": {', '.join(missing)}" if missing else ""
         raise ExplorationError(f"Dungeon level {dungeon_level} is not unlocked{detail}")
+
+
+def _expected_player_power(session: Session, dungeon_level: int) -> float:
+    value = session.scalar(
+        select(ContentDungeonLevel.expected_player_power).where(ContentDungeonLevel.level == dungeon_level)
+    )
+    if value is not None:
+        return float(value)
+    return float(DUNGEON_LEVELS[dungeon_level].get("expected_player_power", 1.0))
