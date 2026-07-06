@@ -17,6 +17,7 @@ from bot.services.defense_service import (
     NotDefendingError,
 )
 from bot.services.discord_asset_service import DEFAULT_DISCORD_ASSETS, DiscordAssetService, banner_first_message_payload
+from bot.services.discord_emoji_service import DEFAULT_DISCORD_EMOJIS, DiscordEmojiService
 from bot.services.dungeon_progression_service import (
     get_player_dungeon_unlock_state,
     sync_player_dungeon_progression,
@@ -24,7 +25,7 @@ from bot.services.dungeon_progression_service import (
 from bot.services.encounter_service import Encounter
 from bot.services.enemy_service import DUNGEON_LEVEL_MAX, DUNGEON_LEVEL_MIN
 from bot.services.energy_service import InsufficientEnergyError
-from bot.services.equipment_service import get_effective_combat_stats
+from bot.services.equipment_service import EquipmentItem, get_effective_combat_stats
 from bot.services.exploration_service import (
     ExplorationAlreadyResolvedError,
     ExplorationExpiredError,
@@ -37,6 +38,7 @@ from bot.services.potion_service import (
     ActivePotion,
     PotionActiveSlotLimitError,
     PotionInventoryEntry,
+    PotionItem,
     PotionNotOwnedError,
     PotionReplacementRequired,
     PotionService,
@@ -45,12 +47,21 @@ from bot.services.progression_service import allocate_stat_points, get_explore_c
 from bot.services.shop_service import (
     InsufficientGoldError,
     InvalidShopSelectionError,
+    ShopPurchaseQuote,
     ShopService,
+    ShopStock,
 )
 from bot.utils.defense_embeds import build_defense_report_embed, build_defense_started_embed
 from bot.utils.embeds import DEEP_NAVY, MIDNIGHT_BLUE, WARM_GOLD, embed
 from bot.utils.profile_embeds import build_profile_embed
-from bot.utils.shop_embeds import build_purchase_embed, build_shop_embed
+from bot.utils.shop_embeds import (
+    SLOT_EMOJIS,
+    build_purchase_embed,
+    build_shop_embed,
+    format_gold,
+    format_item_stats,
+    rarity_badge,
+)
 from bot.utils.time import discord_relative_timestamp, human_duration, utc_now
 
 log = logging.getLogger(__name__)
@@ -140,7 +151,9 @@ class ExplorationView(discord.ui.View):
             label = "New Discovery" if result.new_discovery else "Discovery Revisited"
             result_embed.add_field(name=label, value=result.discovery_name, inline=False)
         if result.potion_drop:
-            result_embed.add_field(name="Potion Found", value=f"{result.potion_drop.name} x1", inline=False)
+            DEFAULT_DISCORD_ASSETS.apply_thumbnail(result_embed, result.potion_drop.thumbnail_asset)
+            emoji = _potion_marker(result.potion_drop, DEFAULT_DISCORD_EMOJIS)
+            result_embed.add_field(name="Potion Found", value=f"{emoji} **{result.potion_drop.name}** x1", inline=False)
         if result.leveled_up:
             result_embed.add_field(name="Explore Level Up", value="Your dungeon title grows heavier.", inline=False)
         if result.energy_state.next_energy_at:
@@ -511,6 +524,52 @@ class DungeonActionView(discord.ui.View):
                 shop_service=self.shop_service,
                 owner_user_id=self.owner_user_id,
                 is_defending=self.is_defending,
+                stock=stock,
+                player=player,
+            ),
+        )
+
+    async def preview_shop_item(self, interaction: discord.Interaction, stock_number: int) -> None:
+        if interaction.guild_id is None:
+            await interaction.response.send_message("The shop is server-specific.", ephemeral=True)
+            return
+        await interaction.response.defer()
+        try:
+            with self.session_factory() as db:
+                player = self.exploration_service.players.get_or_create(
+                    db,
+                    guild_id=interaction.guild_id,
+                    user_id=interaction.user.id,
+                    display_name=interaction.user.display_name,
+                )
+                stock = self.shop_service.stock_for_player(player)
+                selected_quote = self.shop_service.quote_stock_item(player, stock=stock, stock_number=stock_number)
+                db.commit()
+                shop_embed = build_shop_embed(
+                    stock,
+                    player=player,
+                    equipment=self.shop_service.equipment,
+                    selected_quote=selected_quote,
+                )
+        except InvalidShopSelectionError as error:
+            await interaction.followup.send(str(error), ephemeral=True)
+            return
+        except Exception:
+            log.exception("Shop selector failed")
+            await interaction.followup.send("The shop ledger jammed. Please try again.", ephemeral=True)
+            return
+        await interaction.edit_original_response(
+            **banner_first_message_payload(shop_embed, attachment_parameter="attachments"),
+            view=ShopView(
+                session_factory=self.session_factory,
+                exploration_service=self.exploration_service,
+                defense_service=self.defense_service,
+                shop_service=self.shop_service,
+                owner_user_id=self.owner_user_id,
+                is_defending=self.is_defending,
+                stock=stock,
+                player=player,
+                selected_stock_number=stock_number,
             ),
         )
 
@@ -1331,14 +1390,16 @@ def _build_potion_inventory_embed(
     active: tuple[ActivePotion, ...],
     replacement: PotionReplacementRequired | None = None,
     asset_service: DiscordAssetService = DEFAULT_DISCORD_ASSETS,
+    emoji_service: DiscordEmojiService | None = None,
 ) -> discord.Embed:
+    emoji_service = emoji_service or DEFAULT_DISCORD_EMOJIS
     response = embed("Potion Inventory", colour=MIDNIGHT_BLUE)
     asset_service.apply_banner(response, LOCATION_SERVICE.banner_asset_for("inventory"))
     asset_service.apply_thumbnail(response, _potion_thumbnail_asset(entries=entries, active=active, replacement=replacement))
     if active:
         active_lines = [
             (
-                f"{POTION_TYPE_EMOJIS.get(effect.effect_group, '🧪')} **{effect.item.name}** - "
+                f"{_potion_marker(effect.item, emoji_service)} **{effect.item.name}** - "
                 f"{potion_service.effect_summary(effect.item)} - ends "
                 f"{discord_relative_timestamp(effect.activation.effective_ends_at)}"
             )
@@ -1350,7 +1411,7 @@ def _build_potion_inventory_embed(
     response.add_field(name="Slots", value=potion_service.active_slot_usage(active), inline=False)
 
     if entries:
-        owned_lines = [_potion_inventory_line(potion_service, entry) for entry in entries[:25]]
+        owned_lines = [_potion_inventory_line(potion_service, entry, emoji_service) for entry in entries[:25]]
         for index, chunk in enumerate(_chunk_lines(owned_lines), start=1):
             name = "Owned Potions" if index == 1 else "Owned Potions Continued"
             response.add_field(name=name, value=chunk, inline=False)
@@ -1381,19 +1442,40 @@ def _potion_thumbnail_asset(
     active: tuple[ActivePotion, ...],
     replacement: PotionReplacementRequired | None,
 ) -> str | None:
-    if replacement is not None and replacement.requested.thumbnail_asset:
-        return replacement.requested.thumbnail_asset
+    if replacement is not None:
+        asset_key = _potion_asset_key(replacement.requested)
+        if asset_key:
+            return asset_key
     for effect in active:
-        if effect.item.thumbnail_asset:
-            return effect.item.thumbnail_asset
+        asset_key = _potion_asset_key(effect.item)
+        if asset_key:
+            return asset_key
     for entry in entries:
-        if entry.item.thumbnail_asset:
-            return entry.item.thumbnail_asset
+        asset_key = _potion_asset_key(entry.item)
+        if asset_key:
+            return asset_key
     return None
 
 
-def _potion_inventory_line(potion_service: PotionService, entry: PotionInventoryEntry) -> str:
-    emoji = POTION_TYPE_EMOJIS.get(entry.item.effect_group, "🧪")
+def _potion_asset_key(item: PotionItem) -> str | None:
+    if item.thumbnail_asset:
+        return item.thumbnail_asset
+    if item.effect_group in {"attack", "healing", "luck", "max_hp", "xp"}:
+        return f"item.potion.{item.effect_group}.{item.tier:02d}"
+    return None
+
+
+def _potion_marker(item: PotionItem, emoji_service: DiscordEmojiService) -> str:
+    return emoji_service.markdown_for(_potion_asset_key(item)) or POTION_TYPE_EMOJIS.get(item.effect_group, "🧪")
+
+
+def _potion_inventory_line(
+    potion_service: PotionService,
+    entry: PotionInventoryEntry,
+    emoji_service: DiscordEmojiService | None = None,
+) -> str:
+    emoji_service = emoji_service or DEFAULT_DISCORD_EMOJIS
+    emoji = _potion_marker(entry.item, emoji_service)
     return (
         f"{emoji} **{entry.item.name}** x{entry.stack.quantity} - "
         f"T{entry.item.tier} {entry.item.rarity} - "
@@ -1447,6 +1529,9 @@ class ShopView(DungeonActionView):
         shop_service: ShopService,
         owner_user_id: int,
         is_defending: bool = False,
+        stock: ShopStock,
+        player: Player,
+        selected_stock_number: int | None = None,
     ) -> None:
         super().__init__(
             session_factory=session_factory,
@@ -1456,8 +1541,9 @@ class ShopView(DungeonActionView):
             owner_user_id=owner_user_id,
             is_defending=is_defending,
         )
-        for number in range(1, 11):
-            self.add_item(ShopBuyButton(number))
+        self.add_item(ShopPurchaseSelect(stock, player, shop_service, selected_stock_number=selected_stock_number))
+        if selected_stock_number is not None:
+            self.add_item(ShopBuySelectedButton(selected_stock_number))
 
     @discord.ui.button(label="Back", style=discord.ButtonStyle.secondary, row=3)
     async def back(
@@ -1479,13 +1565,43 @@ class ShopView(DungeonActionView):
         )
 
 
-class ShopBuyButton(discord.ui.Button):
+class ShopPurchaseSelect(discord.ui.Select):
+    def __init__(
+        self,
+        stock: ShopStock,
+        player: Player,
+        shop_service: ShopService,
+        *,
+        selected_stock_number: int | None = None,
+    ) -> None:
+        super().__init__(
+            placeholder="Choose equipment",
+            min_values=1,
+            max_values=1,
+            options=_shop_select_options(
+                stock,
+                player,
+                shop_service,
+                selected_stock_number=selected_stock_number,
+            ),
+            row=0,
+        )
+
+    async def callback(self, interaction: discord.Interaction) -> None:
+        view = self.view
+        if not isinstance(view, ShopView):
+            await interaction.response.send_message("This shop is no longer available.", ephemeral=True)
+            return
+        await view.preview_shop_item(interaction, int(self.values[0]))
+
+
+class ShopBuySelectedButton(discord.ui.Button):
     def __init__(self, stock_number: int) -> None:
         super().__init__(
-            label=str(stock_number),
-            style=discord.ButtonStyle.primary,
-            row=0 if stock_number <= 5 else 1,
-            custom_id=f"shop:buy:{stock_number}",
+            label="Buy Selected",
+            style=discord.ButtonStyle.success,
+            row=1,
+            custom_id=f"shop:buy-selected:{stock_number}",
         )
         self.stock_number = stock_number
 
@@ -1495,3 +1611,40 @@ class ShopBuyButton(discord.ui.Button):
             await interaction.response.send_message("This shop is no longer available.", ephemeral=True)
             return
         await view.buy_shop_item(interaction, self.stock_number)
+
+
+def _shop_select_options(
+    stock: ShopStock,
+    player: Player,
+    shop_service: ShopService,
+    *,
+    selected_stock_number: int | None = None,
+) -> list[discord.SelectOption]:
+    options: list[discord.SelectOption] = []
+    for index, item in enumerate(stock.items, start=1):
+        quote = shop_service.quote_stock_item(player, stock=stock, stock_number=index)
+        options.append(
+            discord.SelectOption(
+                label=_shop_option_label(index, item),
+                value=str(index),
+                description=_shop_option_description(quote),
+                emoji=SLOT_EMOJIS.get(item.slot, "📦"),
+                default=index == selected_stock_number,
+            )
+        )
+    return options
+
+
+def _shop_option_label(index: int, item: EquipmentItem) -> str:
+    return _limit_component_text(f"{index}. {item.name}", 100)
+
+
+def _shop_option_description(quote: ShopPurchaseQuote) -> str:
+    trade = f" after {format_gold(quote.trade_in_value)} trade" if quote.trade_in_value > 0 else ""
+    return _limit_component_text(
+        (
+            f"{rarity_badge(quote.item.rarity)} {quote.item.slot.title()} | "
+            f"{format_item_stats(quote.item)} | Buy {format_gold(quote.purchase_cost)}{trade}"
+        ),
+        100,
+    )

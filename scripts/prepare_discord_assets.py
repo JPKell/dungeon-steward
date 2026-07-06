@@ -127,6 +127,21 @@ def _resize_to_canvas(image, size: tuple[int, int], *, spec_name: str):
     from PIL import Image, ImageOps
 
     background = (10, 16, 30)
+    if spec_name == "thumbnail" and _has_alpha(image):
+        image = image.convert("RGBA")
+        scale = min(size[0] / image.width, size[1] / image.height)
+        resized_size = (
+            max(1, round(image.width * scale)),
+            max(1, round(image.height * scale)),
+        )
+        resized = image.resize(resized_size, Image.Resampling.LANCZOS)
+        canvas = Image.new("RGBA", size, (0, 0, 0, 0))
+        canvas.alpha_composite(
+            resized,
+            ((size[0] - resized.width) // 2, (size[1] - resized.height) // 2),
+        )
+        return canvas
+
     if _has_alpha(image):
         base = Image.new("RGBA", image.size, background + (255,))
         base.alpha_composite(image.convert("RGBA"))

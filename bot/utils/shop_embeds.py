@@ -6,7 +6,7 @@ from bot.models import Player
 from bot.services.discord_asset_service import DEFAULT_DISCORD_ASSETS, DiscordAssetService
 from bot.services.equipment_service import EquipmentItem, EquipmentService
 from bot.services.location_service import LOCATION_SERVICE
-from bot.services.shop_service import PurchasedEquipment, ShopStock
+from bot.services.shop_service import PurchasedEquipment, ShopPurchaseQuote, ShopStock
 from bot.utils.embeds import DEEP_NAVY, WARM_GOLD, embed
 from bot.utils.time import discord_timestamp
 
@@ -36,6 +36,7 @@ def build_shop_embed(
     *,
     player: Player,
     equipment: EquipmentService,
+    selected_quote: ShopPurchaseQuote | None = None,
     asset_service: DiscordAssetService = DEFAULT_DISCORD_ASSETS,
 ) -> discord.Embed:
     response = embed(
@@ -49,8 +50,11 @@ def build_shop_embed(
     response.add_field(name=format_gold(player.gold), value="\u200b")
     response.add_field(name="Equipped", value=_equipped_summary(player, equipment), inline=False)
     response.add_field(name="Stock", value=_stock_summary(stock), inline=False)
+    if selected_quote is not None:
+        response.add_field(name="Selected Purchase", value=_selected_purchase_summary(selected_quote, player), inline=False)
     asset_service.apply_banner(response, LOCATION_SERVICE.banner_asset_for("equipment_shop"))
-    asset_service.apply_thumbnail(response, _first_stock_thumbnail(stock))
+    thumbnail_asset = selected_quote.item.thumbnail_asset if selected_quote is not None else _first_stock_thumbnail(stock)
+    asset_service.apply_thumbnail(response, thumbnail_asset)
     response.timestamp = stock.refreshes_at
     response.set_footer(text="Buying an item equips it immediately and replaces the matching slot.")
     return response
@@ -132,6 +136,22 @@ def _equipped_summary(player: Player, equipment: EquipmentService) -> str:
             f" | Trade {format_gold(trade_value)}"
         )
     return "\n".join(equipped)
+
+
+def _selected_purchase_summary(quote: ShopPurchaseQuote, player: Player) -> str:
+    lines = [
+        f"{SLOT_EMOJIS.get(quote.item.slot, '📦')} {format_item_stats(quote.item)}",
+        f"{rarity_badge(quote.item.rarity)} {quote.item.name}",
+        f"Sticker {format_gold(quote.item.cost)}",
+    ]
+    if quote.trade_in_value > 0:
+        lines.append(f"Trade-in -{format_gold(quote.trade_in_value)}")
+    lines.append(f"Purchase Price {format_gold(quote.purchase_cost)}")
+    if player.gold >= quote.purchase_cost:
+        lines.append(f"After Purchase {format_gold(player.gold - quote.purchase_cost)}")
+    else:
+        lines.append(f"Short {format_gold(quote.purchase_cost - player.gold)}")
+    return "\n".join(lines)
 
 
 def _first_stock_thumbnail(stock: ShopStock) -> str | None:

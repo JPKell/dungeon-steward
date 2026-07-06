@@ -108,9 +108,452 @@
     },
     "item.potion.xp.01": {
       "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/xp_potion_01.webp",
-      "source_path": "assets/discord/thumbnails/items/xp_potion_01.png",
-      "alt_text": "A small blue experience potion",
+      "path": "assets/discord/thumbnails/items/potions/xp_01.webp",
+      "alt_text": "A small combat XP potion, tier 1",
+      "required": false
+    },
+    "item.potion.xp.02": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/xp_02.webp",
+      "alt_text": "A small combat XP potion, tier 2",
+      "required": false
+    },
+    "item.potion.xp.03": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/xp_03.webp",
+      "alt_text": "A small combat XP potion, tier 3",
+      "required": false
+    },
+    "item.potion.xp.04": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/xp_04.webp",
+      "alt_text": "A small combat XP potion, tier 4",
+      "required": false
+    },
+    "item.potion.xp.05": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/xp_05.webp",
+      "alt_text": "A small combat XP potion, tier 5",
+      "required": false
+    },
+    "item.potion.xp.06": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/xp_06.webp",
+      "alt_text": "A small combat XP potion, tier 6",
+      "required": false
+    },
+    "item.potion.xp.07": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/xp_07.webp",
+      "alt_text": "A small combat XP potion, tier 7",
+      "required": false
+    },
+    "item.potion.xp.08": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/xp_08.webp",
+      "alt_text": "A small combat XP potion, tier 8",
+      "required": false
+    },
+    "item.potion.xp.09": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/xp_09.webp",
+      "alt_text": "A small combat XP potion, tier 9",
+      "required": false
+    },
+    "item.potion.xp.10": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/xp_10.webp",
+      "alt_text": "A small combat XP potion, tier 10",
+      "required": false
+    },
+    "item.potion.xp.11": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/xp_11.webp",
+      "alt_text": "A small combat XP potion, tier 11",
+      "required": false
+    },
+    "item.potion.xp.12": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/xp_12.webp",
+      "alt_text": "A small combat XP potion, tier 12",
+      "required": false
+    },
+    "item.potion.xp.13": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/xp_13.webp",
+      "alt_text": "A small combat XP potion, tier 13",
+      "required": false
+    },
+    "item.potion.xp.14": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/xp_14.webp",
+      "alt_text": "A small combat XP potion, tier 14",
+      "required": false
+    },
+    "item.potion.xp.15": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/xp_15.webp",
+      "alt_text": "A small combat XP potion, tier 15",
+      "required": false
+    },
+    "item.potion.max_hp.01": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/hp_01.webp",
+      "alt_text": "A small maximum HP potion, tier 1",
+      "required": false
+    },
+    "item.potion.max_hp.02": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/hp_02.webp",
+      "alt_text": "A small maximum HP potion, tier 2",
+      "required": false
+    },
+    "item.potion.max_hp.03": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/hp_03.webp",
+      "alt_text": "A small maximum HP potion, tier 3",
+      "required": false
+    },
+    "item.potion.max_hp.04": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/hp_04.webp",
+      "alt_text": "A small maximum HP potion, tier 4",
+      "required": false
+    },
+    "item.potion.max_hp.05": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/hp_05.webp",
+      "alt_text": "A small maximum HP potion, tier 5",
+      "required": false
+    },
+    "item.potion.max_hp.06": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/hp_06.webp",
+      "alt_text": "A small maximum HP potion, tier 6",
+      "required": false
+    },
+    "item.potion.max_hp.07": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/hp_07.webp",
+      "alt_text": "A small maximum HP potion, tier 7",
+      "required": false
+    },
+    "item.potion.max_hp.08": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/hp_08.webp",
+      "alt_text": "A small maximum HP potion, tier 8",
+      "required": false
+    },
+    "item.potion.max_hp.09": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/hp_09.webp",
+      "alt_text": "A small maximum HP potion, tier 9",
+      "required": false
+    },
+    "item.potion.max_hp.10": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/hp_10.webp",
+      "alt_text": "A small maximum HP potion, tier 10",
+      "required": false
+    },
+    "item.potion.max_hp.11": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/hp_11.webp",
+      "alt_text": "A small maximum HP potion, tier 11",
+      "required": false
+    },
+    "item.potion.max_hp.12": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/hp_12.webp",
+      "alt_text": "A small maximum HP potion, tier 12",
+      "required": false
+    },
+    "item.potion.max_hp.13": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/hp_13.webp",
+      "alt_text": "A small maximum HP potion, tier 13",
+      "required": false
+    },
+    "item.potion.max_hp.14": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/hp_14.webp",
+      "alt_text": "A small maximum HP potion, tier 14",
+      "required": false
+    },
+    "item.potion.max_hp.15": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/hp_15.webp",
+      "alt_text": "A small maximum HP potion, tier 15",
+      "required": false
+    },
+    "item.potion.healing.01": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/healing_01.webp",
+      "alt_text": "A small healing potion, tier 1",
+      "required": false
+    },
+    "item.potion.healing.02": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/healing_02.webp",
+      "alt_text": "A small healing potion, tier 2",
+      "required": false
+    },
+    "item.potion.healing.03": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/healing_03.webp",
+      "alt_text": "A small healing potion, tier 3",
+      "required": false
+    },
+    "item.potion.healing.04": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/healing_04.webp",
+      "alt_text": "A small healing potion, tier 4",
+      "required": false
+    },
+    "item.potion.healing.05": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/healing_05.webp",
+      "alt_text": "A small healing potion, tier 5",
+      "required": false
+    },
+    "item.potion.healing.06": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/healing_06.webp",
+      "alt_text": "A small healing potion, tier 6",
+      "required": false
+    },
+    "item.potion.healing.07": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/healing_07.webp",
+      "alt_text": "A small healing potion, tier 7",
+      "required": false
+    },
+    "item.potion.healing.08": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/healing_08.webp",
+      "alt_text": "A small healing potion, tier 8",
+      "required": false
+    },
+    "item.potion.healing.09": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/healing_09.webp",
+      "alt_text": "A small healing potion, tier 9",
+      "required": false
+    },
+    "item.potion.healing.10": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/healing_10.webp",
+      "alt_text": "A small healing potion, tier 10",
+      "required": false
+    },
+    "item.potion.healing.11": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/healing_11.webp",
+      "alt_text": "A small healing potion, tier 11",
+      "required": false
+    },
+    "item.potion.healing.12": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/healing_12.webp",
+      "alt_text": "A small healing potion, tier 12",
+      "required": false
+    },
+    "item.potion.healing.13": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/healing_13.webp",
+      "alt_text": "A small healing potion, tier 13",
+      "required": false
+    },
+    "item.potion.healing.14": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/healing_14.webp",
+      "alt_text": "A small healing potion, tier 14",
+      "required": false
+    },
+    "item.potion.healing.15": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/healing_15.webp",
+      "alt_text": "A small healing potion, tier 15",
+      "required": false
+    },
+    "item.potion.attack.01": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/atk_01.webp",
+      "alt_text": "A small attack potion, tier 1",
+      "required": false
+    },
+    "item.potion.attack.02": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/atk_02.webp",
+      "alt_text": "A small attack potion, tier 2",
+      "required": false
+    },
+    "item.potion.attack.03": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/atk_03.webp",
+      "alt_text": "A small attack potion, tier 3",
+      "required": false
+    },
+    "item.potion.attack.04": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/atk_04.webp",
+      "alt_text": "A small attack potion, tier 4",
+      "required": false
+    },
+    "item.potion.attack.05": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/atk_05.webp",
+      "alt_text": "A small attack potion, tier 5",
+      "required": false
+    },
+    "item.potion.attack.06": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/atk_06.webp",
+      "alt_text": "A small attack potion, tier 6",
+      "required": false
+    },
+    "item.potion.attack.07": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/atk_07.webp",
+      "alt_text": "A small attack potion, tier 7",
+      "required": false
+    },
+    "item.potion.attack.08": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/atk_08.webp",
+      "alt_text": "A small attack potion, tier 8",
+      "required": false
+    },
+    "item.potion.attack.09": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/atk_09.webp",
+      "alt_text": "A small attack potion, tier 9",
+      "required": false
+    },
+    "item.potion.attack.10": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/atk_10.webp",
+      "alt_text": "A small attack potion, tier 10",
+      "required": false
+    },
+    "item.potion.attack.11": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/atk_11.webp",
+      "alt_text": "A small attack potion, tier 11",
+      "required": false
+    },
+    "item.potion.attack.12": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/atk_12.webp",
+      "alt_text": "A small attack potion, tier 12",
+      "required": false
+    },
+    "item.potion.attack.13": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/atk_13.webp",
+      "alt_text": "A small attack potion, tier 13",
+      "required": false
+    },
+    "item.potion.attack.14": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/atk_14.webp",
+      "alt_text": "A small attack potion, tier 14",
+      "required": false
+    },
+    "item.potion.attack.15": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/atk_15.webp",
+      "alt_text": "A small attack potion, tier 15",
+      "required": false
+    },
+    "item.potion.luck.01": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/luck_01.webp",
+      "alt_text": "A small luck potion, tier 1",
+      "required": false
+    },
+    "item.potion.luck.02": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/luck_02.webp",
+      "alt_text": "A small luck potion, tier 2",
+      "required": false
+    },
+    "item.potion.luck.03": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/luck_03.webp",
+      "alt_text": "A small luck potion, tier 3",
+      "required": false
+    },
+    "item.potion.luck.04": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/luck_04.webp",
+      "alt_text": "A small luck potion, tier 4",
+      "required": false
+    },
+    "item.potion.luck.05": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/luck_05.webp",
+      "alt_text": "A small luck potion, tier 5",
+      "required": false
+    },
+    "item.potion.luck.06": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/luck_06.webp",
+      "alt_text": "A small luck potion, tier 6",
+      "required": false
+    },
+    "item.potion.luck.07": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/luck_07.webp",
+      "alt_text": "A small luck potion, tier 7",
+      "required": false
+    },
+    "item.potion.luck.08": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/luck_08.webp",
+      "alt_text": "A small luck potion, tier 8",
+      "required": false
+    },
+    "item.potion.luck.09": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/luck_09.webp",
+      "alt_text": "A small luck potion, tier 9",
+      "required": false
+    },
+    "item.potion.luck.10": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/luck_10.webp",
+      "alt_text": "A small luck potion, tier 10",
+      "required": false
+    },
+    "item.potion.luck.11": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/luck_11.webp",
+      "alt_text": "A small luck potion, tier 11",
+      "required": false
+    },
+    "item.potion.luck.12": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/luck_12.webp",
+      "alt_text": "A small luck potion, tier 12",
+      "required": false
+    },
+    "item.potion.luck.13": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/luck_13.webp",
+      "alt_text": "A small luck potion, tier 13",
+      "required": false
+    },
+    "item.potion.luck.14": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/luck_14.webp",
+      "alt_text": "A small luck potion, tier 14",
+      "required": false
+    },
+    "item.potion.luck.15": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/items/potions/luck_15.webp",
+      "alt_text": "A small luck potion, tier 15",
       "required": false
     },
     "item.equipment.quilted_vest": {

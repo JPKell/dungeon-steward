@@ -1,12 +1,16 @@
 from __future__ import annotations
 
 import random
+from datetime import UTC, datetime
 from types import SimpleNamespace
 
 import discord
 import pytest
 
+from bot.models import Player
+from bot.services.equipment_service import EquipmentItem
 from bot.services.potion_service import PotionInventoryEntry, PotionService
+from bot.services.shop_service import ShopService, ShopStock
 from bot.views.exploration import (
     STAT_ALLOCATION_PROFILE,
     DefenseLevelSelectView,
@@ -14,6 +18,7 @@ from bot.views.exploration import (
     ExploreLevelSelectView,
     PostExplorationView,
     PotionInventoryView,
+    ShopView,
     StewardsHallView,
     _stat_allocation_summary_embed,
 )
@@ -211,3 +216,61 @@ def test_potion_inventory_select_is_capped_to_owned_items() -> None:
     select = next(child for child in view.children if isinstance(child, discord.ui.Select))
 
     assert len(select.options) == 25
+
+
+def test_shop_view_uses_dropdown_and_confirm_button() -> None:
+    item = EquipmentItem(
+        key="rusty-axe",
+        name="Rusty Axe",
+        slot="weapon",
+        rarity="common",
+        min_level=1,
+        max_level=10,
+        cost=60,
+        hp=1,
+        attack=3,
+        defense=0,
+        speed=1,
+    )
+    stock = ShopStock(
+        combat_level=5,
+        generated_at=datetime(2026, 7, 3, 12, 0, tzinfo=UTC),
+        refreshes_at=datetime(2026, 7, 3, 13, 0, tzinfo=UTC),
+        items=(item,),
+    )
+    player = Player(discord_user_id=1, guild_id=10, display_name="Test Player", gold=250)
+
+    view = ShopView(
+        session_factory=DummySessionFactory(),
+        exploration_service=DummyExplorationService(),
+        defense_service=DummyDefenseService(),
+        shop_service=ShopService(),
+        owner_user_id=1,
+        stock=stock,
+        player=player,
+    )
+
+    buttons = [child for child in view.children if isinstance(child, discord.ui.Button)]
+    select = next(child for child in view.children if isinstance(child, discord.ui.Select))
+
+    assert len(select.options) == 1
+    assert "Buy 🪙 60" in (select.options[0].description or "")
+    assert all(button.label not in {str(number) for number in range(1, 11)} for button in buttons)
+    assert "Buy Selected" not in [button.label for button in buttons]
+
+    selected_view = ShopView(
+        session_factory=DummySessionFactory(),
+        exploration_service=DummyExplorationService(),
+        defense_service=DummyDefenseService(),
+        shop_service=ShopService(),
+        owner_user_id=1,
+        stock=stock,
+        player=player,
+        selected_stock_number=1,
+    )
+
+    selected_buttons = [child for child in selected_view.children if isinstance(child, discord.ui.Button)]
+    selected_select = next(child for child in selected_view.children if isinstance(child, discord.ui.Select))
+
+    assert "Buy Selected" in [button.label for button in selected_buttons]
+    assert selected_select.options[0].default

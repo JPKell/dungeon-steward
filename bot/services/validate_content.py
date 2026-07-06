@@ -14,6 +14,11 @@ from bot.services.discord_asset_service import (
     validate_gameplay_asset_references,
     validate_registry_integrity,
 )
+from bot.services.discord_emoji_service import (
+    load_emoji_catalog,
+    load_emoji_registry,
+    validate_emoji_registry_integrity,
+)
 from bot.services.location_service import LocationService
 from bot.services.potion_service import EXPECTED_POTION_GROUPS, load_potion_content
 
@@ -57,6 +62,8 @@ def validate() -> dict[str, Any]:
         "locations.json",
         "image_assets.json",
         "image_asset_registry.json",
+        "emoji_assets.json",
+        "emoji_asset_registry.json",
     ):
         try:
             parsed[filename] = json.loads((BASE / filename).read_text(encoding="utf-8"))
@@ -329,6 +336,14 @@ def validate() -> dict[str, Any]:
         errors.append(f"image assets failed validation: {exc}")
         image_catalog = None
         image_registry = None
+
+    # Discord inline emoji assets.
+    try:
+        emoji_catalog = load_emoji_catalog(BASE / "emoji_assets.json", validate_files=True)
+        emoji_registry = load_emoji_registry(BASE / "emoji_asset_registry.json")
+        validate_emoji_registry_integrity(emoji_catalog, emoji_registry)
+    except Exception as exc:
+        errors.append(f"emoji assets failed validation: {exc}")
 
     content_coverage = {}
     for level in range(1, 21):

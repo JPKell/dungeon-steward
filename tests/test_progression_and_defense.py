@@ -436,6 +436,32 @@ def test_shop_purchase_equips_item_and_applies_bonuses(db, now):
     assert stats.speed == player.speed + purchase.item.speed
 
 
+def test_shop_purchase_uses_net_trade_in_cost_for_affordability(db, now):
+    player = make_player(db, now=now, user_id=1, guild_id=10)
+    player.combat_level = 1
+    shop = ShopService()
+    stock = shop.stock_for_player(player, now=now)
+    item = stock.items[0]
+    replacement = next(candidate for candidate in shop.equipment.items if candidate.slot == item.slot)
+    setattr(player, item.slot, replacement.key)
+    quote = shop.quote_stock_item(player, stock=stock, stock_number=1)
+    player.gold = quote.purchase_cost
+
+    purchase = shop.purchase(
+        db,
+        guild_id=10,
+        user_id=1,
+        display_name="Scout",
+        stock_number=1,
+        now=now,
+    )
+
+    assert quote.trade_in_value > 0
+    assert quote.purchase_cost < item.cost
+    assert purchase.purchase_cost == quote.purchase_cost
+    assert player.gold == 0
+
+
 def test_equipment_service_reads_equipped_names(db, now):
     player = make_player(db, now=now)
     equipment = EquipmentService()

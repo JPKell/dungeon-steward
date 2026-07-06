@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from typing import Any
 
 from sqlalchemy.orm import Session, sessionmaker
@@ -8,6 +9,8 @@ from bot.services.content_database import (
     load_content_documents_from_database,
     sync_runtime_discoveries_from_content_tables,
 )
+
+log = logging.getLogger(__name__)
 
 
 class RuntimeContentError(RuntimeError):
@@ -35,6 +38,7 @@ def _refresh(session: Session) -> dict[str, Any]:
         combat_service,
         defense_service,
         discord_asset_service,
+        discord_emoji_service,
         discovery_service,
         dungeon_progression_service,
         encounter_service,
@@ -91,11 +95,17 @@ def _refresh(session: Session) -> dict[str, Any]:
         catalog_document=_document_object(documents, "image_assets.json"),
         registry_document=_document_object(documents, "image_asset_registry.json"),
     )
+    emojis = discord_emoji_service.DiscordEmojiService()
+    if emojis.catalog.emojis and not emojis.registry.emojis:
+        log.warning("Loaded %s Discord emoji definitions but no registered emoji IDs.", len(emojis.catalog.emojis))
+    else:
+        log.info("Loaded %s Discord emoji registry entries.", len(emojis.registry.emojis))
 
     for module in (dungeon_commands, defense_embeds, exploration_view, shop_embeds):
         module.LOCATION_SERVICE = location
     for module in (dungeon_commands, defense_embeds, exploration_view, shop_embeds):
         module.DEFAULT_DISCORD_ASSETS = assets
+    exploration_view.DEFAULT_DISCORD_EMOJIS = emojis
     exploration_view.PotionService = potion_service.PotionService
     dungeon_commands.PotionService = potion_service.PotionService
     dungeon_commands.EncounterService = encounter_service.EncounterService

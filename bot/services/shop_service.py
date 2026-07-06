@@ -49,6 +49,15 @@ class PurchasedEquipment:
     purchase_cost: int = 0
 
 
+@dataclass(frozen=True)
+class ShopPurchaseQuote:
+    item: EquipmentItem
+    replaced_item: EquipmentItem | None
+    stock: ShopStock
+    trade_in_value: int = 0
+    purchase_cost: int = 0
+
+
 class ShopService:
     def __init__(
         self,
@@ -95,9 +104,6 @@ class ShopService:
         stock_number: int,
         now: datetime | None = None,
     ) -> PurchasedEquipment:
-        if not 1 <= stock_number <= SHOP_STOCK_SIZE:
-            raise InvalidShopSelectionError("Choose a shop item from 1 through 10")
-
         player = session.scalar(select(Player).where(Player.guild_id == guild_id, Player.discord_user_id == user_id).with_for_update())
         if player is None:
             player = self.players.get_or_create(
@@ -106,32 +112,62 @@ class ShopService:
                 user_id=user_id,
                 display_name=display_name,
             )
+        quote = self.quote_purchase(player, stock_number=stock_number, now=now)
+        if player.gold < quote.purchase_cost:
+            raise InsufficientGoldError("You do not have enough gold for that item")
+
+        player.gold -= quote.purchase_cost
+        setattr(player, quote.item.slot, quote.item.key)
+        session.flush()
+        return PurchasedEquipment(
+            item=quote.item,
+            replaced_item=quote.replaced_item,
+            remaining_gold=player.gold,
+            stock=quote.stock,
+            trade_in_value=quote.trade_in_value,
+            purchase_cost=quote.purchase_cost,
+        )
+
+    def quote_purchase(
+        self,
+        player: Player,
+        *,
+        stock_number: int,
+        now: datetime | None = None,
+    ) -> ShopPurchaseQuote:
         stock = self.stock_for_player(player, now=now)
+        return self.quote_stock_item(player, stock=stock, stock_number=stock_number)
+
+    def quote_stock_item(
+        self,
+        player: Player,
+        *,
+        stock: ShopStock,
+        stock_number: int,
+    ) -> ShopPurchaseQuote:
+        if not 1 <= stock_number <= SHOP_STOCK_SIZE:
+            raise InvalidShopSelectionError(f"Choose a shop item from 1 through {SHOP_STOCK_SIZE}")
         try:
             item = stock.items[stock_number - 1]
         except IndexError as error:
             raise InvalidShopSelectionError("That shop item is no longer available") from error
 
-        if player.gold < item.cost:
-            raise InsufficientGoldError("You do not have enough gold for that item")
-
         replaced_item = self.equipment.get_or_none(getattr(player, item.slot), combat_level=player.combat_level)
-        trade_in_value = 0
-        purchase_cost = item.cost
-        if replaced_item is not None:
-            trade_in_value = int(item.cost * 0.1)
-            purchase_cost = max(0, item.cost - trade_in_value)
-        player.gold -= purchase_cost
-        setattr(player, item.slot, item.key)
-        session.flush()
-        return PurchasedEquipment(
+        trade_in_value = _trade_in_value(item, replaced_item)
+        purchase_cost = max(0, item.cost - trade_in_value)
+        return ShopPurchaseQuote(
             item=item,
             replaced_item=replaced_item,
-            remaining_gold=player.gold,
             stock=stock,
             trade_in_value=trade_in_value,
             purchase_cost=purchase_cost,
         )
+
+
+def _trade_in_value(item: EquipmentItem, replaced_item: EquipmentItem | None) -> int:
+    if replaced_item is None:
+        return 0
+    return int(item.cost * 0.1)
 
 
 def shop_hour(when: datetime) -> datetime:

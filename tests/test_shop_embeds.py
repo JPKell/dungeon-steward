@@ -4,7 +4,7 @@ from datetime import UTC, datetime
 
 from bot.models import Player
 from bot.services.equipment_service import EquipmentItem
-from bot.services.shop_service import PurchasedEquipment, ShopStock
+from bot.services.shop_service import PurchasedEquipment, ShopPurchaseQuote, ShopStock
 from bot.utils.shop_embeds import build_purchase_embed, build_shop_embed
 
 
@@ -80,6 +80,63 @@ def test_shop_embed_shows_equipped_stats_and_rarity_badges() -> None:
     assert stock_field.value.index("Rusty Axe") < stock_field.value.index("Heroic Blade")
     assert "weapon" not in stock_field.value
     assert "gold" not in stock_field.value.lower()
+
+
+def test_shop_embed_selected_purchase_shows_net_trade_in_price() -> None:
+    item = EquipmentItem(
+        key="heroic-blade",
+        name="Heroic Blade",
+        slot="weapon",
+        rarity="legendary",
+        min_level=1,
+        max_level=10,
+        cost=140,
+        hp=4,
+        attack=8,
+        defense=3,
+        speed=2,
+    )
+    replaced_item = EquipmentItem(
+        key="rusty-knife",
+        name="Rusty Knife",
+        slot="weapon",
+        rarity="common",
+        min_level=1,
+        max_level=10,
+        cost=50,
+        hp=1,
+        attack=1,
+        defense=0,
+        speed=0,
+    )
+    player = Player(
+        discord_user_id=1,
+        guild_id=10,
+        display_name="Test Player",
+        gold=250,
+        weapon=replaced_item.key,
+    )
+    stock = ShopStock(
+        combat_level=5,
+        generated_at=datetime(2026, 7, 3, 12, 0, tzinfo=UTC),
+        refreshes_at=datetime(2026, 7, 3, 13, 0, tzinfo=UTC),
+        items=(item,),
+    )
+    quote = ShopPurchaseQuote(
+        item=item,
+        replaced_item=replaced_item,
+        stock=stock,
+        trade_in_value=14,
+        purchase_cost=126,
+    )
+
+    embed = build_shop_embed(stock, player=player, equipment=StubEquipmentService(replaced_item), selected_quote=quote)
+
+    selected_field = next(field for field in embed.fields if field.name == "Selected Purchase")
+
+    assert "Sticker 🪙 140" in selected_field.value
+    assert "Trade-in -🪙 14" in selected_field.value
+    assert "Purchase Price 🪙 126" in selected_field.value
 
 
 def test_purchase_embed_uses_embed_timestamp_for_refreshes() -> None:

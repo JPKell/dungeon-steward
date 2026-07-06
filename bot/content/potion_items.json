@@ -80,6 +80,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.xp.02",
       "sort_order": 102,
       "effect": {
         "kind": "combat_xp_multiplier",
@@ -108,6 +109,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.xp.03",
       "sort_order": 103,
       "effect": {
         "kind": "combat_xp_multiplier",
@@ -136,6 +138,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.xp.04",
       "sort_order": 104,
       "effect": {
         "kind": "combat_xp_multiplier",
@@ -164,6 +167,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.xp.05",
       "sort_order": 105,
       "effect": {
         "kind": "combat_xp_multiplier",
@@ -192,6 +196,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.xp.06",
       "sort_order": 106,
       "effect": {
         "kind": "combat_xp_multiplier",
@@ -220,6 +225,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.xp.07",
       "sort_order": 107,
       "effect": {
         "kind": "combat_xp_multiplier",
@@ -248,6 +254,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.xp.08",
       "sort_order": 108,
       "effect": {
         "kind": "combat_xp_multiplier",
@@ -276,6 +283,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.xp.09",
       "sort_order": 109,
       "effect": {
         "kind": "combat_xp_multiplier",
@@ -304,6 +312,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.xp.10",
       "sort_order": 110,
       "effect": {
         "kind": "combat_xp_multiplier",
@@ -332,6 +341,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.xp.11",
       "sort_order": 111,
       "effect": {
         "kind": "combat_xp_multiplier",
@@ -360,6 +370,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.xp.12",
       "sort_order": 112,
       "effect": {
         "kind": "combat_xp_multiplier",
@@ -388,6 +399,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.xp.13",
       "sort_order": 113,
       "effect": {
         "kind": "combat_xp_multiplier",
@@ -416,6 +428,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.xp.14",
       "sort_order": 114,
       "effect": {
         "kind": "combat_xp_multiplier",
@@ -444,6 +457,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.xp.15",
       "sort_order": 115,
       "effect": {
         "kind": "combat_xp_multiplier",
@@ -472,6 +486,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.max_hp.01",
       "sort_order": 201,
       "effect": {
         "kind": "max_hp_multiplier",
@@ -498,6 +513,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.max_hp.02",
       "sort_order": 202,
       "effect": {
         "kind": "max_hp_multiplier",
@@ -524,6 +540,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.max_hp.03",
       "sort_order": 203,
       "effect": {
         "kind": "max_hp_multiplier",
@@ -550,6 +567,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.max_hp.04",
       "sort_order": 204,
       "effect": {
         "kind": "max_hp_multiplier",
@@ -576,6 +594,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.max_hp.05",
       "sort_order": 205,
       "effect": {
         "kind": "max_hp_multiplier",
@@ -602,6 +621,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.max_hp.06",
       "sort_order": 206,
       "effect": {
         "kind": "max_hp_multiplier",
@@ -628,6 +648,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.max_hp.07",
       "sort_order": 207,
       "effect": {
         "kind": "max_hp_multiplier",
@@ -654,6 +675,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.max_hp.08",
       "sort_order": 208,
       "effect": {
         "kind": "max_hp_multiplier",
@@ -680,6 +702,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.max_hp.09",
       "sort_order": 209,
       "effect": {
         "kind": "max_hp_multiplier",
@@ -706,6 +729,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.max_hp.10",
       "sort_order": 210,
       "effect": {
         "kind": "max_hp_multiplier",
@@ -732,6 +756,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.max_hp.11",
       "sort_order": 211,
       "effect": {
         "kind": "max_hp_multiplier",
@@ -758,6 +783,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.max_hp.12",
       "sort_order": 212,
       "effect": {
         "kind": "max_hp_multiplier",
@@ -784,6 +810,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.max_hp.13",
       "sort_order": 213,
       "effect": {
         "kind": "max_hp_multiplier",
@@ -810,6 +837,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.max_hp.14",
       "sort_order": 214,
       "effect": {
         "kind": "max_hp_multiplier",
@@ -836,6 +864,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.max_hp.15",
       "sort_order": 215,
       "effect": {
         "kind": "max_hp_multiplier",
@@ -862,6 +891,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.healing.01",
       "sort_order": 301,
       "effect": {
         "kind": "heal_between_battles",
@@ -889,6 +919,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.healing.02",
       "sort_order": 302,
       "effect": {
         "kind": "heal_between_battles",
@@ -916,6 +947,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.healing.03",
       "sort_order": 303,
       "effect": {
         "kind": "heal_between_battles",
@@ -943,6 +975,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.healing.04",
       "sort_order": 304,
       "effect": {
         "kind": "heal_between_battles",
@@ -970,6 +1003,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.healing.05",
       "sort_order": 305,
       "effect": {
         "kind": "heal_between_battles",
@@ -997,6 +1031,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.healing.06",
       "sort_order": 306,
       "effect": {
         "kind": "heal_between_battles",
@@ -1024,6 +1059,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.healing.07",
       "sort_order": 307,
       "effect": {
         "kind": "heal_between_battles",
@@ -1051,6 +1087,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.healing.08",
       "sort_order": 308,
       "effect": {
         "kind": "heal_between_battles",
@@ -1078,6 +1115,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.healing.09",
       "sort_order": 309,
       "effect": {
         "kind": "heal_between_battles",
@@ -1105,6 +1143,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.healing.10",
       "sort_order": 310,
       "effect": {
         "kind": "heal_between_battles",
@@ -1132,6 +1171,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.healing.11",
       "sort_order": 311,
       "effect": {
         "kind": "heal_between_battles",
@@ -1159,6 +1199,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.healing.12",
       "sort_order": 312,
       "effect": {
         "kind": "heal_between_battles",
@@ -1186,6 +1227,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.healing.13",
       "sort_order": 313,
       "effect": {
         "kind": "heal_between_battles",
@@ -1213,6 +1255,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.healing.14",
       "sort_order": 314,
       "effect": {
         "kind": "heal_between_battles",
@@ -1240,6 +1283,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.healing.15",
       "sort_order": 315,
       "effect": {
         "kind": "heal_between_battles",
@@ -1267,6 +1311,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.attack.01",
       "sort_order": 401,
       "effect": {
         "kind": "attack_multiplier",
@@ -1292,6 +1337,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.attack.02",
       "sort_order": 402,
       "effect": {
         "kind": "attack_multiplier",
@@ -1317,6 +1363,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.attack.03",
       "sort_order": 403,
       "effect": {
         "kind": "attack_multiplier",
@@ -1342,6 +1389,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.attack.04",
       "sort_order": 404,
       "effect": {
         "kind": "attack_multiplier",
@@ -1367,6 +1415,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.attack.05",
       "sort_order": 405,
       "effect": {
         "kind": "attack_multiplier",
@@ -1392,6 +1441,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.attack.06",
       "sort_order": 406,
       "effect": {
         "kind": "attack_multiplier",
@@ -1417,6 +1467,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.attack.07",
       "sort_order": 407,
       "effect": {
         "kind": "attack_multiplier",
@@ -1442,6 +1493,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.attack.08",
       "sort_order": 408,
       "effect": {
         "kind": "attack_multiplier",
@@ -1467,6 +1519,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.attack.09",
       "sort_order": 409,
       "effect": {
         "kind": "attack_multiplier",
@@ -1492,6 +1545,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.attack.10",
       "sort_order": 410,
       "effect": {
         "kind": "attack_multiplier",
@@ -1517,6 +1571,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.attack.11",
       "sort_order": 411,
       "effect": {
         "kind": "attack_multiplier",
@@ -1542,6 +1597,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.attack.12",
       "sort_order": 412,
       "effect": {
         "kind": "attack_multiplier",
@@ -1567,6 +1623,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.attack.13",
       "sort_order": 413,
       "effect": {
         "kind": "attack_multiplier",
@@ -1592,6 +1649,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.attack.14",
       "sort_order": 414,
       "effect": {
         "kind": "attack_multiplier",
@@ -1617,6 +1675,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.attack.15",
       "sort_order": 415,
       "effect": {
         "kind": "attack_multiplier",
@@ -2017,6 +2076,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.luck.01",
       "sort_order": 601,
       "effect": {
         "kind": "maximum_enemy_reward_chance",
@@ -2046,6 +2106,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.luck.02",
       "sort_order": 602,
       "effect": {
         "kind": "maximum_enemy_reward_chance",
@@ -2075,6 +2136,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.luck.03",
       "sort_order": 603,
       "effect": {
         "kind": "maximum_enemy_reward_chance",
@@ -2104,6 +2166,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.luck.04",
       "sort_order": 604,
       "effect": {
         "kind": "maximum_enemy_reward_chance",
@@ -2133,6 +2196,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.luck.05",
       "sort_order": 605,
       "effect": {
         "kind": "maximum_enemy_reward_chance",
@@ -2162,6 +2226,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.luck.06",
       "sort_order": 606,
       "effect": {
         "kind": "maximum_enemy_reward_chance",
@@ -2191,6 +2256,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.luck.07",
       "sort_order": 607,
       "effect": {
         "kind": "maximum_enemy_reward_chance",
@@ -2220,6 +2286,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.luck.08",
       "sort_order": 608,
       "effect": {
         "kind": "maximum_enemy_reward_chance",
@@ -2249,6 +2316,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.luck.09",
       "sort_order": 609,
       "effect": {
         "kind": "maximum_enemy_reward_chance",
@@ -2278,6 +2346,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.luck.10",
       "sort_order": 610,
       "effect": {
         "kind": "maximum_enemy_reward_chance",
@@ -2307,6 +2376,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.luck.11",
       "sort_order": 611,
       "effect": {
         "kind": "maximum_enemy_reward_chance",
@@ -2336,6 +2406,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.luck.12",
       "sort_order": 612,
       "effect": {
         "kind": "maximum_enemy_reward_chance",
@@ -2365,6 +2436,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.luck.13",
       "sort_order": 613,
       "effect": {
         "kind": "maximum_enemy_reward_chance",
@@ -2394,6 +2466,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.luck.14",
       "sort_order": 614,
       "effect": {
         "kind": "maximum_enemy_reward_chance",
@@ -2423,6 +2496,7 @@
       "inventory_stack_limit": 99,
       "consumable": true,
       "enabled": true,
+      "thumbnail_asset": "item.potion.luck.15",
       "sort_order": 615,
       "effect": {
         "kind": "maximum_enemy_reward_chance",

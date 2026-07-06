@@ -417,6 +417,8 @@ class DungeonGroup(app_commands.Group):
                 shop_service=self.shop,
                 owner_user_id=interaction.user.id,
                 is_defending=action_is_defending,
+                stock=stock,
+                player=player,
             ),
             ephemeral=True,
         )
