@@ -24,6 +24,16 @@ DEFAULT_REGISTRY_PATH = CONTENT_DIR / "image_asset_registry.json"
 
 DISCORD_ATTACHMENT_HOSTS = frozenset({"cdn.discordapp.com", "media.discordapp.net"})
 GAMEPLAY_ASSET_FIELDS = frozenset({"thumbnail_asset", "banner_asset", "artwork_asset", "image_asset"})
+NON_IMAGE_CONTENT_FILES = frozenset(
+    {
+        "image_assets.json",
+        "image_asset_registry.json",
+        "emoji_assets.json",
+        "emoji_asset_registry.json",
+        "content_validation.json",
+        "simulation_results.json",
+    }
+)
 _FILENAME_RE = re.compile(r"^[a-z0-9]+(?:_[a-z0-9]+)*(?:\.[a-z0-9]+)?$")
 _SHA256_RE = re.compile(r"^[a-fA-F0-9]{64}$")
 _MISSING = object()
@@ -58,16 +68,6 @@ class AssetTypeSpec:
 
 
 ASSET_TYPE_SPECS: dict[str, AssetTypeSpec] = {
-    "command_image": AssetTypeSpec(
-        name="command_image",
-        width=0,
-        height=0,
-        preferred_format="png",
-        allowed_formats=frozenset({"png", "webp", "jpeg"}),
-        warning_max_bytes=2 * 1024 * 1024,
-        hard_max_bytes=8 * 1024 * 1024,
-        target_size_label="local command art",
-    ),
     "thumbnail": AssetTypeSpec(
         name="thumbnail",
         width=256,
@@ -81,7 +81,7 @@ ASSET_TYPE_SPECS: dict[str, AssetTypeSpec] = {
     "location_banner": AssetTypeSpec(
         name="location_banner",
         width=1200,
-        height=300,
+        height=244,
         preferred_format="webp",
         allowed_formats=frozenset({"webp", "png", "jpeg"}),
         warning_max_bytes=500 * 1024,
@@ -351,13 +351,13 @@ def registry_asset_from_upload(
 def referenced_gameplay_asset_keys(content_dir: Path = CONTENT_DIR) -> set[str]:
     keys: set[str] = set()
     for path in content_dir.glob("*.json"):
-        if path.name in {"image_assets.json", "image_asset_registry.json", "content_validation.json", "simulation_results.json"}:
+        if path.name in NON_IMAGE_CONTENT_FILES:
             continue
         try:
             raw = json.loads(path.read_text(encoding="utf-8"))
         except Exception:
             continue
-        _collect_asset_keys(raw, keys)
+        _collect_asset_keys(raw, keys, content_file=path.name)
     return keys
 
 
@@ -372,6 +372,7 @@ def validate_registry_integrity(
     registry: AssetRegistry,
     *,
     require_required_assets: bool = False,
+    require_current_files: bool = True,
 ) -> None:
     unknown_registry_keys = sorted(set(registry.assets) - set(catalog.assets))
     if unknown_registry_keys:
@@ -387,7 +388,7 @@ def validate_registry_integrity(
         definition = catalog.get(key)
         if entry.type != definition.type:
             raise AssetConfigError(f"{key} registry type does not match catalog type")
-        if definition.path.exists():
+        if require_current_files and definition.path.exists():
             image = inspect_image_file(definition.path)
             if entry.sha256 != image.sha256:
                 raise AssetConfigError(f"{key} registry SHA-256 does not match local file")
@@ -454,12 +455,9 @@ class DiscordAssetService:
         if not asset_key:
             return
         definition = self.catalog.get(asset_key)
-        expected_types = {"location_banner", "encounter_artwork", "command_image"}
+        expected_types = {"location_banner", "encounter_artwork"}
         if definition.type not in expected_types:
             raise AssetConfigError(f"{asset_key} is {definition.type}, not one of {sorted(expected_types)}")
-        if definition.path.exists():
-            embed.set_image(url=f"attachment://{definition.filename}")
-            return
         url = self.get_url(asset_key)
         if url:
             embed.set_image(url=url)
@@ -533,7 +531,7 @@ def _asset_definition(key: str, entry: dict[str, Any], *, catalog_path: Path, as
     if asset_type not in ASSET_TYPE_SPECS:
         raise AssetConfigError(f"{key} has unsupported asset type: {asset_type}")
     path = _asset_path(_required_str(entry, "path", key), catalog_path=catalog_path, asset_root=asset_root, key=key)
-    alt_text = _required_str(entry, "alt_text", key)
+    alt_text = _optional_str(entry, "alt_text", key) or _default_alt_text(key)
     required = entry.get("required", False)
     if not isinstance(required, bool):
         raise AssetConfigError(f"{key} required must be boolean")
@@ -618,6 +616,19 @@ def _required_str(entry: dict[str, Any], field: str, key: str) -> str:
     return value.strip()
 
 
+def _optional_str(entry: dict[str, Any], field: str, key: str) -> str | None:
+    value = entry.get(field)
+    if value is None:
+        return None
+    if not isinstance(value, str) or not value.strip():
+        raise AssetConfigError(f"{key} {field} must be a non-empty string when provided")
+    return value.strip()
+
+
+def _default_alt_text(key: str) -> str:
+    return key.replace(".", " ").replace("_", " ").title()
+
+
 def _required_int(entry: dict[str, Any], field: str, key: str) -> int:
     value = entry.get(field)
     if not isinstance(value, int) or isinstance(value, bool):
@@ -683,16 +694,16 @@ def _webp_dimensions(data: bytes, filename: str) -> tuple[str, int, int]:
     raise AssetValidationError(f"{filename} has unsupported WebP chunk")
 
 
-def _collect_asset_keys(value: Any, keys: set[str]) -> None:
+def _collect_asset_keys(value: Any, keys: set[str], *, content_file: str) -> None:
     if isinstance(value, dict):
         for key, item in value.items():
             if key in GAMEPLAY_ASSET_FIELDS and isinstance(item, str) and item.strip():
                 keys.add(item.strip())
             else:
-                _collect_asset_keys(item, keys)
+                _collect_asset_keys(item, keys, content_file=content_file)
     elif isinstance(value, list):
         for item in value:
-            _collect_asset_keys(item, keys)
+            _collect_asset_keys(item, keys, content_file=content_file)
 
 
 def _embed_attachment_filenames(embed: Any) -> set[str]:

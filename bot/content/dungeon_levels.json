@@ -14,7 +14,8 @@
     "required_equipment_power": 0,
     "required_discoveries": 0,
     "required_defense_wins": 0,
-    "requires_previous_completion": false
+    "requires_previous_completion": false,
+    "thumbnail_asset": "enemy.giant_rat"
   },
   {
     "level": 2,
@@ -31,7 +32,8 @@
     "required_equipment_power": 12,
     "required_discoveries": 1,
     "required_defense_wins": 10,
-    "requires_previous_completion": true
+    "requires_previous_completion": true,
+    "thumbnail_asset": "enemy.goblin"
   },
   {
     "level": 3,
@@ -48,7 +50,8 @@
     "required_equipment_power": 20,
     "required_discoveries": 3,
     "required_defense_wins": 30,
-    "requires_previous_completion": true
+    "requires_previous_completion": true,
+    "thumbnail_asset": "enemy.blob"
   },
   {
     "level": 4,
@@ -65,7 +68,8 @@
     "required_equipment_power": 30,
     "required_discoveries": 6,
     "required_defense_wins": 60,
-    "requires_previous_completion": true
+    "requires_previous_completion": true,
+    "thumbnail_asset": "enemy.kobold"
   },
   {
     "level": 5,
@@ -82,7 +86,8 @@
     "required_equipment_power": 45,
     "required_discoveries": 10,
     "required_defense_wins": 100,
-    "requires_previous_completion": true
+    "requires_previous_completion": true,
+    "thumbnail_asset": "enemy.skeleton"
   },
   {
     "level": 6,
@@ -99,7 +104,8 @@
     "required_equipment_power": 62,
     "required_discoveries": 15,
     "required_defense_wins": 160,
-    "requires_previous_completion": true
+    "requires_previous_completion": true,
+    "thumbnail_asset": "enemy.orc"
   },
   {
     "level": 7,
@@ -116,7 +122,8 @@
     "required_equipment_power": 82,
     "required_discoveries": 22,
     "required_defense_wins": 240,
-    "requires_previous_completion": true
+    "requires_previous_completion": true,
+    "thumbnail_asset": "enemy.zombie"
   },
   {
     "level": 8,
@@ -133,7 +140,8 @@
     "required_equipment_power": 105,
     "required_discoveries": 30,
     "required_defense_wins": 340,
-    "requires_previous_completion": true
+    "requires_previous_completion": true,
+    "thumbnail_asset": "enemy.cave_spider"
   },
   {
     "level": 9,
@@ -150,7 +158,8 @@
     "required_equipment_power": 132,
     "required_discoveries": 40,
     "required_defense_wins": 470,
-    "requires_previous_completion": true
+    "requires_previous_completion": true,
+    "thumbnail_asset": "enemy.bandit"
   },
   {
     "level": 10,
@@ -167,7 +176,8 @@
     "required_equipment_power": 165,
     "required_discoveries": 52,
     "required_defense_wins": 630,
-    "requires_previous_completion": true
+    "requires_previous_completion": true,
+    "thumbnail_asset": "enemy.ghoul"
   },
   {
     "level": 11,
@@ -184,7 +194,8 @@
     "required_equipment_power": 205,
     "required_discoveries": 65,
     "required_defense_wins": 820,
-    "requires_previous_completion": true
+    "requires_previous_completion": true,
+    "thumbnail_asset": "enemy.hobgoblin"
   },
   {
     "level": 12,
@@ -201,7 +212,8 @@
     "required_equipment_power": 250,
     "required_discoveries": 80,
     "required_defense_wins": 1050,
-    "requires_previous_completion": true
+    "requires_previous_completion": true,
+    "thumbnail_asset": "enemy.wraith"
   },
   {
     "level": 13,
@@ -218,7 +230,8 @@
     "required_equipment_power": 300,
     "required_discoveries": 96,
     "required_defense_wins": 1320,
-    "requires_previous_completion": true
+    "requires_previous_completion": true,
+    "thumbnail_asset": "enemy.ogre"
   },
   {
     "level": 14,
@@ -235,7 +248,8 @@
     "required_equipment_power": 360,
     "required_discoveries": 112,
     "required_defense_wins": 1650,
-    "requires_previous_completion": true
+    "requires_previous_completion": true,
+    "thumbnail_asset": "enemy.troll"
   },
   {
     "level": 15,
@@ -252,7 +266,8 @@
     "required_equipment_power": 425,
     "required_discoveries": 128,
     "required_defense_wins": 2050,
-    "requires_previous_completion": true
+    "requires_previous_completion": true,
+    "thumbnail_asset": "enemy.minotaur"
   },
   {
     "level": 16,
@@ -269,7 +284,8 @@
     "required_equipment_power": 500,
     "required_discoveries": 145,
     "required_defense_wins": 2500,
-    "requires_previous_completion": true
+    "requires_previous_completion": true,
+    "thumbnail_asset": "enemy.stone_golem"
   },
   {
     "level": 17,
@@ -286,7 +302,8 @@
     "required_equipment_power": 585,
     "required_discoveries": 160,
     "required_defense_wins": 3000,
-    "requires_previous_completion": true
+    "requires_previous_completion": true,
+    "thumbnail_asset": "enemy.vampire"
   },
   {
     "level": 18,
@@ -303,7 +320,8 @@
     "required_equipment_power": 680,
     "required_discoveries": 175,
     "required_defense_wins": 3600,
-    "requires_previous_completion": true
+    "requires_previous_completion": true,
+    "thumbnail_asset": "enemy.necromancer"
   },
   {
     "level": 19,
@@ -320,7 +338,8 @@
     "required_equipment_power": 800,
     "required_discoveries": 200,
     "required_defense_wins": 4500,
-    "requires_previous_completion": true
+    "requires_previous_completion": true,
+    "thumbnail_asset": "enemy.giant"
   },
   {
     "level": 20,
@@ -337,6 +356,7 @@
     "required_equipment_power": 950,
     "required_discoveries": 225,
     "required_defense_wins": 5600,
-    "requires_previous_completion": true
+    "requires_previous_completion": true,
+    "thumbnail_asset": "enemy.lesser_dragon"
   }
 ]

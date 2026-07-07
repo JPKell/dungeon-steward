@@ -24,7 +24,7 @@ from bot.services.discord_asset_service import (
     validate_gameplay_asset_references,
     write_registry_atomic,
 )
-from scripts.sync_discord_assets import plan_sync, sync_registry_with_channel
+from scripts.sync_assets import plan_image_sync, sync_registry_with_channel
 
 
 def test_catalog_loading_and_asset_file_validation(tmp_path: Path) -> None:
@@ -51,6 +51,29 @@ def test_catalog_loading_and_asset_file_validation(tmp_path: Path) -> None:
     assert info.sha256 == result.image.sha256
 
 
+def test_catalog_metadata_defaults_are_optional(tmp_path: Path) -> None:
+    project = _project(tmp_path)
+    _write_png(project / "assets/discord/thumbnails/items/test_item.png", 256, 256)
+    catalog = load_catalog(
+        _write_catalog(
+            project,
+            {
+                "item.test_item": {
+                    "type": "thumbnail",
+                    "path": "assets/discord/thumbnails/items/test_item.png",
+                }
+            },
+        ),
+        asset_root=project / "assets/discord",
+        validate_files=True,
+    )
+
+    definition = catalog.get("item.test_item")
+
+    assert definition.alt_text == "Item Test Item"
+    assert definition.required is False
+
+
 def test_registry_loading_normalizes_discord_urls(tmp_path: Path) -> None:
     registry_path = tmp_path / "image_asset_registry.json"
     registry_path.write_text(
@@ -63,7 +86,7 @@ def test_registry_loading_normalizes_discord_urls(tmp_path: Path) -> None:
                         "filename": "test.png",
                         "sha256": "a" * 64,
                         "width": 1200,
-                        "height": 400,
+                        "height": 300,
                         "size_bytes": 123,
                         "channel_id": "1",
                         "message_id": "2",
@@ -193,7 +216,7 @@ def test_plan_sync_skips_unchanged_assets(tmp_path: Path) -> None:
         },
     )
 
-    planned, summary = plan_sync(catalog, registry)
+    planned, summary = plan_image_sync(catalog, registry)
 
     assert planned[0].action == "unchanged"
     assert summary.as_dict()["unchanged"] == 1
@@ -231,7 +254,7 @@ def test_atomic_registry_write_creates_backup(tmp_path: Path) -> None:
 def test_thumbnail_and_banner_application_to_embed(tmp_path: Path) -> None:
     project = _project(tmp_path)
     thumb = _write_png(project / "assets/discord/thumbnails/items/test_item.png", 256, 256)
-    banner = _write_png(project / "assets/discord/locations/test_hall.png", 1200, 300)
+    banner = _write_png(project / "assets/discord/locations/test_hall.png", 1200, 244)
     catalog = load_catalog(
         _write_catalog(
             project,
@@ -284,16 +307,16 @@ def test_thumbnail_and_banner_application_to_embed(tmp_path: Path) -> None:
     service.apply_banner(embed, "location.test")
 
     assert embed.thumbnail.url == "https://cdn.discordapp.com/attachments/1/3/test_item.png"
-    assert embed.image.url == "attachment://test_hall.png"
+    assert embed.image.url == "https://cdn.discordapp.com/attachments/1/5/test_hall.png"
 
     payload = service.message_payload_with_banner_attachment(embed)
     files = payload["files"]
     try:
         assert sorted(payload) == ["embed", "files"]
         assert payload["embed"].title == "Assets"
-        assert payload["embed"].image.url is None
+        assert payload["embed"].image.url == "https://cdn.discordapp.com/attachments/1/5/test_hall.png"
         assert payload["embed"].thumbnail.url == "https://cdn.discordapp.com/attachments/1/3/test_item.png"
-        assert [file.filename for file in files] == ["test_hall.png"]
+        assert files == []
     finally:
         for file in files:
             file.close()
@@ -313,7 +336,7 @@ def test_message_payload_omits_none_view() -> None:
 
 def test_development_fallback_uses_local_attachments_for_unregistered_images(tmp_path: Path) -> None:
     project = _project(tmp_path)
-    _write_png(project / "assets/discord/locations/test_hall.png", 1200, 300)
+    _write_png(project / "assets/discord/locations/test_hall.png", 1200, 244)
     catalog = load_catalog(
         _write_catalog(
             project,
@@ -391,6 +414,32 @@ def test_gameplay_data_referencing_unknown_asset_key_fails(tmp_path: Path) -> No
         validate_gameplay_asset_references(catalog, content_dir)
 
 
+def test_potion_thumbnail_assets_are_image_references(tmp_path: Path) -> None:
+    project = _project(tmp_path)
+    _write_png(project / "assets/discord/thumbnails/potions/xp_01.png", 256, 256)
+    catalog = load_catalog(
+        _write_catalog(
+            project,
+            {
+                "item.potion.xp.01": {
+                    "type": "thumbnail",
+                    "path": "assets/discord/thumbnails/potions/xp_01.png",
+                    "alt_text": "XP potion",
+                    "required": False,
+                }
+            },
+        ),
+        asset_root=project / "assets/discord",
+    )
+    content_dir = project / "bot/content"
+    (content_dir / "potion_items.json").write_text(
+        '{"items":[{"thumbnail_asset":"item.potion.xp.01"}]}',
+        encoding="utf-8",
+    )
+
+    validate_gameplay_asset_references(catalog, content_dir)
+
+
 @pytest.mark.asyncio
 async def test_sync_uploads_changed_assets_with_mock_channel(tmp_path: Path) -> None:
     project = _project(tmp_path)
@@ -409,7 +458,7 @@ async def test_sync_uploads_changed_assets_with_mock_channel(tmp_path: Path) -> 
         ),
         asset_root=project / "assets/discord",
     )
-    planned, _summary = plan_sync(catalog, AssetRegistry(version=1, assets={}))
+    planned, _summary = plan_image_sync(catalog, AssetRegistry(version=1, assets={}))
     channel = FakeChannel()
 
     registry = await sync_registry_with_channel(channel, planned, AssetRegistry(version=1, assets={}))

@@ -4,6 +4,8 @@ import discord
 
 from bot.services.defense_service import DefenseReport, StartedDefense
 from bot.services.discord_asset_service import DEFAULT_DISCORD_ASSETS, DiscordAssetService
+from bot.services.discord_emoji_service import DEFAULT_DISCORD_EMOJIS, DiscordEmojiService
+from bot.services.enemy_service import DUNGEON_LEVELS, ENEMY_TYPES
 from bot.services.location_service import LOCATION_SERVICE
 from bot.utils.embeds import DEEP_NAVY, WARM_GOLD, embed
 from bot.utils.time import discord_relative_timestamp, human_duration
@@ -20,6 +22,7 @@ def build_defense_started_embed(
         colour=DEEP_NAVY,
     )
     asset_service.apply_banner(response, LOCATION_SERVICE.banner_asset_for("defending_the_dungeon"))
+    asset_service.apply_thumbnail(response, _dungeon_thumbnail_asset(started.dungeon_level))
     response.add_field(name="HP", value=f"{started.current_hp}/{started.stats.max_hp}")
     response.add_field(
         name="Stats",
@@ -42,6 +45,7 @@ def build_defense_report_embed(
     report: DefenseReport,
     *,
     asset_service: DiscordAssetService = DEFAULT_DISCORD_ASSETS,
+    emoji_service: DiscordEmojiService = DEFAULT_DISCORD_EMOJIS,
 ) -> discord.Embed:
     response = embed(
         "Defense Complete",
@@ -49,6 +53,7 @@ def build_defense_report_embed(
         colour=WARM_GOLD,
     )
     asset_service.apply_banner(response, LOCATION_SERVICE.banner_asset_for("returned_from_dungeon"))
+    asset_service.apply_thumbnail(response, _enemy_thumbnail_asset(report.enemies_encountered))
     response.add_field(
         name="Duration",
         value=(
@@ -106,17 +111,51 @@ def build_defense_report_embed(
         response.add_field(name="Potions", value="\n".join(potion_lines), inline=False)
     response.add_field(
         name="Enemies Encountered",
-        value=_enemy_summary(report.enemies_encountered),
+        value=_enemy_summary(report.enemies_encountered, emoji_service),
         inline=False,
     )
     return response
 
 
-def _enemy_summary(enemies: dict[str, int]) -> str:
+def _enemy_summary(enemies: dict[str, int], emoji_service: DiscordEmojiService = DEFAULT_DISCORD_EMOJIS) -> str:
     if not enemies:
         return "No completed attacks reached the dungeon line."
     ordered = sorted(enemies.items(), key=lambda item: (-item[1], item[0]))
-    summary = "\n".join(f"{name}: {count}" for name, count in ordered[:12])
+    summary = "\n".join(_enemy_summary_line(name, count, emoji_service) for name, count in ordered[:12])
     if len(ordered) > 12:
         summary += f"\n...and {len(ordered) - 12} more"
     return summary
+
+
+def _enemy_summary_line(name: str, count: int, emoji_service: DiscordEmojiService) -> str:
+    marker = _enemy_marker(name, emoji_service)
+    prefix = f"{marker} " if marker else ""
+    return f"{prefix}**{name}**: {count}"
+
+
+def _dungeon_thumbnail_asset(dungeon_level: int) -> str | None:
+    config = DUNGEON_LEVELS.get(dungeon_level, {})
+    value = config.get("thumbnail_asset")
+    return value if isinstance(value, str) and value else None
+
+
+def _enemy_thumbnail_asset(enemies: dict[str, int]) -> str | None:
+    for name, _count in sorted(enemies.items(), key=lambda item: (-item[1], item[0])):
+        value = _enemy_content_by_name(name).get("thumbnail_asset")
+        if isinstance(value, str) and value:
+            return value
+    return None
+
+
+def _enemy_marker(name: str, emoji_service: DiscordEmojiService) -> str:
+    value = _enemy_content_by_name(name).get("emoji_asset")
+    if isinstance(value, str) and value:
+        return emoji_service.markdown_for(value) or ""
+    return ""
+
+
+def _enemy_content_by_name(name: str) -> dict[str, object]:
+    for enemy in ENEMY_TYPES.values():
+        if enemy.get("name") == name:
+            return enemy
+    return {}

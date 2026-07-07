@@ -35,11 +35,6 @@
     "banner_asset": "location.returned_from_dungeon"
   },
   {
-    "key": "dungeon_energy",
-    "name": "Dungeon Energy",
-    "banner_asset": "location.dungeon_energy"
-  },
-  {
     "key": "out_of_energy",
     "name": "Out of Energy",
     "banner_asset": "location.out_of_energy"

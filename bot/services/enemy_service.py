@@ -48,6 +48,7 @@ DUNGEON_OPTIONAL_FIELDS = {
     "required_discoveries": 0,
     "required_defense_wins": 0,
     "requires_previous_completion": False,
+    "thumbnail_asset": None,
 }
 
 VALID_RANKS = {"common", "standard", "dangerous", "elite", "boss"}

@@ -28,6 +28,7 @@ class EmojiDefinition:
     path: Path
     alt_text: str
     required: bool = False
+    source_path: Path | None = None
 
     @property
     def filename(self) -> str:
@@ -92,6 +93,25 @@ class DiscordEmojiService:
 
     def registry_entry_for(self, asset_key: str | None) -> EmojiRegistryEntry | None:
         return self.registry.get(asset_key)
+
+
+def referenced_emoji_asset_keys(content_dir: Path = CONTENT_DIR) -> set[str]:
+    keys: set[str] = set()
+    for path in content_dir.glob("*.json"):
+        if path.name in {"emoji_assets.json", "emoji_asset_registry.json", "image_assets.json", "image_asset_registry.json"}:
+            continue
+        try:
+            raw = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        _collect_emoji_keys(raw, keys, content_file=path.name)
+    return keys
+
+
+def validate_emoji_asset_references(catalog: EmojiCatalog, content_dir: Path = CONTENT_DIR) -> None:
+    missing = sorted(referenced_emoji_asset_keys(content_dir) - set(catalog.emojis))
+    if missing:
+        raise AssetConfigError(f"Potion content references unknown emoji assets: {', '.join(missing)}")
 
 
 def load_emoji_catalog(
@@ -191,6 +211,7 @@ def validate_emoji_registry_integrity(
     registry: EmojiRegistry,
     *,
     require_required_emojis: bool = False,
+    require_current_files: bool = True,
 ) -> None:
     unknown_registry_keys = sorted(set(registry.emojis) - set(catalog.emojis))
     if unknown_registry_keys:
@@ -206,7 +227,7 @@ def validate_emoji_registry_integrity(
         definition = catalog.get(key)
         if entry.name != definition.name:
             raise AssetConfigError(f"{key} emoji registry name does not match catalog name")
-        if definition.path.exists() and entry.sha256 != sha256_file(definition.path):
+        if require_current_files and definition.path.exists() and entry.sha256 != sha256_file(definition.path):
             raise AssetConfigError(f"{key} emoji registry SHA-256 does not match local file")
 
 
@@ -242,15 +263,41 @@ def _emoji_definition(key: str, entry: dict[str, Any], *, catalog_path: Path, as
     name = _required_str(entry, "name", key)
     if not _EMOJI_NAME_RE.match(name):
         raise AssetConfigError(f"{key} emoji name must be 2-32 letters, numbers, or underscores")
-    path = _asset_path(_required_str(entry, "path", key), catalog_path=catalog_path, asset_root=asset_root, key=key)
-    alt_text = _required_str(entry, "alt_text", key)
+    path = _asset_path(
+        _required_str(entry, "path", key),
+        catalog_path=catalog_path,
+        asset_root=asset_root,
+        key=key,
+        allowed_suffixes={".png", ".jpg", ".jpeg"},
+        label="emoji image",
+    )
+    alt_text = _optional_str(entry, "alt_text", key) or name.replace("_", " ")
     required = entry.get("required", False)
     if not isinstance(required, bool):
         raise AssetConfigError(f"{key} required must be boolean")
-    return EmojiDefinition(key=key, name=name, path=path, alt_text=alt_text, required=required)
+    source_raw = entry.get("source_path")
+    source_path = None
+    if source_raw is not None:
+        source_path = _asset_path(
+            _required_str(entry, "source_path", key),
+            catalog_path=catalog_path,
+            asset_root=asset_root,
+            key=key,
+            allowed_suffixes={".png", ".jpg", ".jpeg", ".webp"},
+            label="emoji source image",
+        )
+    return EmojiDefinition(key=key, name=name, path=path, alt_text=alt_text, required=required, source_path=source_path)
 
 
-def _asset_path(raw_path: str, *, catalog_path: Path, asset_root: Path, key: str) -> Path:
+def _asset_path(
+    raw_path: str,
+    *,
+    catalog_path: Path,
+    asset_root: Path,
+    key: str,
+    allowed_suffixes: set[str],
+    label: str,
+) -> Path:
     value = Path(raw_path)
     if value.is_absolute():
         raise AssetConfigError(f"{key} path must be relative")
@@ -263,8 +310,9 @@ def _asset_path(raw_path: str, *, catalog_path: Path, asset_root: Path, key: str
         raise AssetConfigError(f"{key} path must stay inside {asset_root}") from error
     if not _FILENAME_RE.match(resolved.name):
         raise AssetConfigError(f"{key} filename must use lowercase snake_case")
-    if resolved.suffix.lower() not in {".png", ".jpg", ".jpeg"}:
-        raise AssetConfigError(f"{key} emoji image must be PNG or JPEG")
+    if resolved.suffix.lower() not in allowed_suffixes:
+        allowed = ", ".join(sorted(allowed_suffixes))
+        raise AssetConfigError(f"{key} {label} must use one of: {allowed}")
     return resolved
 
 
@@ -311,10 +359,32 @@ def _reject_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
     return result
 
 
+def _collect_emoji_keys(value: Any, keys: set[str], *, content_file: str) -> None:
+    if isinstance(value, dict):
+        for field, item in value.items():
+            is_legacy_potion_emoji = content_file == "potion_items.json" and field == "thumbnail_asset"
+            if (field == "emoji_asset" or is_legacy_potion_emoji) and isinstance(item, str) and item.strip():
+                keys.add(item.strip())
+            else:
+                _collect_emoji_keys(item, keys, content_file=content_file)
+    elif isinstance(value, list):
+        for item in value:
+            _collect_emoji_keys(item, keys, content_file=content_file)
+
+
 def _required_str(entry: dict[str, Any], field: str, key: str) -> str:
     value = entry.get(field)
     if not isinstance(value, str) or not value.strip():
         raise AssetConfigError(f"{key} missing string field: {field}")
+    return value.strip()
+
+
+def _optional_str(entry: dict[str, Any], field: str, key: str) -> str | None:
+    value = entry.get(field)
+    if value is None:
+        return None
+    if not isinstance(value, str) or not value.strip():
+        raise AssetConfigError(f"{key} {field} must be a non-empty string when provided")
     return value.strip()
 
 

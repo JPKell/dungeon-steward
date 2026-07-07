@@ -80,18 +80,18 @@ python -m scripts.build_dev_db --reset
 Validate content and run tests:
 
 ```bash
-python -m scripts.validate_content
-python -m scripts.prepare_discord_assets --validate
+.venv/bin/python -m scripts.validate_content
+.venv/bin/python -m scripts.sync_assets --dry-run
 ruff check .
 pytest
 ```
 
-Prepare and synchronize Discord embed images:
+Prepare and synchronize Discord embed images and application emojis:
 
 ```bash
-python -m scripts.prepare_discord_assets --prepare
-python -m scripts.sync_discord_assets --dry-run
-python -m scripts.sync_discord_assets
+.venv/bin/python -m scripts.sync_assets --prepare-only
+.venv/bin/python -m scripts.sync_assets --dry-run
+.venv/bin/python -m scripts.sync_assets
 ```
 
 See [docs/DISCORD_IMAGES.md](docs/DISCORD_IMAGES.md) for image dimensions, naming conventions, asset-channel permissions, replacement flow, and local fallback behavior.
@@ -260,8 +260,8 @@ sudo -u kellrond-bot git pull
 sudo -u kellrond-bot .venv/bin/pip install -r requirements.txt
 sudo -u kellrond-bot .venv/bin/alembic upgrade head
 sudo -u kellrond-bot .venv/bin/python -m scripts.content_db load
-sudo -u kellrond-bot .venv/bin/python -m scripts.prepare_discord_assets --validate
-sudo -u kellrond-bot .venv/bin/python -m scripts.sync_discord_assets --dry-run
+sudo -u kellrond-bot .venv/bin/python -m scripts.sync_assets --dry-run
+sudo -u kellrond-bot .venv/bin/python -m scripts.sync_assets
 sudo systemctl restart kellrond-discord-bot
 ```
 

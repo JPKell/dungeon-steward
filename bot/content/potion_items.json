@@ -1707,7 +1707,8 @@
         "operation": "multiply_bonus",
         "bonus": 0.03,
         "final_multiplier": 1.03
-      }
+      },
+      "thumbnail_asset": "item.potion.defense.01"
     },
     {
       "key": "potion_defense_02",
@@ -1732,7 +1733,8 @@
         "operation": "multiply_bonus",
         "bonus": 0.035,
         "final_multiplier": 1.035
-      }
+      },
+      "thumbnail_asset": "item.potion.defense.02"
     },
     {
       "key": "potion_defense_03",
@@ -1757,7 +1759,8 @@
         "operation": "multiply_bonus",
         "bonus": 0.04,
         "final_multiplier": 1.04
-      }
+      },
+      "thumbnail_asset": "item.potion.defense.03"
     },
     {
       "key": "potion_defense_04",
@@ -1782,7 +1785,8 @@
         "operation": "multiply_bonus",
         "bonus": 0.045,
         "final_multiplier": 1.045
-      }
+      },
+      "thumbnail_asset": "item.potion.defense.04"
     },
     {
       "key": "potion_defense_05",
@@ -1807,7 +1811,8 @@
         "operation": "multiply_bonus",
         "bonus": 0.05,
         "final_multiplier": 1.05
-      }
+      },
+      "thumbnail_asset": "item.potion.defense.05"
     },
     {
       "key": "potion_defense_06",
@@ -1832,7 +1837,8 @@
         "operation": "multiply_bonus",
         "bonus": 0.055,
         "final_multiplier": 1.055
-      }
+      },
+      "thumbnail_asset": "item.potion.defense.06"
     },
     {
       "key": "potion_defense_07",
@@ -1857,7 +1863,8 @@
         "operation": "multiply_bonus",
         "bonus": 0.06,
         "final_multiplier": 1.06
-      }
+      },
+      "thumbnail_asset": "item.potion.defense.07"
     },
     {
       "key": "potion_defense_08",
@@ -1882,7 +1889,8 @@
         "operation": "multiply_bonus",
         "bonus": 0.0675,
         "final_multiplier": 1.0675
-      }
+      },
+      "thumbnail_asset": "item.potion.defense.08"
     },
     {
       "key": "potion_defense_09",
@@ -1907,7 +1915,8 @@
         "operation": "multiply_bonus",
         "bonus": 0.075,
         "final_multiplier": 1.075
-      }
+      },
+      "thumbnail_asset": "item.potion.defense.09"
     },
     {
       "key": "potion_defense_10",
@@ -1932,7 +1941,8 @@
         "operation": "multiply_bonus",
         "bonus": 0.0825,
         "final_multiplier": 1.0825
-      }
+      },
+      "thumbnail_asset": "item.potion.defense.10"
     },
     {
       "key": "potion_defense_11",
@@ -1957,7 +1967,8 @@
         "operation": "multiply_bonus",
         "bonus": 0.09,
         "final_multiplier": 1.09
-      }
+      },
+      "thumbnail_asset": "item.potion.defense.11"
     },
     {
       "key": "potion_defense_12",
@@ -1982,7 +1993,8 @@
         "operation": "multiply_bonus",
         "bonus": 0.0975,
         "final_multiplier": 1.0975
-      }
+      },
+      "thumbnail_asset": "item.potion.defense.12"
     },
     {
       "key": "potion_defense_13",
@@ -2007,7 +2019,8 @@
         "operation": "multiply_bonus",
         "bonus": 0.105,
         "final_multiplier": 1.105
-      }
+      },
+      "thumbnail_asset": "item.potion.defense.13"
     },
     {
       "key": "potion_defense_14",
@@ -2032,7 +2045,8 @@
         "operation": "multiply_bonus",
         "bonus": 0.1125,
         "final_multiplier": 1.1125
-      }
+      },
+      "thumbnail_asset": "item.potion.defense.14"
     },
     {
       "key": "potion_defense_15",
@@ -2057,7 +2071,8 @@
         "operation": "multiply_bonus",
         "bonus": 0.12,
         "final_multiplier": 1.12
-      }
+      },
+      "thumbnail_asset": "item.potion.defense.15"
     },
     {
       "key": "potion_luck_01",

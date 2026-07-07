@@ -30,6 +30,7 @@ class ContentDungeonLevel(TimestampMixin, Base):
     required_discoveries: Mapped[int] = mapped_column(Integer, nullable=False)
     required_defense_wins: Mapped[int] = mapped_column(Integer, nullable=False)
     requires_previous_completion: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    thumbnail_asset: Mapped[str | None] = mapped_column(String(160))
 
 
 class ContentEnemy(TimestampMixin, Base):
@@ -63,6 +64,8 @@ class ContentEnemy(TimestampMixin, Base):
     weight: Mapped[int] = mapped_column(Integer, nullable=False)
     enabled: Mapped[bool] = mapped_column(Boolean, nullable=False)
     rank: Mapped[str] = mapped_column(String(40), nullable=False)
+    thumbnail_asset: Mapped[str | None] = mapped_column(String(160))
+    emoji_asset: Mapped[str | None] = mapped_column(String(160))
 
 
 class ContentEquipmentItem(TimestampMixin, Base):

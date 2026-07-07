@@ -1,567 +1,881 @@
 {
   "version": 1,
   "assets": {
+    "enemy.bandit": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/enemies/bandit.webp",
+      "source_path": "assets/discord/source/enemies/bandit.png"
+    },
+    "enemy.blob": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/enemies/blob.webp",
+      "source_path": "assets/discord/source/enemies/blob.png"
+    },
+    "enemy.cave_spider": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/enemies/cave_spider.webp",
+      "source_path": "assets/discord/source/enemies/spider.png"
+    },
+    "enemy.ghoul": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/enemies/ghoul.webp",
+      "source_path": "assets/discord/source/enemies/ghoul.png"
+    },
+    "enemy.giant": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/enemies/giant.webp",
+      "source_path": "assets/discord/source/enemies/giant.png"
+    },
+    "enemy.giant_rat": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/enemies/giant_rat.webp",
+      "source_path": "assets/discord/source/enemies/rat.png"
+    },
+    "enemy.goblin": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/enemies/goblin.webp",
+      "source_path": "assets/discord/source/enemies/goblin.png"
+    },
+    "enemy.hobgoblin": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/enemies/hobgoblin.webp",
+      "source_path": "assets/discord/source/enemies/hobgoblin.png"
+    },
+    "enemy.kobold": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/enemies/kobold.webp",
+      "source_path": "assets/discord/source/enemies/kobold.png"
+    },
+    "enemy.lesser_dragon": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/enemies/lesser_dragon.webp",
+      "source_path": "assets/discord/source/enemies/dragon.png"
+    },
+    "enemy.minotaur": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/enemies/minotaur.webp",
+      "source_path": "assets/discord/source/enemies/minotaur.png"
+    },
+    "enemy.necromancer": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/enemies/necromancer.webp",
+      "source_path": "assets/discord/source/enemies/necromancer.png"
+    },
+    "enemy.ogre": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/enemies/ogre.webp",
+      "source_path": "assets/discord/source/enemies/ogre.png"
+    },
+    "enemy.orc": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/enemies/orc.webp",
+      "source_path": "assets/discord/source/enemies/orc.png"
+    },
+    "enemy.skeleton": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/enemies/skeleton.webp",
+      "source_path": "assets/discord/source/enemies/skeleton.png"
+    },
+    "enemy.stone_golem": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/enemies/stone_golem.webp",
+      "source_path": "assets/discord/source/enemies/stone_golem.png"
+    },
+    "enemy.troll": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/enemies/troll.webp",
+      "source_path": "assets/discord/source/enemies/troll.png"
+    },
+    "enemy.vampire": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/enemies/vampire.webp",
+      "source_path": "assets/discord/source/enemies/vampire.png"
+    },
+    "enemy.wraith": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/enemies/wraith.webp",
+      "source_path": "assets/discord/source/enemies/wraith.png"
+    },
+    "enemy.zombie": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/enemies/zombie.webp",
+      "source_path": "assets/discord/source/enemies/zombie.png"
+    },
+    "equipment.armor_carapace": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/armor_carapace.webp",
+      "source_path": "assets/discord/source/equipment/armor_carapace.png"
+    },
+    "equipment.armor_cuirass": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/armor_cuirass.webp",
+      "source_path": "assets/discord/source/equipment/armor_cuirass.png"
+    },
+    "equipment.armor_harness": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/armor_harness.webp",
+      "source_path": "assets/discord/source/equipment/armor_harness.png"
+    },
+    "equipment.armor_hauberk": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/armor_hauberk.webp",
+      "source_path": "assets/discord/source/equipment/armor_hauberk.png"
+    },
+    "equipment.armor_mail": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/armor_mail.webp",
+      "source_path": "assets/discord/source/equipment/armor_mail.png"
+    },
+    "equipment.armor_plate": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/armor_plate.webp",
+      "source_path": "assets/discord/source/equipment/armor_plate.png"
+    },
+    "equipment.armor_vestment": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/armor_vestment.webp",
+      "source_path": "assets/discord/source/equipment/armor_vestment.png"
+    },
+    "equipment.boots_boots": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/boots_boots.webp",
+      "source_path": "assets/discord/source/equipment/boots_boots.png"
+    },
+    "equipment.boots_footguards": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/boots_footguards.webp",
+      "source_path": "assets/discord/source/equipment/boots_footguards.png"
+    },
+    "equipment.boots_greaves": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/boots_greaves.webp",
+      "source_path": "assets/discord/source/equipment/boots_greaves.png"
+    },
+    "equipment.boots_sabatons": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/boots_sabatons.webp",
+      "source_path": "assets/discord/source/equipment/boots_sabatons.png"
+    },
+    "equipment.boots_sandals": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/boots_sandals.webp",
+      "source_path": "assets/discord/source/equipment/boots_sandals.png"
+    },
+    "equipment.boots_striders": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/boots_striders.webp",
+      "source_path": "assets/discord/source/equipment/boots_striders.png"
+    },
+    "equipment.boots_treads": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/boots_treads.webp",
+      "source_path": "assets/discord/source/equipment/boots_treads.png"
+    },
+    "equipment.gloves_bracers": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/gloves_bracers.webp",
+      "source_path": "assets/discord/source/equipment/gloves_bracers.png"
+    },
+    "equipment.gloves_claws": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/gloves_claws.webp",
+      "source_path": "assets/discord/source/equipment/gloves_claws.png"
+    },
+    "equipment.gloves_gauntlets": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/gloves_gauntlets.webp",
+      "source_path": "assets/discord/source/equipment/gloves_gauntlets.png"
+    },
+    "equipment.gloves_gloves": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/gloves_gloves.webp",
+      "source_path": "assets/discord/source/equipment/gloves_gloves.png"
+    },
+    "equipment.gloves_grips": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/gloves_grips.webp",
+      "source_path": "assets/discord/source/equipment/gloves_grips.png"
+    },
+    "equipment.gloves_knuckles": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/gloves_knuckles.webp",
+      "source_path": "assets/discord/source/equipment/gloves_knuckles.png"
+    },
+    "equipment.gloves_wraps": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/gloves_wraps.webp",
+      "source_path": "assets/discord/source/equipment/gloves_wraps.png"
+    },
+    "equipment.helm_coif": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/helm_coif.webp",
+      "source_path": "assets/discord/source/equipment/helm_coif.png"
+    },
+    "equipment.helm_crown": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/helm_crown.webp",
+      "source_path": "assets/discord/source/equipment/helm_crown.png"
+    },
+    "equipment.helm_greathelm": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/helm_greathelm.webp",
+      "source_path": "assets/discord/source/equipment/helm_greathelm.png"
+    },
+    "equipment.helm_helm": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/helm_helm.webp",
+      "source_path": "assets/discord/source/equipment/helm_helm.png"
+    },
+    "equipment.helm_hood": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/helm_hood.webp",
+      "source_path": "assets/discord/source/equipment/helm_hood.png"
+    },
+    "equipment.helm_mask": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/helm_mask.webp",
+      "source_path": "assets/discord/source/equipment/helm_mask.png"
+    },
+    "equipment.helm_visor": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/helm_visor.webp",
+      "source_path": "assets/discord/source/equipment/helm_visor.png"
+    },
+    "equipment.shield_aegis": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/shield_aegis.webp",
+      "source_path": "assets/discord/source/equipment/shield_aegis.png"
+    },
+    "equipment.shield_barrier": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/shield_barrier.webp",
+      "source_path": "assets/discord/source/equipment/shield_barrier.png"
+    },
+    "equipment.shield_buckler": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/shield_buckler.webp",
+      "source_path": "assets/discord/source/equipment/shield_buckler.png"
+    },
+    "equipment.shield_bulwark": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/shield_bulwark.webp",
+      "source_path": "assets/discord/source/equipment/shield_bulwark.png"
+    },
+    "equipment.shield_guard": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/shield_guard.webp",
+      "source_path": "assets/discord/source/equipment/shield_guard.png"
+    },
+    "equipment.shield_rampart": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/shield_rampart.webp",
+      "source_path": "assets/discord/source/equipment/shield_rampart.png"
+    },
+    "equipment.shield_ward": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/shield_ward.webp",
+      "source_path": "assets/discord/source/equipment/shield_ward.png"
+    },
+    "equipment.trinket_charm": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/trinket_charm.webp",
+      "source_path": "assets/discord/source/equipment/trinket_charm.png"
+    },
+    "equipment.trinket_compass": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/trinket_compass.webp",
+      "source_path": "assets/discord/source/equipment/trinket_compass.png"
+    },
+    "equipment.trinket_idol": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/trinket_idol.webp",
+      "source_path": "assets/discord/source/equipment/trinket_idol.png"
+    },
+    "equipment.trinket_reliquary": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/trinket_reliquary.webp",
+      "source_path": "assets/discord/source/equipment/trinket_reliquary.png"
+    },
+    "equipment.trinket_sigil": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/trinket_sigil.webp",
+      "source_path": "assets/discord/source/equipment/trinket_sigil.png"
+    },
+    "equipment.trinket_talisman": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/trinket_talisman.webp",
+      "source_path": "assets/discord/source/equipment/trinket_talisman.png"
+    },
+    "equipment.trinket_token": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/trinket_token.webp",
+      "source_path": "assets/discord/source/equipment/trinket_token.png"
+    },
+    "equipment.weapon_axe": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/weapon_axe.webp",
+      "source_path": "assets/discord/source/equipment/weapon_axe.png"
+    },
+    "equipment.weapon_blade": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/weapon_blade.webp",
+      "source_path": "assets/discord/source/equipment/weapon_blade.png"
+    },
+    "equipment.weapon_dirk": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/weapon_dirk.webp",
+      "source_path": "assets/discord/source/equipment/weapon_dirk.png"
+    },
+    "equipment.weapon_glaive": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/weapon_glaive.webp",
+      "source_path": "assets/discord/source/equipment/weapon_glaive.png"
+    },
+    "equipment.weapon_hammer": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/weapon_hammer.webp",
+      "source_path": "assets/discord/source/equipment/weapon_hammer.png"
+    },
+    "equipment.weapon_pike": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/weapon_pike.webp",
+      "source_path": "assets/discord/source/equipment/weapon_pike.png"
+    },
+    "equipment.weapon_saber": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/weapon_saber.webp",
+      "source_path": "assets/discord/source/equipment/weapon_saber.png"
+    },
+    "equipment.weapon_spear": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/equipment/weapon_spear.webp",
+      "source_path": "assets/discord/source/equipment/weapon_spear.png"
+    },
+    "item.potion.attack.01": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/atk_01.webp",
+      "source_path": "assets/discord/source/potions/atk_01.png"
+    },
+    "item.potion.attack.02": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/atk_02.webp",
+      "source_path": "assets/discord/source/potions/atk_02.png"
+    },
+    "item.potion.attack.03": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/atk_03.webp",
+      "source_path": "assets/discord/source/potions/atk_03.png"
+    },
+    "item.potion.attack.04": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/atk_04.webp",
+      "source_path": "assets/discord/source/potions/atk_04.png"
+    },
+    "item.potion.attack.05": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/atk_05.webp",
+      "source_path": "assets/discord/source/potions/atk_05.png"
+    },
+    "item.potion.attack.06": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/atk_06.webp",
+      "source_path": "assets/discord/source/potions/atk_06.png"
+    },
+    "item.potion.attack.07": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/atk_07.webp",
+      "source_path": "assets/discord/source/potions/atk_07.png"
+    },
+    "item.potion.attack.08": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/atk_08.webp",
+      "source_path": "assets/discord/source/potions/atk_08.png"
+    },
+    "item.potion.attack.09": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/atk_09.webp",
+      "source_path": "assets/discord/source/potions/atk_09.png"
+    },
+    "item.potion.attack.10": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/atk_10.webp",
+      "source_path": "assets/discord/source/potions/atk_10.png"
+    },
+    "item.potion.attack.11": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/atk_11.webp",
+      "source_path": "assets/discord/source/potions/atk_11.png"
+    },
+    "item.potion.attack.12": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/atk_12.webp",
+      "source_path": "assets/discord/source/potions/atk_12.png"
+    },
+    "item.potion.attack.13": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/atk_13.webp",
+      "source_path": "assets/discord/source/potions/atk_13.png"
+    },
+    "item.potion.attack.14": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/atk_14.webp",
+      "source_path": "assets/discord/source/potions/atk_14.png"
+    },
+    "item.potion.attack.15": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/atk_15.webp",
+      "source_path": "assets/discord/source/potions/atk_15.png"
+    },
+    "item.potion.defense.01": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/def_01.webp",
+      "source_path": "assets/discord/source/potions/def_01.png"
+    },
+    "item.potion.defense.02": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/def_02.webp",
+      "source_path": "assets/discord/source/potions/def_02.png"
+    },
+    "item.potion.defense.03": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/def_03.webp",
+      "source_path": "assets/discord/source/potions/def_03.png"
+    },
+    "item.potion.defense.04": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/def_04.webp",
+      "source_path": "assets/discord/source/potions/def_04.png"
+    },
+    "item.potion.defense.05": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/def_05.webp",
+      "source_path": "assets/discord/source/potions/def_05.png"
+    },
+    "item.potion.defense.06": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/def_06.webp",
+      "source_path": "assets/discord/source/potions/def_06.png"
+    },
+    "item.potion.defense.07": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/def_07.webp",
+      "source_path": "assets/discord/source/potions/def_07.png"
+    },
+    "item.potion.defense.08": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/def_08.webp",
+      "source_path": "assets/discord/source/potions/def_08.png"
+    },
+    "item.potion.defense.09": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/def_09.webp",
+      "source_path": "assets/discord/source/potions/def_09.png"
+    },
+    "item.potion.defense.10": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/def_10.webp",
+      "source_path": "assets/discord/source/potions/def_10.png"
+    },
+    "item.potion.defense.11": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/def_11.webp",
+      "source_path": "assets/discord/source/potions/def_11.png"
+    },
+    "item.potion.defense.12": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/def_12.webp",
+      "source_path": "assets/discord/source/potions/def_12.png"
+    },
+    "item.potion.defense.13": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/def_13.webp",
+      "source_path": "assets/discord/source/potions/def_13.png"
+    },
+    "item.potion.defense.14": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/def_14.webp",
+      "source_path": "assets/discord/source/potions/def_14.png"
+    },
+    "item.potion.defense.15": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/def_15.webp",
+      "source_path": "assets/discord/source/potions/def_15.png"
+    },
+    "item.potion.healing.01": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/healing_01.webp",
+      "source_path": "assets/discord/source/potions/healing_01.png"
+    },
+    "item.potion.healing.02": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/healing_02.webp",
+      "source_path": "assets/discord/source/potions/healing_02.png"
+    },
+    "item.potion.healing.03": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/healing_03.webp",
+      "source_path": "assets/discord/source/potions/healing_03.png"
+    },
+    "item.potion.healing.04": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/healing_04.webp",
+      "source_path": "assets/discord/source/potions/healing_04.png"
+    },
+    "item.potion.healing.05": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/healing_05.webp",
+      "source_path": "assets/discord/source/potions/healing_05.png"
+    },
+    "item.potion.healing.06": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/healing_06.webp",
+      "source_path": "assets/discord/source/potions/healing_06.png"
+    },
+    "item.potion.healing.07": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/healing_07.webp",
+      "source_path": "assets/discord/source/potions/healing_07.png"
+    },
+    "item.potion.healing.08": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/healing_08.webp",
+      "source_path": "assets/discord/source/potions/healing_08.png"
+    },
+    "item.potion.healing.09": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/healing_09.webp",
+      "source_path": "assets/discord/source/potions/healing_09.png"
+    },
+    "item.potion.healing.10": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/healing_10.webp",
+      "source_path": "assets/discord/source/potions/healing_10.png"
+    },
+    "item.potion.healing.11": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/healing_11.webp",
+      "source_path": "assets/discord/source/potions/healing_11.png"
+    },
+    "item.potion.healing.12": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/healing_12.webp",
+      "source_path": "assets/discord/source/potions/healing_12.png"
+    },
+    "item.potion.healing.13": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/healing_13.webp",
+      "source_path": "assets/discord/source/potions/healing_13.png"
+    },
+    "item.potion.healing.14": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/healing_14.webp",
+      "source_path": "assets/discord/source/potions/healing_14.png"
+    },
+    "item.potion.healing.15": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/healing_15.webp",
+      "source_path": "assets/discord/source/potions/healing_15.png"
+    },
+    "item.potion.luck.01": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/luck_01.webp",
+      "source_path": "assets/discord/source/potions/luck_01.png"
+    },
+    "item.potion.luck.02": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/luck_02.webp",
+      "source_path": "assets/discord/source/potions/luck_02.png"
+    },
+    "item.potion.luck.03": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/luck_03.webp",
+      "source_path": "assets/discord/source/potions/luck_03.png"
+    },
+    "item.potion.luck.04": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/luck_04.webp",
+      "source_path": "assets/discord/source/potions/luck_04.png"
+    },
+    "item.potion.luck.05": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/luck_05.webp",
+      "source_path": "assets/discord/source/potions/luck_05.png"
+    },
+    "item.potion.luck.06": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/luck_06.webp",
+      "source_path": "assets/discord/source/potions/luck_06.png"
+    },
+    "item.potion.luck.07": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/luck_07.webp",
+      "source_path": "assets/discord/source/potions/luck_07.png"
+    },
+    "item.potion.luck.08": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/luck_08.webp",
+      "source_path": "assets/discord/source/potions/luck_08.png"
+    },
+    "item.potion.luck.09": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/luck_09.webp",
+      "source_path": "assets/discord/source/potions/luck_09.png"
+    },
+    "item.potion.luck.10": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/luck_10.webp",
+      "source_path": "assets/discord/source/potions/luck_10.png"
+    },
+    "item.potion.luck.11": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/luck_11.webp",
+      "source_path": "assets/discord/source/potions/luck_11.png"
+    },
+    "item.potion.luck.12": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/luck_12.webp",
+      "source_path": "assets/discord/source/potions/luck_12.png"
+    },
+    "item.potion.luck.13": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/luck_13.webp",
+      "source_path": "assets/discord/source/potions/luck_13.png"
+    },
+    "item.potion.luck.14": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/luck_14.webp",
+      "source_path": "assets/discord/source/potions/luck_14.png"
+    },
+    "item.potion.luck.15": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/luck_15.webp",
+      "source_path": "assets/discord/source/potions/luck_15.png"
+    },
+    "item.potion.max_hp.01": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/hp_01.webp",
+      "source_path": "assets/discord/source/potions/hp_01.png"
+    },
+    "item.potion.max_hp.02": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/hp_02.webp",
+      "source_path": "assets/discord/source/potions/hp_02.png"
+    },
+    "item.potion.max_hp.03": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/hp_03.webp",
+      "source_path": "assets/discord/source/potions/hp_03.png"
+    },
+    "item.potion.max_hp.04": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/hp_04.webp",
+      "source_path": "assets/discord/source/potions/hp_04.png"
+    },
+    "item.potion.max_hp.05": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/hp_05.webp",
+      "source_path": "assets/discord/source/potions/hp_05.png"
+    },
+    "item.potion.max_hp.06": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/hp_06.webp",
+      "source_path": "assets/discord/source/potions/hp_06.png"
+    },
+    "item.potion.max_hp.07": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/hp_07.webp",
+      "source_path": "assets/discord/source/potions/hp_07.png"
+    },
+    "item.potion.max_hp.08": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/hp_08.webp",
+      "source_path": "assets/discord/source/potions/hp_08.png"
+    },
+    "item.potion.max_hp.09": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/hp_09.webp",
+      "source_path": "assets/discord/source/potions/hp_09.png"
+    },
+    "item.potion.max_hp.10": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/hp_10.webp",
+      "source_path": "assets/discord/source/potions/hp_10.png"
+    },
+    "item.potion.max_hp.11": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/hp_11.webp",
+      "source_path": "assets/discord/source/potions/hp_11.png"
+    },
+    "item.potion.max_hp.12": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/hp_12.webp",
+      "source_path": "assets/discord/source/potions/hp_12.png"
+    },
+    "item.potion.max_hp.13": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/hp_13.webp",
+      "source_path": "assets/discord/source/potions/hp_13.png"
+    },
+    "item.potion.max_hp.14": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/hp_14.webp",
+      "source_path": "assets/discord/source/potions/hp_14.png"
+    },
+    "item.potion.max_hp.15": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/hp_15.webp",
+      "source_path": "assets/discord/source/potions/hp_15.png"
+    },
+    "item.potion.xp.01": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/xp_01.webp",
+      "source_path": "assets/discord/source/potions/xp_01.png"
+    },
+    "item.potion.xp.02": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/xp_02.webp",
+      "source_path": "assets/discord/source/potions/xp_02.png"
+    },
+    "item.potion.xp.03": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/xp_03.webp",
+      "source_path": "assets/discord/source/potions/xp_03.png"
+    },
+    "item.potion.xp.04": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/xp_04.webp",
+      "source_path": "assets/discord/source/potions/xp_04.png"
+    },
+    "item.potion.xp.05": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/xp_05.webp",
+      "source_path": "assets/discord/source/potions/xp_05.png"
+    },
+    "item.potion.xp.06": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/xp_06.webp",
+      "source_path": "assets/discord/source/potions/xp_06.png"
+    },
+    "item.potion.xp.07": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/xp_07.webp",
+      "source_path": "assets/discord/source/potions/xp_07.png"
+    },
+    "item.potion.xp.08": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/xp_08.webp",
+      "source_path": "assets/discord/source/potions/xp_08.png"
+    },
+    "item.potion.xp.09": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/xp_09.webp",
+      "source_path": "assets/discord/source/potions/xp_09.png"
+    },
+    "item.potion.xp.10": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/xp_10.webp",
+      "source_path": "assets/discord/source/potions/xp_10.png"
+    },
+    "item.potion.xp.11": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/xp_11.webp",
+      "source_path": "assets/discord/source/potions/xp_11.png"
+    },
+    "item.potion.xp.12": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/xp_12.webp",
+      "source_path": "assets/discord/source/potions/xp_12.png"
+    },
+    "item.potion.xp.13": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/xp_13.webp",
+      "source_path": "assets/discord/source/potions/xp_13.png"
+    },
+    "item.potion.xp.14": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/xp_14.webp",
+      "source_path": "assets/discord/source/potions/xp_14.png"
+    },
+    "item.potion.xp.15": {
+      "type": "thumbnail",
+      "path": "assets/discord/thumbnails/potions/xp_15.webp",
+      "source_path": "assets/discord/source/potions/xp_15.png"
+    },
     "location.community_dungeon": {
       "type": "location_banner",
       "path": "assets/discord/locations/community_dungeon.webp",
-      "source_path": "assets/discord/locations/community_dungeon.png",
-      "alt_text": "The shared community dungeon status board",
-      "required": false
+      "source_path": "assets/discord/source/banners/community_dungeon.png"
     },
     "location.defend": {
       "type": "location_banner",
       "path": "assets/discord/locations/defend.webp",
-      "source_path": "assets/discord/locations/defend.png",
-      "alt_text": "A dungeon defense level selection scene",
-      "required": false
+      "source_path": "assets/discord/source/banners/defend.png"
     },
     "location.defending_the_dungeon": {
       "type": "location_banner",
       "path": "assets/discord/locations/defending_the_dungeon.webp",
-      "source_path": "assets/discord/locations/defending_the_dungeon.png",
-      "alt_text": "A dungeon line actively being defended",
-      "required": false
+      "source_path": "assets/discord/source/banners/defending_the_dungeon.png"
     },
     "location.dungeon_energy": {
       "type": "location_banner",
       "path": "assets/discord/locations/dungeon_energy.webp",
-      "source_path": "assets/discord/locations/dungeon_energy.png",
-      "alt_text": "A glowing dungeon energy meter",
-      "required": false
+      "source_path": "assets/discord/source/banners/dungeon_energy.png"
     },
     "location.dungeon_selection": {
       "type": "location_banner",
       "path": "assets/discord/locations/dungeon_selection.webp",
-      "source_path": "assets/discord/source/dungeon_selection_source.png",
-      "alt_text": "A row of dungeon entrances descending into darkness",
-      "required": false
+      "source_path": "assets/discord/source/banners/dungeon_selection.png"
     },
     "location.explore_dungeon": {
       "type": "location_banner",
       "path": "assets/discord/locations/explore_dungeon.webp",
-      "source_path": "assets/discord/locations/explore_dungeon.png",
-      "alt_text": "An adventurer entering the dungeon to explore",
-      "required": false
+      "source_path": "assets/discord/source/banners/explore_dungeon.png"
     },
     "location.explore_results": {
       "type": "location_banner",
       "path": "assets/discord/locations/explore_results.webp",
-      "source_path": "assets/discord/locations/explore_results.png",
-      "alt_text": "A dungeon exploration result report",
-      "required": false
+      "source_path": "assets/discord/source/banners/explore_results.png"
     },
     "location.inventory": {
       "type": "location_banner",
       "path": "assets/discord/locations/inventory.webp",
-      "source_path": "assets/discord/locations/inventory.png",
-      "alt_text": "A potion inventory satchel opened on a dungeon table",
-      "required": false
+      "source_path": "assets/discord/source/banners/inventory.png"
     },
     "location.item_purchased": {
       "type": "location_banner",
       "path": "assets/discord/locations/item_purchased.webp",
-      "source_path": "assets/discord/locations/item_purchased.png",
-      "alt_text": "A newly purchased dungeon item on display",
-      "required": false
+      "source_path": "assets/discord/source/banners/item_purchased.png"
     },
     "location.leaderboard": {
       "type": "location_banner",
       "path": "assets/discord/locations/leaderboard.webp",
-      "source_path": "assets/discord/locations/leaderboard.png",
-      "alt_text": "A dungeon leaderboard carved into a notice board",
-      "required": false
+      "source_path": "assets/discord/source/banners/leaderboard.png"
     },
     "location.out_of_energy": {
       "type": "location_banner",
       "path": "assets/discord/locations/out_of_energy.webp",
-      "source_path": "assets/discord/locations/out_of_energy.png",
-      "alt_text": "A depleted dungeon energy meter",
-      "required": false
+      "source_path": "assets/discord/source/banners/out_of_energy.png"
     },
     "location.returned_from_dungeon": {
       "type": "location_banner",
       "path": "assets/discord/locations/returned_from_dungeon.webp",
-      "source_path": "assets/discord/locations/returned_from_dungeon.png",
-      "alt_text": "A defender returning from the dungeon",
-      "required": false
+      "source_path": "assets/discord/source/banners/returned_from_dungeon.png"
     },
     "location.shop": {
       "type": "location_banner",
       "path": "assets/discord/locations/shop.webp",
-      "source_path": "assets/discord/source/shop_source.png",
-      "alt_text": "A compact dungeon equipment shop lit by warm lanterns",
-      "required": false
+      "source_path": "assets/discord/source/banners/shop.png"
     },
     "location.stewards_hall": {
       "type": "location_banner",
       "path": "assets/discord/locations/stewards_hall.webp",
-      "source_path": "assets/discord/source/stewards_hall_source.png",
-      "alt_text": "The torchlit Steward's Hall planning room",
+      "source_path": "assets/discord/source/banners/stewards_hall.png",
       "required": true
     },
     "location.user_profile": {
       "type": "location_banner",
       "path": "assets/discord/locations/user_profile.webp",
-      "source_path": "assets/discord/locations/user_profile.png",
-      "alt_text": "A dungeon steward profile ledger",
-      "required": false
-    },
-    "item.potion.xp.01": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/xp_01.webp",
-      "alt_text": "A small combat XP potion, tier 1",
-      "required": false
-    },
-    "item.potion.xp.02": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/xp_02.webp",
-      "alt_text": "A small combat XP potion, tier 2",
-      "required": false
-    },
-    "item.potion.xp.03": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/xp_03.webp",
-      "alt_text": "A small combat XP potion, tier 3",
-      "required": false
-    },
-    "item.potion.xp.04": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/xp_04.webp",
-      "alt_text": "A small combat XP potion, tier 4",
-      "required": false
-    },
-    "item.potion.xp.05": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/xp_05.webp",
-      "alt_text": "A small combat XP potion, tier 5",
-      "required": false
-    },
-    "item.potion.xp.06": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/xp_06.webp",
-      "alt_text": "A small combat XP potion, tier 6",
-      "required": false
-    },
-    "item.potion.xp.07": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/xp_07.webp",
-      "alt_text": "A small combat XP potion, tier 7",
-      "required": false
-    },
-    "item.potion.xp.08": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/xp_08.webp",
-      "alt_text": "A small combat XP potion, tier 8",
-      "required": false
-    },
-    "item.potion.xp.09": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/xp_09.webp",
-      "alt_text": "A small combat XP potion, tier 9",
-      "required": false
-    },
-    "item.potion.xp.10": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/xp_10.webp",
-      "alt_text": "A small combat XP potion, tier 10",
-      "required": false
-    },
-    "item.potion.xp.11": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/xp_11.webp",
-      "alt_text": "A small combat XP potion, tier 11",
-      "required": false
-    },
-    "item.potion.xp.12": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/xp_12.webp",
-      "alt_text": "A small combat XP potion, tier 12",
-      "required": false
-    },
-    "item.potion.xp.13": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/xp_13.webp",
-      "alt_text": "A small combat XP potion, tier 13",
-      "required": false
-    },
-    "item.potion.xp.14": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/xp_14.webp",
-      "alt_text": "A small combat XP potion, tier 14",
-      "required": false
-    },
-    "item.potion.xp.15": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/xp_15.webp",
-      "alt_text": "A small combat XP potion, tier 15",
-      "required": false
-    },
-    "item.potion.max_hp.01": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/hp_01.webp",
-      "alt_text": "A small maximum HP potion, tier 1",
-      "required": false
-    },
-    "item.potion.max_hp.02": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/hp_02.webp",
-      "alt_text": "A small maximum HP potion, tier 2",
-      "required": false
-    },
-    "item.potion.max_hp.03": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/hp_03.webp",
-      "alt_text": "A small maximum HP potion, tier 3",
-      "required": false
-    },
-    "item.potion.max_hp.04": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/hp_04.webp",
-      "alt_text": "A small maximum HP potion, tier 4",
-      "required": false
-    },
-    "item.potion.max_hp.05": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/hp_05.webp",
-      "alt_text": "A small maximum HP potion, tier 5",
-      "required": false
-    },
-    "item.potion.max_hp.06": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/hp_06.webp",
-      "alt_text": "A small maximum HP potion, tier 6",
-      "required": false
-    },
-    "item.potion.max_hp.07": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/hp_07.webp",
-      "alt_text": "A small maximum HP potion, tier 7",
-      "required": false
-    },
-    "item.potion.max_hp.08": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/hp_08.webp",
-      "alt_text": "A small maximum HP potion, tier 8",
-      "required": false
-    },
-    "item.potion.max_hp.09": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/hp_09.webp",
-      "alt_text": "A small maximum HP potion, tier 9",
-      "required": false
-    },
-    "item.potion.max_hp.10": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/hp_10.webp",
-      "alt_text": "A small maximum HP potion, tier 10",
-      "required": false
-    },
-    "item.potion.max_hp.11": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/hp_11.webp",
-      "alt_text": "A small maximum HP potion, tier 11",
-      "required": false
-    },
-    "item.potion.max_hp.12": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/hp_12.webp",
-      "alt_text": "A small maximum HP potion, tier 12",
-      "required": false
-    },
-    "item.potion.max_hp.13": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/hp_13.webp",
-      "alt_text": "A small maximum HP potion, tier 13",
-      "required": false
-    },
-    "item.potion.max_hp.14": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/hp_14.webp",
-      "alt_text": "A small maximum HP potion, tier 14",
-      "required": false
-    },
-    "item.potion.max_hp.15": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/hp_15.webp",
-      "alt_text": "A small maximum HP potion, tier 15",
-      "required": false
-    },
-    "item.potion.healing.01": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/healing_01.webp",
-      "alt_text": "A small healing potion, tier 1",
-      "required": false
-    },
-    "item.potion.healing.02": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/healing_02.webp",
-      "alt_text": "A small healing potion, tier 2",
-      "required": false
-    },
-    "item.potion.healing.03": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/healing_03.webp",
-      "alt_text": "A small healing potion, tier 3",
-      "required": false
-    },
-    "item.potion.healing.04": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/healing_04.webp",
-      "alt_text": "A small healing potion, tier 4",
-      "required": false
-    },
-    "item.potion.healing.05": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/healing_05.webp",
-      "alt_text": "A small healing potion, tier 5",
-      "required": false
-    },
-    "item.potion.healing.06": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/healing_06.webp",
-      "alt_text": "A small healing potion, tier 6",
-      "required": false
-    },
-    "item.potion.healing.07": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/healing_07.webp",
-      "alt_text": "A small healing potion, tier 7",
-      "required": false
-    },
-    "item.potion.healing.08": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/healing_08.webp",
-      "alt_text": "A small healing potion, tier 8",
-      "required": false
-    },
-    "item.potion.healing.09": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/healing_09.webp",
-      "alt_text": "A small healing potion, tier 9",
-      "required": false
-    },
-    "item.potion.healing.10": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/healing_10.webp",
-      "alt_text": "A small healing potion, tier 10",
-      "required": false
-    },
-    "item.potion.healing.11": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/healing_11.webp",
-      "alt_text": "A small healing potion, tier 11",
-      "required": false
-    },
-    "item.potion.healing.12": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/healing_12.webp",
-      "alt_text": "A small healing potion, tier 12",
-      "required": false
-    },
-    "item.potion.healing.13": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/healing_13.webp",
-      "alt_text": "A small healing potion, tier 13",
-      "required": false
-    },
-    "item.potion.healing.14": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/healing_14.webp",
-      "alt_text": "A small healing potion, tier 14",
-      "required": false
-    },
-    "item.potion.healing.15": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/healing_15.webp",
-      "alt_text": "A small healing potion, tier 15",
-      "required": false
-    },
-    "item.potion.attack.01": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/atk_01.webp",
-      "alt_text": "A small attack potion, tier 1",
-      "required": false
-    },
-    "item.potion.attack.02": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/atk_02.webp",
-      "alt_text": "A small attack potion, tier 2",
-      "required": false
-    },
-    "item.potion.attack.03": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/atk_03.webp",
-      "alt_text": "A small attack potion, tier 3",
-      "required": false
-    },
-    "item.potion.attack.04": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/atk_04.webp",
-      "alt_text": "A small attack potion, tier 4",
-      "required": false
-    },
-    "item.potion.attack.05": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/atk_05.webp",
-      "alt_text": "A small attack potion, tier 5",
-      "required": false
-    },
-    "item.potion.attack.06": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/atk_06.webp",
-      "alt_text": "A small attack potion, tier 6",
-      "required": false
-    },
-    "item.potion.attack.07": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/atk_07.webp",
-      "alt_text": "A small attack potion, tier 7",
-      "required": false
-    },
-    "item.potion.attack.08": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/atk_08.webp",
-      "alt_text": "A small attack potion, tier 8",
-      "required": false
-    },
-    "item.potion.attack.09": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/atk_09.webp",
-      "alt_text": "A small attack potion, tier 9",
-      "required": false
-    },
-    "item.potion.attack.10": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/atk_10.webp",
-      "alt_text": "A small attack potion, tier 10",
-      "required": false
-    },
-    "item.potion.attack.11": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/atk_11.webp",
-      "alt_text": "A small attack potion, tier 11",
-      "required": false
-    },
-    "item.potion.attack.12": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/atk_12.webp",
-      "alt_text": "A small attack potion, tier 12",
-      "required": false
-    },
-    "item.potion.attack.13": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/atk_13.webp",
-      "alt_text": "A small attack potion, tier 13",
-      "required": false
-    },
-    "item.potion.attack.14": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/atk_14.webp",
-      "alt_text": "A small attack potion, tier 14",
-      "required": false
-    },
-    "item.potion.attack.15": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/atk_15.webp",
-      "alt_text": "A small attack potion, tier 15",
-      "required": false
-    },
-    "item.potion.luck.01": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/luck_01.webp",
-      "alt_text": "A small luck potion, tier 1",
-      "required": false
-    },
-    "item.potion.luck.02": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/luck_02.webp",
-      "alt_text": "A small luck potion, tier 2",
-      "required": false
-    },
-    "item.potion.luck.03": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/luck_03.webp",
-      "alt_text": "A small luck potion, tier 3",
-      "required": false
-    },
-    "item.potion.luck.04": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/luck_04.webp",
-      "alt_text": "A small luck potion, tier 4",
-      "required": false
-    },
-    "item.potion.luck.05": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/luck_05.webp",
-      "alt_text": "A small luck potion, tier 5",
-      "required": false
-    },
-    "item.potion.luck.06": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/luck_06.webp",
-      "alt_text": "A small luck potion, tier 6",
-      "required": false
-    },
-    "item.potion.luck.07": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/luck_07.webp",
-      "alt_text": "A small luck potion, tier 7",
-      "required": false
-    },
-    "item.potion.luck.08": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/luck_08.webp",
-      "alt_text": "A small luck potion, tier 8",
-      "required": false
-    },
-    "item.potion.luck.09": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/luck_09.webp",
-      "alt_text": "A small luck potion, tier 9",
-      "required": false
-    },
-    "item.potion.luck.10": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/luck_10.webp",
-      "alt_text": "A small luck potion, tier 10",
-      "required": false
-    },
-    "item.potion.luck.11": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/luck_11.webp",
-      "alt_text": "A small luck potion, tier 11",
-      "required": false
-    },
-    "item.potion.luck.12": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/luck_12.webp",
-      "alt_text": "A small luck potion, tier 12",
-      "required": false
-    },
-    "item.potion.luck.13": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/luck_13.webp",
-      "alt_text": "A small luck potion, tier 13",
-      "required": false
-    },
-    "item.potion.luck.14": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/luck_14.webp",
-      "alt_text": "A small luck potion, tier 14",
-      "required": false
-    },
-    "item.potion.luck.15": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/potions/luck_15.webp",
-      "alt_text": "A small luck potion, tier 15",
-      "required": false
-    },
-    "item.equipment.quilted_vest": {
-      "type": "thumbnail",
-      "path": "assets/discord/thumbnails/items/quilted_vest.webp",
-      "source_path": "assets/discord/thumbnails/items/quilted_vest.png",
-      "alt_text": "A quilted defensive vest",
-      "required": false
+      "source_path": "assets/discord/source/banners/user_profile.png"
     }
   }
 }

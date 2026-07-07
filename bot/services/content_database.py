@@ -426,6 +426,7 @@ def _load_dungeon_levels(session: Session, document: Any) -> int:
                 requires_previous_completion=_required_bool(
                     item, "requires_previous_completion", "dungeon_levels.json"
                 ),
+                thumbnail_asset=_optional_str(item, "thumbnail_asset", "dungeon_levels.json"),
             )
         )
     return len(rows)
@@ -459,6 +460,8 @@ def _load_enemies(session: Session, document: Any) -> int:
                 weight=_required_int(item, "weight", "enemies.json"),
                 enabled=_required_bool(item, "enabled", "enemies.json"),
                 rank=_required_str(item, "rank", "enemies.json"),
+                thumbnail_asset=_optional_str(item, "thumbnail_asset", "enemies.json"),
+                emoji_asset=_optional_str(item, "emoji_asset", "enemies.json"),
             )
         )
     return len(rows)
@@ -733,8 +736,8 @@ def _load_image_assets(session: Session, document: Any) -> int:
                 asset_key=str(asset_key),
                 type=_required_str(item, "type", "image_assets.json"),
                 path=_required_str(item, "path", "image_assets.json"),
-                alt_text=_required_str(item, "alt_text", "image_assets.json"),
-                required=_required_bool(item, "required", "image_assets.json"),
+                alt_text=_optional_str(item, "alt_text", "image_assets.json") or _default_asset_alt_text(str(asset_key)),
+                required=_optional_bool(item, "required", "image_assets.json", default=False),
                 source_path=_optional_str(item, "source_path", "image_assets.json"),
             )
         )
@@ -956,8 +959,10 @@ def _dump_dungeon_levels(session: Session) -> list[dict[str, Any]]:
             ("required_discoveries", "required_discoveries"),
             ("required_defense_wins", "required_defense_wins"),
             ("requires_previous_completion", "requires_previous_completion"),
+            ("thumbnail_asset", "thumbnail_asset"),
         ),
         "dungeon_levels.json",
+        optional_fields={"thumbnail_asset"},
     )
 
 
@@ -987,8 +992,11 @@ def _dump_enemies(session: Session) -> list[dict[str, Any]]:
             ("weight", "weight"),
             ("enabled", "enabled"),
             ("rank", "rank"),
+            ("thumbnail_asset", "thumbnail_asset"),
+            ("emoji_asset", "emoji_asset"),
         ),
         "enemies.json",
+        optional_fields={"thumbnail_asset", "emoji_asset"},
     )
 
 
@@ -1231,7 +1239,11 @@ def _dump_image_assets(session: Session) -> dict[str, Any]:
                 ("required", "required"),
                 ("source_path", "source_path"),
             ),
-            optional_fields={"source_path"},
+            optional_fields={"alt_text", "required", "source_path"},
+            default_optional_values={
+                "alt_text": _default_asset_alt_text(row.asset_key),
+                "required": False,
+            },
         )
         for row in rows
     }
@@ -1307,6 +1319,10 @@ def _payload_with(
 def _include_optional(target: dict[str, Any], key: str, value: Any) -> None:
     if value is not None:
         target[key] = value
+
+
+def _default_asset_alt_text(asset_key: str) -> str:
+    return asset_key.replace(".", " ").replace("_", " ").title()
 
 
 def _require_singleton(session: Session, model: type[Any], filename: str) -> Any:

@@ -78,7 +78,7 @@ def _refresh(session: Session) -> dict[str, Any]:
         dungeon_levels_document=_document_list(documents, "dungeon_levels.json"),
         enemies_document=_document_list(documents, "enemies.json"),
     )
-    for module in (dungeon_progression_service, exploration_service):
+    for module in (dungeon_progression_service, exploration_service, defense_embeds):
         module.DUNGEON_LEVELS = enemy_service.DUNGEON_LEVELS
     for module in (defense_service, dungeon_progression_service, exploration_view):
         module.DUNGEON_LEVEL_MIN = enemy_service.DUNGEON_LEVEL_MIN
@@ -106,6 +106,7 @@ def _refresh(session: Session) -> dict[str, Any]:
         module.LOCATION_SERVICE = location
     for module in (dungeon_commands, defense_embeds, exploration_view, shop_embeds):
         module.DEFAULT_DISCORD_ASSETS = assets
+    defense_embeds.DEFAULT_DISCORD_EMOJIS = emojis
     exploration_view.DEFAULT_DISCORD_EMOJIS = emojis
     admin_commands.DEFAULT_DISCORD_EMOJIS = emojis
     admin_commands.EquipmentService = equipment_service.EquipmentService

@@ -1,455 +1,555 @@
 {
   "version": 1,
   "emojis": {
+    "enemy.bandit": {
+      "name": "ds_e_bandit",
+      "path": "assets/discord/emojis/enemies/bandit.png",
+      "source_path": "assets/discord/source/enemies/bandit.png"
+    },
+    "enemy.blob": {
+      "name": "ds_e_blob",
+      "path": "assets/discord/emojis/enemies/blob.png",
+      "source_path": "assets/discord/source/enemies/blob.png"
+    },
+    "enemy.cave_spider": {
+      "name": "ds_e_cave_spider",
+      "path": "assets/discord/emojis/enemies/cave_spider.png",
+      "source_path": "assets/discord/source/enemies/spider.png"
+    },
+    "enemy.ghoul": {
+      "name": "ds_e_ghoul",
+      "path": "assets/discord/emojis/enemies/ghoul.png",
+      "source_path": "assets/discord/source/enemies/ghoul.png"
+    },
+    "enemy.giant": {
+      "name": "ds_e_giant",
+      "path": "assets/discord/emojis/enemies/giant.png",
+      "source_path": "assets/discord/source/enemies/giant.png"
+    },
+    "enemy.giant_rat": {
+      "name": "ds_e_giant_rat",
+      "path": "assets/discord/emojis/enemies/giant_rat.png",
+      "source_path": "assets/discord/source/enemies/rat.png"
+    },
+    "enemy.goblin": {
+      "name": "ds_e_goblin",
+      "path": "assets/discord/emojis/enemies/goblin.png",
+      "source_path": "assets/discord/source/enemies/goblin.png"
+    },
+    "enemy.hobgoblin": {
+      "name": "ds_e_hobgoblin",
+      "path": "assets/discord/emojis/enemies/hobgoblin.png",
+      "source_path": "assets/discord/source/enemies/hobgoblin.png"
+    },
+    "enemy.kobold": {
+      "name": "ds_e_kobold",
+      "path": "assets/discord/emojis/enemies/kobold.png",
+      "source_path": "assets/discord/source/enemies/kobold.png"
+    },
+    "enemy.lesser_dragon": {
+      "name": "ds_e_lesser_dragon",
+      "path": "assets/discord/emojis/enemies/lesser_dragon.png",
+      "source_path": "assets/discord/source/enemies/dragon.png"
+    },
+    "enemy.minotaur": {
+      "name": "ds_e_minotaur",
+      "path": "assets/discord/emojis/enemies/minotaur.png",
+      "source_path": "assets/discord/source/enemies/minotaur.png"
+    },
+    "enemy.necromancer": {
+      "name": "ds_e_necromancer",
+      "path": "assets/discord/emojis/enemies/necromancer.png",
+      "source_path": "assets/discord/source/enemies/necromancer.png"
+    },
+    "enemy.ogre": {
+      "name": "ds_e_ogre",
+      "path": "assets/discord/emojis/enemies/ogre.png",
+      "source_path": "assets/discord/source/enemies/ogre.png"
+    },
+    "enemy.orc": {
+      "name": "ds_e_orc",
+      "path": "assets/discord/emojis/enemies/orc.png",
+      "source_path": "assets/discord/source/enemies/orc.png"
+    },
+    "enemy.skeleton": {
+      "name": "ds_e_skeleton",
+      "path": "assets/discord/emojis/enemies/skeleton.png",
+      "source_path": "assets/discord/source/enemies/skeleton.png"
+    },
+    "enemy.stone_golem": {
+      "name": "ds_e_stone_golem",
+      "path": "assets/discord/emojis/enemies/stone_golem.png",
+      "source_path": "assets/discord/source/enemies/stone_golem.png"
+    },
+    "enemy.troll": {
+      "name": "ds_e_troll",
+      "path": "assets/discord/emojis/enemies/troll.png",
+      "source_path": "assets/discord/source/enemies/troll.png"
+    },
+    "enemy.vampire": {
+      "name": "ds_e_vampire",
+      "path": "assets/discord/emojis/enemies/vampire.png",
+      "source_path": "assets/discord/source/enemies/vampire.png"
+    },
+    "enemy.wraith": {
+      "name": "ds_e_wraith",
+      "path": "assets/discord/emojis/enemies/wraith.png",
+      "source_path": "assets/discord/source/enemies/wraith.png"
+    },
+    "enemy.zombie": {
+      "name": "ds_e_zombie",
+      "path": "assets/discord/emojis/enemies/zombie.png",
+      "source_path": "assets/discord/source/enemies/zombie.png"
+    },
     "item.potion.attack.01": {
       "name": "ds_p_atk_01",
-      "path": "assets/discord/emojis/items/potions/atk_01.png",
-      "alt_text": "A small attack potion emoji, tier 1",
-      "required": false
+      "path": "assets/discord/emojis/potions/atk_01.png",
+      "source_path": "assets/discord/source/potions/atk_01.png"
     },
     "item.potion.attack.02": {
       "name": "ds_p_atk_02",
-      "path": "assets/discord/emojis/items/potions/atk_02.png",
-      "alt_text": "A small attack potion emoji, tier 2",
-      "required": false
+      "path": "assets/discord/emojis/potions/atk_02.png",
+      "source_path": "assets/discord/source/potions/atk_02.png"
     },
     "item.potion.attack.03": {
       "name": "ds_p_atk_03",
-      "path": "assets/discord/emojis/items/potions/atk_03.png",
-      "alt_text": "A small attack potion emoji, tier 3",
-      "required": false
+      "path": "assets/discord/emojis/potions/atk_03.png",
+      "source_path": "assets/discord/source/potions/atk_03.png"
     },
     "item.potion.attack.04": {
       "name": "ds_p_atk_04",
-      "path": "assets/discord/emojis/items/potions/atk_04.png",
-      "alt_text": "A small attack potion emoji, tier 4",
-      "required": false
+      "path": "assets/discord/emojis/potions/atk_04.png",
+      "source_path": "assets/discord/source/potions/atk_04.png"
     },
     "item.potion.attack.05": {
       "name": "ds_p_atk_05",
-      "path": "assets/discord/emojis/items/potions/atk_05.png",
-      "alt_text": "A small attack potion emoji, tier 5",
-      "required": false
+      "path": "assets/discord/emojis/potions/atk_05.png",
+      "source_path": "assets/discord/source/potions/atk_05.png"
     },
     "item.potion.attack.06": {
       "name": "ds_p_atk_06",
-      "path": "assets/discord/emojis/items/potions/atk_06.png",
-      "alt_text": "A small attack potion emoji, tier 6",
-      "required": false
+      "path": "assets/discord/emojis/potions/atk_06.png",
+      "source_path": "assets/discord/source/potions/atk_06.png"
     },
     "item.potion.attack.07": {
       "name": "ds_p_atk_07",
-      "path": "assets/discord/emojis/items/potions/atk_07.png",
-      "alt_text": "A small attack potion emoji, tier 7",
-      "required": false
+      "path": "assets/discord/emojis/potions/atk_07.png",
+      "source_path": "assets/discord/source/potions/atk_07.png"
     },
     "item.potion.attack.08": {
       "name": "ds_p_atk_08",
-      "path": "assets/discord/emojis/items/potions/atk_08.png",
-      "alt_text": "A small attack potion emoji, tier 8",
-      "required": false
+      "path": "assets/discord/emojis/potions/atk_08.png",
+      "source_path": "assets/discord/source/potions/atk_08.png"
     },
     "item.potion.attack.09": {
       "name": "ds_p_atk_09",
-      "path": "assets/discord/emojis/items/potions/atk_09.png",
-      "alt_text": "A small attack potion emoji, tier 9",
-      "required": false
+      "path": "assets/discord/emojis/potions/atk_09.png",
+      "source_path": "assets/discord/source/potions/atk_09.png"
     },
     "item.potion.attack.10": {
       "name": "ds_p_atk_10",
-      "path": "assets/discord/emojis/items/potions/atk_10.png",
-      "alt_text": "A small attack potion emoji, tier 10",
-      "required": false
+      "path": "assets/discord/emojis/potions/atk_10.png",
+      "source_path": "assets/discord/source/potions/atk_10.png"
     },
     "item.potion.attack.11": {
       "name": "ds_p_atk_11",
-      "path": "assets/discord/emojis/items/potions/atk_11.png",
-      "alt_text": "A small attack potion emoji, tier 11",
-      "required": false
+      "path": "assets/discord/emojis/potions/atk_11.png",
+      "source_path": "assets/discord/source/potions/atk_11.png"
     },
     "item.potion.attack.12": {
       "name": "ds_p_atk_12",
-      "path": "assets/discord/emojis/items/potions/atk_12.png",
-      "alt_text": "A small attack potion emoji, tier 12",
-      "required": false
+      "path": "assets/discord/emojis/potions/atk_12.png",
+      "source_path": "assets/discord/source/potions/atk_12.png"
     },
     "item.potion.attack.13": {
       "name": "ds_p_atk_13",
-      "path": "assets/discord/emojis/items/potions/atk_13.png",
-      "alt_text": "A small attack potion emoji, tier 13",
-      "required": false
+      "path": "assets/discord/emojis/potions/atk_13.png",
+      "source_path": "assets/discord/source/potions/atk_13.png"
     },
     "item.potion.attack.14": {
       "name": "ds_p_atk_14",
-      "path": "assets/discord/emojis/items/potions/atk_14.png",
-      "alt_text": "A small attack potion emoji, tier 14",
-      "required": false
+      "path": "assets/discord/emojis/potions/atk_14.png",
+      "source_path": "assets/discord/source/potions/atk_14.png"
     },
     "item.potion.attack.15": {
       "name": "ds_p_atk_15",
-      "path": "assets/discord/emojis/items/potions/atk_15.png",
-      "alt_text": "A small attack potion emoji, tier 15",
-      "required": false
+      "path": "assets/discord/emojis/potions/atk_15.png",
+      "source_path": "assets/discord/source/potions/atk_15.png"
+    },
+    "item.potion.defense.01": {
+      "name": "ds_p_def_01",
+      "path": "assets/discord/emojis/potions/def_01.png",
+      "source_path": "assets/discord/source/potions/def_01.png"
+    },
+    "item.potion.defense.02": {
+      "name": "ds_p_def_02",
+      "path": "assets/discord/emojis/potions/def_02.png",
+      "source_path": "assets/discord/source/potions/def_02.png"
+    },
+    "item.potion.defense.03": {
+      "name": "ds_p_def_03",
+      "path": "assets/discord/emojis/potions/def_03.png",
+      "source_path": "assets/discord/source/potions/def_03.png"
+    },
+    "item.potion.defense.04": {
+      "name": "ds_p_def_04",
+      "path": "assets/discord/emojis/potions/def_04.png",
+      "source_path": "assets/discord/source/potions/def_04.png"
+    },
+    "item.potion.defense.05": {
+      "name": "ds_p_def_05",
+      "path": "assets/discord/emojis/potions/def_05.png",
+      "source_path": "assets/discord/source/potions/def_05.png"
+    },
+    "item.potion.defense.06": {
+      "name": "ds_p_def_06",
+      "path": "assets/discord/emojis/potions/def_06.png",
+      "source_path": "assets/discord/source/potions/def_06.png"
+    },
+    "item.potion.defense.07": {
+      "name": "ds_p_def_07",
+      "path": "assets/discord/emojis/potions/def_07.png",
+      "source_path": "assets/discord/source/potions/def_07.png"
+    },
+    "item.potion.defense.08": {
+      "name": "ds_p_def_08",
+      "path": "assets/discord/emojis/potions/def_08.png",
+      "source_path": "assets/discord/source/potions/def_08.png"
+    },
+    "item.potion.defense.09": {
+      "name": "ds_p_def_09",
+      "path": "assets/discord/emojis/potions/def_09.png",
+      "source_path": "assets/discord/source/potions/def_09.png"
+    },
+    "item.potion.defense.10": {
+      "name": "ds_p_def_10",
+      "path": "assets/discord/emojis/potions/def_10.png",
+      "source_path": "assets/discord/source/potions/def_10.png"
+    },
+    "item.potion.defense.11": {
+      "name": "ds_p_def_11",
+      "path": "assets/discord/emojis/potions/def_11.png",
+      "source_path": "assets/discord/source/potions/def_11.png"
+    },
+    "item.potion.defense.12": {
+      "name": "ds_p_def_12",
+      "path": "assets/discord/emojis/potions/def_12.png",
+      "source_path": "assets/discord/source/potions/def_12.png"
+    },
+    "item.potion.defense.13": {
+      "name": "ds_p_def_13",
+      "path": "assets/discord/emojis/potions/def_13.png",
+      "source_path": "assets/discord/source/potions/def_13.png"
+    },
+    "item.potion.defense.14": {
+      "name": "ds_p_def_14",
+      "path": "assets/discord/emojis/potions/def_14.png",
+      "source_path": "assets/discord/source/potions/def_14.png"
+    },
+    "item.potion.defense.15": {
+      "name": "ds_p_def_15",
+      "path": "assets/discord/emojis/potions/def_15.png",
+      "source_path": "assets/discord/source/potions/def_15.png"
     },
     "item.potion.healing.01": {
       "name": "ds_p_heal_01",
-      "path": "assets/discord/emojis/items/potions/healing_01.png",
-      "alt_text": "A small healing potion emoji, tier 1",
-      "required": false
+      "path": "assets/discord/emojis/potions/healing_01.png",
+      "source_path": "assets/discord/source/potions/healing_01.png"
     },
     "item.potion.healing.02": {
       "name": "ds_p_heal_02",
-      "path": "assets/discord/emojis/items/potions/healing_02.png",
-      "alt_text": "A small healing potion emoji, tier 2",
-      "required": false
+      "path": "assets/discord/emojis/potions/healing_02.png",
+      "source_path": "assets/discord/source/potions/healing_02.png"
     },
     "item.potion.healing.03": {
       "name": "ds_p_heal_03",
-      "path": "assets/discord/emojis/items/potions/healing_03.png",
-      "alt_text": "A small healing potion emoji, tier 3",
-      "required": false
+      "path": "assets/discord/emojis/potions/healing_03.png",
+      "source_path": "assets/discord/source/potions/healing_03.png"
     },
     "item.potion.healing.04": {
       "name": "ds_p_heal_04",
-      "path": "assets/discord/emojis/items/potions/healing_04.png",
-      "alt_text": "A small healing potion emoji, tier 4",
-      "required": false
+      "path": "assets/discord/emojis/potions/healing_04.png",
+      "source_path": "assets/discord/source/potions/healing_04.png"
     },
     "item.potion.healing.05": {
       "name": "ds_p_heal_05",
-      "path": "assets/discord/emojis/items/potions/healing_05.png",
-      "alt_text": "A small healing potion emoji, tier 5",
-      "required": false
+      "path": "assets/discord/emojis/potions/healing_05.png",
+      "source_path": "assets/discord/source/potions/healing_05.png"
     },
     "item.potion.healing.06": {
       "name": "ds_p_heal_06",
-      "path": "assets/discord/emojis/items/potions/healing_06.png",
-      "alt_text": "A small healing potion emoji, tier 6",
-      "required": false
+      "path": "assets/discord/emojis/potions/healing_06.png",
+      "source_path": "assets/discord/source/potions/healing_06.png"
     },
     "item.potion.healing.07": {
       "name": "ds_p_heal_07",
-      "path": "assets/discord/emojis/items/potions/healing_07.png",
-      "alt_text": "A small healing potion emoji, tier 7",
-      "required": false
+      "path": "assets/discord/emojis/potions/healing_07.png",
+      "source_path": "assets/discord/source/potions/healing_07.png"
     },
     "item.potion.healing.08": {
       "name": "ds_p_heal_08",
-      "path": "assets/discord/emojis/items/potions/healing_08.png",
-      "alt_text": "A small healing potion emoji, tier 8",
-      "required": false
+      "path": "assets/discord/emojis/potions/healing_08.png",
+      "source_path": "assets/discord/source/potions/healing_08.png"
     },
     "item.potion.healing.09": {
       "name": "ds_p_heal_09",
-      "path": "assets/discord/emojis/items/potions/healing_09.png",
-      "alt_text": "A small healing potion emoji, tier 9",
-      "required": false
+      "path": "assets/discord/emojis/potions/healing_09.png",
+      "source_path": "assets/discord/source/potions/healing_09.png"
     },
     "item.potion.healing.10": {
       "name": "ds_p_heal_10",
-      "path": "assets/discord/emojis/items/potions/healing_10.png",
-      "alt_text": "A small healing potion emoji, tier 10",
-      "required": false
+      "path": "assets/discord/emojis/potions/healing_10.png",
+      "source_path": "assets/discord/source/potions/healing_10.png"
     },
     "item.potion.healing.11": {
       "name": "ds_p_heal_11",
-      "path": "assets/discord/emojis/items/potions/healing_11.png",
-      "alt_text": "A small healing potion emoji, tier 11",
-      "required": false
+      "path": "assets/discord/emojis/potions/healing_11.png",
+      "source_path": "assets/discord/source/potions/healing_11.png"
     },
     "item.potion.healing.12": {
       "name": "ds_p_heal_12",
-      "path": "assets/discord/emojis/items/potions/healing_12.png",
-      "alt_text": "A small healing potion emoji, tier 12",
-      "required": false
+      "path": "assets/discord/emojis/potions/healing_12.png",
+      "source_path": "assets/discord/source/potions/healing_12.png"
     },
     "item.potion.healing.13": {
       "name": "ds_p_heal_13",
-      "path": "assets/discord/emojis/items/potions/healing_13.png",
-      "alt_text": "A small healing potion emoji, tier 13",
-      "required": false
+      "path": "assets/discord/emojis/potions/healing_13.png",
+      "source_path": "assets/discord/source/potions/healing_13.png"
     },
     "item.potion.healing.14": {
       "name": "ds_p_heal_14",
-      "path": "assets/discord/emojis/items/potions/healing_14.png",
-      "alt_text": "A small healing potion emoji, tier 14",
-      "required": false
+      "path": "assets/discord/emojis/potions/healing_14.png",
+      "source_path": "assets/discord/source/potions/healing_14.png"
     },
     "item.potion.healing.15": {
       "name": "ds_p_heal_15",
-      "path": "assets/discord/emojis/items/potions/healing_15.png",
-      "alt_text": "A small healing potion emoji, tier 15",
-      "required": false
+      "path": "assets/discord/emojis/potions/healing_15.png",
+      "source_path": "assets/discord/source/potions/healing_15.png"
     },
     "item.potion.luck.01": {
       "name": "ds_p_luck_01",
-      "path": "assets/discord/emojis/items/potions/luck_01.png",
-      "alt_text": "A small luck potion emoji, tier 1",
-      "required": false
+      "path": "assets/discord/emojis/potions/luck_01.png",
+      "source_path": "assets/discord/source/potions/luck_01.png"
     },
     "item.potion.luck.02": {
       "name": "ds_p_luck_02",
-      "path": "assets/discord/emojis/items/potions/luck_02.png",
-      "alt_text": "A small luck potion emoji, tier 2",
-      "required": false
+      "path": "assets/discord/emojis/potions/luck_02.png",
+      "source_path": "assets/discord/source/potions/luck_02.png"
     },
     "item.potion.luck.03": {
       "name": "ds_p_luck_03",
-      "path": "assets/discord/emojis/items/potions/luck_03.png",
-      "alt_text": "A small luck potion emoji, tier 3",
-      "required": false
+      "path": "assets/discord/emojis/potions/luck_03.png",
+      "source_path": "assets/discord/source/potions/luck_03.png"
     },
     "item.potion.luck.04": {
       "name": "ds_p_luck_04",
-      "path": "assets/discord/emojis/items/potions/luck_04.png",
-      "alt_text": "A small luck potion emoji, tier 4",
-      "required": false
+      "path": "assets/discord/emojis/potions/luck_04.png",
+      "source_path": "assets/discord/source/potions/luck_04.png"
     },
     "item.potion.luck.05": {
       "name": "ds_p_luck_05",
-      "path": "assets/discord/emojis/items/potions/luck_05.png",
-      "alt_text": "A small luck potion emoji, tier 5",
-      "required": false
+      "path": "assets/discord/emojis/potions/luck_05.png",
+      "source_path": "assets/discord/source/potions/luck_05.png"
     },
     "item.potion.luck.06": {
       "name": "ds_p_luck_06",
-      "path": "assets/discord/emojis/items/potions/luck_06.png",
-      "alt_text": "A small luck potion emoji, tier 6",
-      "required": false
+      "path": "assets/discord/emojis/potions/luck_06.png",
+      "source_path": "assets/discord/source/potions/luck_06.png"
     },
     "item.potion.luck.07": {
       "name": "ds_p_luck_07",
-      "path": "assets/discord/emojis/items/potions/luck_07.png",
-      "alt_text": "A small luck potion emoji, tier 7",
-      "required": false
+      "path": "assets/discord/emojis/potions/luck_07.png",
+      "source_path": "assets/discord/source/potions/luck_07.png"
     },
     "item.potion.luck.08": {
       "name": "ds_p_luck_08",
-      "path": "assets/discord/emojis/items/potions/luck_08.png",
-      "alt_text": "A small luck potion emoji, tier 8",
-      "required": false
+      "path": "assets/discord/emojis/potions/luck_08.png",
+      "source_path": "assets/discord/source/potions/luck_08.png"
     },
     "item.potion.luck.09": {
       "name": "ds_p_luck_09",
-      "path": "assets/discord/emojis/items/potions/luck_09.png",
-      "alt_text": "A small luck potion emoji, tier 9",
-      "required": false
+      "path": "assets/discord/emojis/potions/luck_09.png",
+      "source_path": "assets/discord/source/potions/luck_09.png"
     },
     "item.potion.luck.10": {
       "name": "ds_p_luck_10",
-      "path": "assets/discord/emojis/items/potions/luck_10.png",
-      "alt_text": "A small luck potion emoji, tier 10",
-      "required": false
+      "path": "assets/discord/emojis/potions/luck_10.png",
+      "source_path": "assets/discord/source/potions/luck_10.png"
     },
     "item.potion.luck.11": {
       "name": "ds_p_luck_11",
-      "path": "assets/discord/emojis/items/potions/luck_11.png",
-      "alt_text": "A small luck potion emoji, tier 11",
-      "required": false
+      "path": "assets/discord/emojis/potions/luck_11.png",
+      "source_path": "assets/discord/source/potions/luck_11.png"
     },
     "item.potion.luck.12": {
       "name": "ds_p_luck_12",
-      "path": "assets/discord/emojis/items/potions/luck_12.png",
-      "alt_text": "A small luck potion emoji, tier 12",
-      "required": false
+      "path": "assets/discord/emojis/potions/luck_12.png",
+      "source_path": "assets/discord/source/potions/luck_12.png"
     },
     "item.potion.luck.13": {
       "name": "ds_p_luck_13",
-      "path": "assets/discord/emojis/items/potions/luck_13.png",
-      "alt_text": "A small luck potion emoji, tier 13",
-      "required": false
+      "path": "assets/discord/emojis/potions/luck_13.png",
+      "source_path": "assets/discord/source/potions/luck_13.png"
     },
     "item.potion.luck.14": {
       "name": "ds_p_luck_14",
-      "path": "assets/discord/emojis/items/potions/luck_14.png",
-      "alt_text": "A small luck potion emoji, tier 14",
-      "required": false
+      "path": "assets/discord/emojis/potions/luck_14.png",
+      "source_path": "assets/discord/source/potions/luck_14.png"
     },
     "item.potion.luck.15": {
       "name": "ds_p_luck_15",
-      "path": "assets/discord/emojis/items/potions/luck_15.png",
-      "alt_text": "A small luck potion emoji, tier 15",
-      "required": false
+      "path": "assets/discord/emojis/potions/luck_15.png",
+      "source_path": "assets/discord/source/potions/luck_15.png"
     },
     "item.potion.max_hp.01": {
       "name": "ds_p_hp_01",
-      "path": "assets/discord/emojis/items/potions/hp_01.png",
-      "alt_text": "A small maximum HP potion emoji, tier 1",
-      "required": false
+      "path": "assets/discord/emojis/potions/hp_01.png",
+      "source_path": "assets/discord/source/potions/hp_01.png"
     },
     "item.potion.max_hp.02": {
       "name": "ds_p_hp_02",
-      "path": "assets/discord/emojis/items/potions/hp_02.png",
-      "alt_text": "A small maximum HP potion emoji, tier 2",
-      "required": false
+      "path": "assets/discord/emojis/potions/hp_02.png",
+      "source_path": "assets/discord/source/potions/hp_02.png"
     },
     "item.potion.max_hp.03": {
       "name": "ds_p_hp_03",
-      "path": "assets/discord/emojis/items/potions/hp_03.png",
-      "alt_text": "A small maximum HP potion emoji, tier 3",
-      "required": false
+      "path": "assets/discord/emojis/potions/hp_03.png",
+      "source_path": "assets/discord/source/potions/hp_03.png"
     },
     "item.potion.max_hp.04": {
       "name": "ds_p_hp_04",
-      "path": "assets/discord/emojis/items/potions/hp_04.png",
-      "alt_text": "A small maximum HP potion emoji, tier 4",
-      "required": false
+      "path": "assets/discord/emojis/potions/hp_04.png",
+      "source_path": "assets/discord/source/potions/hp_04.png"
     },
     "item.potion.max_hp.05": {
       "name": "ds_p_hp_05",
-      "path": "assets/discord/emojis/items/potions/hp_05.png",
-      "alt_text": "A small maximum HP potion emoji, tier 5",
-      "required": false
+      "path": "assets/discord/emojis/potions/hp_05.png",
+      "source_path": "assets/discord/source/potions/hp_05.png"
     },
     "item.potion.max_hp.06": {
       "name": "ds_p_hp_06",
-      "path": "assets/discord/emojis/items/potions/hp_06.png",
-      "alt_text": "A small maximum HP potion emoji, tier 6",
-      "required": false
+      "path": "assets/discord/emojis/potions/hp_06.png",
+      "source_path": "assets/discord/source/potions/hp_06.png"
     },
     "item.potion.max_hp.07": {
       "name": "ds_p_hp_07",
-      "path": "assets/discord/emojis/items/potions/hp_07.png",
-      "alt_text": "A small maximum HP potion emoji, tier 7",
-      "required": false
+      "path": "assets/discord/emojis/potions/hp_07.png",
+      "source_path": "assets/discord/source/potions/hp_07.png"
     },
     "item.potion.max_hp.08": {
       "name": "ds_p_hp_08",
-      "path": "assets/discord/emojis/items/potions/hp_08.png",
-      "alt_text": "A small maximum HP potion emoji, tier 8",
-      "required": false
+      "path": "assets/discord/emojis/potions/hp_08.png",
+      "source_path": "assets/discord/source/potions/hp_08.png"
     },
     "item.potion.max_hp.09": {
       "name": "ds_p_hp_09",
-      "path": "assets/discord/emojis/items/potions/hp_09.png",
-      "alt_text": "A small maximum HP potion emoji, tier 9",
-      "required": false
+      "path": "assets/discord/emojis/potions/hp_09.png",
+      "source_path": "assets/discord/source/potions/hp_09.png"
     },
     "item.potion.max_hp.10": {
       "name": "ds_p_hp_10",
-      "path": "assets/discord/emojis/items/potions/hp_10.png",
-      "alt_text": "A small maximum HP potion emoji, tier 10",
-      "required": false
+      "path": "assets/discord/emojis/potions/hp_10.png",
+      "source_path": "assets/discord/source/potions/hp_10.png"
     },
     "item.potion.max_hp.11": {
       "name": "ds_p_hp_11",
-      "path": "assets/discord/emojis/items/potions/hp_11.png",
-      "alt_text": "A small maximum HP potion emoji, tier 11",
-      "required": false
+      "path": "assets/discord/emojis/potions/hp_11.png",
+      "source_path": "assets/discord/source/potions/hp_11.png"
     },
     "item.potion.max_hp.12": {
       "name": "ds_p_hp_12",
-      "path": "assets/discord/emojis/items/potions/hp_12.png",
-      "alt_text": "A small maximum HP potion emoji, tier 12",
-      "required": false
+      "path": "assets/discord/emojis/potions/hp_12.png",
+      "source_path": "assets/discord/source/potions/hp_12.png"
     },
     "item.potion.max_hp.13": {
       "name": "ds_p_hp_13",
-      "path": "assets/discord/emojis/items/potions/hp_13.png",
-      "alt_text": "A small maximum HP potion emoji, tier 13",
-      "required": false
+      "path": "assets/discord/emojis/potions/hp_13.png",
+      "source_path": "assets/discord/source/potions/hp_13.png"
     },
     "item.potion.max_hp.14": {
       "name": "ds_p_hp_14",
-      "path": "assets/discord/emojis/items/potions/hp_14.png",
-      "alt_text": "A small maximum HP potion emoji, tier 14",
-      "required": false
+      "path": "assets/discord/emojis/potions/hp_14.png",
+      "source_path": "assets/discord/source/potions/hp_14.png"
     },
     "item.potion.max_hp.15": {
       "name": "ds_p_hp_15",
-      "path": "assets/discord/emojis/items/potions/hp_15.png",
-      "alt_text": "A small maximum HP potion emoji, tier 15",
-      "required": false
+      "path": "assets/discord/emojis/potions/hp_15.png",
+      "source_path": "assets/discord/source/potions/hp_15.png"
     },
     "item.potion.xp.01": {
       "name": "ds_p_xp_01",
-      "path": "assets/discord/emojis/items/potions/xp_01.png",
-      "alt_text": "A small combat XP potion emoji, tier 1",
-      "required": false
+      "path": "assets/discord/emojis/potions/xp_01.png",
+      "source_path": "assets/discord/source/potions/xp_01.png"
     },
     "item.potion.xp.02": {
       "name": "ds_p_xp_02",
-      "path": "assets/discord/emojis/items/potions/xp_02.png",
-      "alt_text": "A small combat XP potion emoji, tier 2",
-      "required": false
+      "path": "assets/discord/emojis/potions/xp_02.png",
+      "source_path": "assets/discord/source/potions/xp_02.png"
     },
     "item.potion.xp.03": {
       "name": "ds_p_xp_03",
-      "path": "assets/discord/emojis/items/potions/xp_03.png",
-      "alt_text": "A small combat XP potion emoji, tier 3",
-      "required": false
+      "path": "assets/discord/emojis/potions/xp_03.png",
+      "source_path": "assets/discord/source/potions/xp_03.png"
     },
     "item.potion.xp.04": {
       "name": "ds_p_xp_04",
-      "path": "assets/discord/emojis/items/potions/xp_04.png",
-      "alt_text": "A small combat XP potion emoji, tier 4",
-      "required": false
+      "path": "assets/discord/emojis/potions/xp_04.png",
+      "source_path": "assets/discord/source/potions/xp_04.png"
     },
     "item.potion.xp.05": {
       "name": "ds_p_xp_05",
-      "path": "assets/discord/emojis/items/potions/xp_05.png",
-      "alt_text": "A small combat XP potion emoji, tier 5",
-      "required": false
+      "path": "assets/discord/emojis/potions/xp_05.png",
+      "source_path": "assets/discord/source/potions/xp_05.png"
     },
     "item.potion.xp.06": {
       "name": "ds_p_xp_06",
-      "path": "assets/discord/emojis/items/potions/xp_06.png",
-      "alt_text": "A small combat XP potion emoji, tier 6",
-      "required": false
+      "path": "assets/discord/emojis/potions/xp_06.png",
+      "source_path": "assets/discord/source/potions/xp_06.png"
     },
     "item.potion.xp.07": {
       "name": "ds_p_xp_07",
-      "path": "assets/discord/emojis/items/potions/xp_07.png",
-      "alt_text": "A small combat XP potion emoji, tier 7",
-      "required": false
+      "path": "assets/discord/emojis/potions/xp_07.png",
+      "source_path": "assets/discord/source/potions/xp_07.png"
     },
     "item.potion.xp.08": {
       "name": "ds_p_xp_08",
-      "path": "assets/discord/emojis/items/potions/xp_08.png",
-      "alt_text": "A small combat XP potion emoji, tier 8",
-      "required": false
+      "path": "assets/discord/emojis/potions/xp_08.png",
+      "source_path": "assets/discord/source/potions/xp_08.png"
     },
     "item.potion.xp.09": {
       "name": "ds_p_xp_09",
-      "path": "assets/discord/emojis/items/potions/xp_09.png",
-      "alt_text": "A small combat XP potion emoji, tier 9",
-      "required": false
+      "path": "assets/discord/emojis/potions/xp_09.png",
+      "source_path": "assets/discord/source/potions/xp_09.png"
     },
     "item.potion.xp.10": {
       "name": "ds_p_xp_10",
-      "path": "assets/discord/emojis/items/potions/xp_10.png",
-      "alt_text": "A small combat XP potion emoji, tier 10",
-      "required": false
+      "path": "assets/discord/emojis/potions/xp_10.png",
+      "source_path": "assets/discord/source/potions/xp_10.png"
     },
     "item.potion.xp.11": {
       "name": "ds_p_xp_11",
-      "path": "assets/discord/emojis/items/potions/xp_11.png",
-      "alt_text": "A small combat XP potion emoji, tier 11",
-      "required": false
+      "path": "assets/discord/emojis/potions/xp_11.png",
+      "source_path": "assets/discord/source/potions/xp_11.png"
     },
     "item.potion.xp.12": {
       "name": "ds_p_xp_12",
-      "path": "assets/discord/emojis/items/potions/xp_12.png",
-      "alt_text": "A small combat XP potion emoji, tier 12",
-      "required": false
+      "path": "assets/discord/emojis/potions/xp_12.png",
+      "source_path": "assets/discord/source/potions/xp_12.png"
     },
     "item.potion.xp.13": {
       "name": "ds_p_xp_13",
-      "path": "assets/discord/emojis/items/potions/xp_13.png",
-      "alt_text": "A small combat XP potion emoji, tier 13",
-      "required": false
+      "path": "assets/discord/emojis/potions/xp_13.png",
+      "source_path": "assets/discord/source/potions/xp_13.png"
     },
     "item.potion.xp.14": {
       "name": "ds_p_xp_14",
-      "path": "assets/discord/emojis/items/potions/xp_14.png",
-      "alt_text": "A small combat XP potion emoji, tier 14",
-      "required": false
+      "path": "assets/discord/emojis/potions/xp_14.png",
+      "source_path": "assets/discord/source/potions/xp_14.png"
     },
     "item.potion.xp.15": {
       "name": "ds_p_xp_15",
-      "path": "assets/discord/emojis/items/potions/xp_15.png",
-      "alt_text": "A small combat XP potion emoji, tier 15",
-      "required": false
+      "path": "assets/discord/emojis/potions/xp_15.png",
+      "source_path": "assets/discord/source/potions/xp_15.png"
     }
   }
 }

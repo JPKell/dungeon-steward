@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import struct
+import zlib
 from dataclasses import replace
 from types import SimpleNamespace
 
@@ -12,9 +14,67 @@ from bot.services.discord_emoji_service import (
     EmojiDefinition,
     EmojiRegistry,
     EmojiRegistryEntry,
+    inspect_image_file,
+    load_emoji_catalog,
+    validate_emoji_file,
 )
 from bot.services.potion_service import PotionInventoryEntry, PotionService
 from bot.views.exploration import DefenseLevelSelectView, PotionConsumeSelect, _add_potion_inventory_fields, _potion_inventory_line
+from scripts.sync_assets import prepare_emoji_assets
+
+
+def test_emoji_catalog_defaults_and_source_preparation(tmp_path) -> None:
+    project = tmp_path / "project"
+    (project / "bot/content").mkdir(parents=True)
+    source = project / "assets/discord/source/rune_source.png"
+    output = project / "assets/discord/emojis/items/runes/rune_01.png"
+    source.parent.mkdir(parents=True)
+    _write_png(source, 300, 180)
+    catalog_path = project / "bot/content/emoji_assets.json"
+    catalog_path.write_text(
+        """
+{
+  "version": 1,
+  "emojis": {
+    "item.rune.01": {
+      "name": "ds_rune_01",
+      "path": "assets/discord/emojis/items/runes/rune_01.png",
+      "source_path": "assets/discord/source/rune_source.png"
+    }
+  }
+}
+""",
+        encoding="utf-8",
+    )
+
+    catalog = load_emoji_catalog(catalog_path, asset_root=project / "assets/discord")
+    definition = catalog.get("item.rune.01")
+
+    assert definition.alt_text == "ds rune 01"
+    assert definition.required is False
+    prepare_emoji_assets([definition])
+    validate_emoji_file(definition)
+    assert inspect_image_file(output).width == 128
+
+
+def _write_png(path, width: int, height: int) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    rows = []
+    for y in range(height):
+        line = bytearray()
+        for x in range(width):
+            line.extend(((x + y) % 255, (x * 2) % 255, (y * 3) % 255))
+        rows.append(bytes(line))
+    raw = b"".join(b"\x00" + row for row in rows)
+
+    def chunk(kind: bytes, data: bytes) -> bytes:
+        return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data) & 0xFFFFFFFF)
+
+    payload = b"\x89PNG\r\n\x1a\n"
+    payload += chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0))
+    payload += chunk(b"IDAT", zlib.compress(raw, 9))
+    payload += chunk(b"IEND", b"")
+    path.write_bytes(payload)
 
 
 def test_potion_inventory_line_uses_registered_custom_emoji(tmp_path) -> None:

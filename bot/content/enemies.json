@@ -20,7 +20,9 @@
     "xp_max": 34,
     "weight": 7,
     "enabled": true,
-    "rank": "dangerous"
+    "rank": "dangerous",
+    "thumbnail_asset": "enemy.bandit",
+    "emoji_asset": "enemy.bandit"
   },
   {
     "key": "blob",
@@ -43,7 +45,9 @@
     "xp_max": 11,
     "weight": 9,
     "enabled": true,
-    "rank": "common"
+    "rank": "common",
+    "thumbnail_asset": "enemy.blob",
+    "emoji_asset": "enemy.blob"
   },
   {
     "key": "cave_spider",
@@ -66,7 +70,9 @@
     "xp_max": 30,
     "weight": 7,
     "enabled": true,
-    "rank": "dangerous"
+    "rank": "dangerous",
+    "thumbnail_asset": "enemy.cave_spider",
+    "emoji_asset": "enemy.cave_spider"
   },
   {
     "key": "ghoul",
@@ -89,7 +95,9 @@
     "xp_max": 40,
     "weight": 6,
     "enabled": true,
-    "rank": "standard"
+    "rank": "standard",
+    "thumbnail_asset": "enemy.ghoul",
+    "emoji_asset": "enemy.ghoul"
   },
   {
     "key": "giant",
@@ -112,7 +120,9 @@
     "xp_max": 150,
     "weight": 2,
     "enabled": true,
-    "rank": "elite"
+    "rank": "elite",
+    "thumbnail_asset": "enemy.giant",
+    "emoji_asset": "enemy.giant"
   },
   {
     "key": "giant_rat",
@@ -135,7 +145,9 @@
     "xp_max": 8,
     "weight": 10,
     "enabled": true,
-    "rank": "common"
+    "rank": "common",
+    "thumbnail_asset": "enemy.giant_rat",
+    "emoji_asset": "enemy.giant_rat"
   },
   {
     "key": "goblin",
@@ -158,7 +170,9 @@
     "xp_max": 10,
     "weight": 12,
     "enabled": true,
-    "rank": "common"
+    "rank": "common",
+    "thumbnail_asset": "enemy.goblin",
+    "emoji_asset": "enemy.goblin"
   },
   {
     "key": "hobgoblin",
@@ -181,7 +195,9 @@
     "xp_max": 46,
     "weight": 6,
     "enabled": true,
-    "rank": "standard"
+    "rank": "standard",
+    "thumbnail_asset": "enemy.hobgoblin",
+    "emoji_asset": "enemy.hobgoblin"
   },
   {
     "key": "kobold",
@@ -204,7 +220,9 @@
     "xp_max": 14,
     "weight": 9,
     "enabled": true,
-    "rank": "common"
+    "rank": "common",
+    "thumbnail_asset": "enemy.kobold",
+    "emoji_asset": "enemy.kobold"
   },
   {
     "key": "lesser_dragon",
@@ -227,7 +245,9 @@
     "xp_max": 190,
     "weight": 1,
     "enabled": true,
-    "rank": "boss"
+    "rank": "boss",
+    "thumbnail_asset": "enemy.lesser_dragon",
+    "emoji_asset": "enemy.lesser_dragon"
   },
   {
     "key": "minotaur",
@@ -250,7 +270,9 @@
     "xp_max": 88,
     "weight": 4,
     "enabled": true,
-    "rank": "dangerous"
+    "rank": "dangerous",
+    "thumbnail_asset": "enemy.minotaur",
+    "emoji_asset": "enemy.minotaur"
   },
   {
     "key": "necromancer",
@@ -273,7 +295,9 @@
     "xp_max": 130,
     "weight": 3,
     "enabled": true,
-    "rank": "elite"
+    "rank": "elite",
+    "thumbnail_asset": "enemy.necromancer",
+    "emoji_asset": "enemy.necromancer"
   },
   {
     "key": "ogre",
@@ -296,7 +320,9 @@
     "xp_max": 66,
     "weight": 5,
     "enabled": true,
-    "rank": "dangerous"
+    "rank": "dangerous",
+    "thumbnail_asset": "enemy.ogre",
+    "emoji_asset": "enemy.ogre"
   },
   {
     "key": "orc",
@@ -319,7 +345,9 @@
     "xp_max": 28,
     "weight": 8,
     "enabled": true,
-    "rank": "standard"
+    "rank": "standard",
+    "thumbnail_asset": "enemy.orc",
+    "emoji_asset": "enemy.orc"
   },
   {
     "key": "skeleton",
@@ -342,7 +370,9 @@
     "xp_max": 16,
     "weight": 10,
     "enabled": true,
-    "rank": "common"
+    "rank": "common",
+    "thumbnail_asset": "enemy.skeleton",
+    "emoji_asset": "enemy.skeleton"
   },
   {
     "key": "stone_golem",
@@ -365,7 +395,9 @@
     "xp_max": 100,
     "weight": 3,
     "enabled": true,
-    "rank": "elite"
+    "rank": "elite",
+    "thumbnail_asset": "enemy.stone_golem",
+    "emoji_asset": "enemy.stone_golem"
   },
   {
     "key": "troll",
@@ -388,7 +420,9 @@
     "xp_max": 76,
     "weight": 4,
     "enabled": true,
-    "rank": "dangerous"
+    "rank": "dangerous",
+    "thumbnail_asset": "enemy.troll",
+    "emoji_asset": "enemy.troll"
   },
   {
     "key": "vampire",
@@ -411,7 +445,9 @@
     "xp_max": 115,
     "weight": 3,
     "enabled": true,
-    "rank": "elite"
+    "rank": "elite",
+    "thumbnail_asset": "enemy.vampire",
+    "emoji_asset": "enemy.vampire"
   },
   {
     "key": "wraith",
@@ -434,7 +470,9 @@
     "xp_max": 55,
     "weight": 5,
     "enabled": true,
-    "rank": "dangerous"
+    "rank": "dangerous",
+    "thumbnail_asset": "enemy.wraith",
+    "emoji_asset": "enemy.wraith"
   },
   {
     "key": "zombie",
@@ -457,6 +495,8 @@
     "xp_max": 26,
     "weight": 7,
     "enabled": true,
-    "rank": "standard"
+    "rank": "standard",
+    "thumbnail_asset": "enemy.zombie",
+    "emoji_asset": "enemy.zombie"
   }
 ]

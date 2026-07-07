@@ -4,7 +4,6 @@ import argparse
 import json
 import os
 from pathlib import Path
-from typing import Any
 
 from alembic import command
 from alembic.config import Config

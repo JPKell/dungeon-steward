@@ -17,6 +17,7 @@ from bot.services.discord_asset_service import (
 from bot.services.discord_emoji_service import (
     load_emoji_catalog,
     load_emoji_registry,
+    validate_emoji_asset_references,
     validate_emoji_registry_integrity,
 )
 from bot.services.location_service import LocationService
@@ -331,6 +332,7 @@ def validate() -> dict[str, Any]:
             image_catalog,
             image_registry,
             require_required_assets=require_registry,
+            require_current_files=require_registry,
         )
     except Exception as exc:
         errors.append(f"image assets failed validation: {exc}")
@@ -341,7 +343,8 @@ def validate() -> dict[str, Any]:
     try:
         emoji_catalog = load_emoji_catalog(BASE / "emoji_assets.json", validate_files=True)
         emoji_registry = load_emoji_registry(BASE / "emoji_asset_registry.json")
-        validate_emoji_registry_integrity(emoji_catalog, emoji_registry)
+        validate_emoji_asset_references(emoji_catalog, BASE)
+        validate_emoji_registry_integrity(emoji_catalog, emoji_registry, require_current_files=require_registry)
     except Exception as exc:
         errors.append(f"emoji assets failed validation: {exc}")
 
