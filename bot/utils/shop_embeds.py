@@ -47,7 +47,7 @@ EMPTY_EQUIPMENT_EMOJI_ASSETS = {
     "helm": "equipment.helm_helm",
     "armor": "equipment.armor_cuirass",
     "gloves": "equipment.gloves_gauntlets",
-    "boots": "equipment.armor_plate",
+    "boots": "equipment.boots_greaves",
     "trinket": "equipment.trinket_token",
 }
 
@@ -95,7 +95,6 @@ def build_purchase_embed(
         "Equipment Purchased",
         (
             f"Equipped {purchase.item.name} in your {purchase.item.slot} slot. "
-            f"Refreshes today at {discord_timestamp(purchase.stock.refreshes_at, 't')}."
         ),
         colour=WARM_GOLD,
     )
@@ -104,7 +103,7 @@ def build_purchase_embed(
     if purchase.trade_in_value > 0:
         response.add_field(name="Trade", value=format_gold(purchase.trade_in_value))
     response.add_field(name="Remaining", value=format_gold(purchase.remaining_gold))
-    response.add_field(name="Stats", value=format_item_stats(purchase.item))
+    response.add_field(name="Stats", value=format_purchase_item_stats(purchase.item), inline=False)
     if purchase.item.description:
         response.add_field(name="Description", value=purchase.item.description, inline=False)
     if purchase.replaced_item is not None:
@@ -125,6 +124,10 @@ def format_item_line(index: int, item: EquipmentItem) -> str:
 
 def format_item_stats(item: EquipmentItem) -> str:
     return f"HP {item.hp} | ATK {item.attack} | DEF {item.defense} | SPD {item.speed}"
+
+
+def format_purchase_item_stats(item: EquipmentItem) -> str:
+    return f"HP | ATK | DEF | SPD\n{item.hp} | {item.attack} | {item.defense} | {item.speed}"
 
 
 def format_gold(amount: int, emoji_service: DiscordEmojiService | None = None) -> str:

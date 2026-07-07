@@ -366,6 +366,9 @@ def test_purchase_embed_uses_embed_timestamp_for_refreshes() -> None:
     assert "Refreshes today at" in embed.description
     assert "<t:" in embed.description
     assert embed.footer.text == "Shop refreshes"
+    stats_field = next(field for field in embed.fields if field.name == "Stats")
+    assert stats_field.value == "HP | ATK | DEF | SPD\n4 | 8 | 3 | 2"
+    assert stats_field.inline is False
 
 
 def test_purchase_embed_shows_trade_in_discount() -> None:
