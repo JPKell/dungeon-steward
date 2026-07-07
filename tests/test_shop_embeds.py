@@ -79,7 +79,7 @@ def test_shop_embed_shows_equipped_stats_and_rarity_badges() -> None:
     assert embed.footer.text is not None
     footer_lines = embed.footer.text.splitlines()
     assert footer_lines[0] == "Buying an item equips it immediately and replaces the matching slot."
-    assert footer_lines[1] == "Items you already own are hidden."
+    assert footer_lines[1] == "Items you already own are hidden in shop."
     assert footer_lines[2].startswith("Combat Level 5 stock. Refreshes today at ")
     assert "<t:" not in footer_lines[2]
     assert all(field.name != "Stock" for field in embed.fields)

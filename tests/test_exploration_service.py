@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from datetime import timedelta
-from types import SimpleNamespace
 
 import pytest
 from sqlalchemy import func, select
@@ -23,7 +22,6 @@ from bot.services.exploration_service import (
     ExplorationNotOwnedError,
     ExplorationService,
 )
-from bot.views.exploration import DungeonActionView
 from tests.conftest import make_player
 
 
@@ -236,25 +234,3 @@ def test_naive_expires_at_is_treated_as_utc(db, now):
             acting_user_id=1,
             now=now + timedelta(minutes=6),
         )
-
-
-@pytest.mark.asyncio
-async def test_explore_button_starts_exploration_directly():
-    started_levels: list[tuple[object, int]] = []
-
-    class RecordingActionView(DungeonActionView):
-        async def start_exploration(self, interaction, dungeon_level: int = 1) -> None:
-            started_levels.append((interaction, dungeon_level))
-
-    view = RecordingActionView(
-        session_factory=object(),
-        exploration_service=object(),
-        defense_service=object(),
-        shop_service=object(),
-        owner_user_id=1,
-    )
-    interaction = SimpleNamespace(guild_id=10)
-
-    await view.show_exploration_selector(interaction)
-
-    assert started_levels == [(interaction, 1)]

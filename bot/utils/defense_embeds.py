@@ -60,16 +60,14 @@ def build_defense_report_embed(
         name="Battles",
         value=(
             f"Scheduled: {report.scheduled_battles}\n"
-            f"Completed: {report.completed_battles}\n"
-            f"Unresolved: {report.unresolved_attacks}"
+            f"Completed: {report.completed_battles}"
         ),
     )
     response.add_field(
         name="Results",
         value=(
             f"Victories: {report.victories}\n"
-            f"Defeats: {report.defeats}\n"
-            f"Draws: {report.draws}"
+            f"Defeats: {report.defeats}"
         ),
     )
     response.add_field(
@@ -111,8 +109,6 @@ def build_defense_report_embed(
         value=_enemy_summary(report.enemies_encountered),
         inline=False,
     )
-    if report.notable_battles:
-        response.add_field(name="Notable Battles", value="\n".join(report.notable_battles), inline=False)
     return response
 
 

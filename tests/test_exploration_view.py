@@ -71,6 +71,92 @@ class DummyContextSessionFactory:
         return DummySessionContext()
 
 
+def _defense_report(**overrides):
+    values = {
+        "dungeon_level": 1,
+        "reason": "duration cap",
+        "elapsed_seconds": 60,
+        "capped_seconds": 60,
+        "scheduled_battles": 1,
+        "completed_battles": 1,
+        "unresolved_attacks": 0,
+        "victories": 1,
+        "defeats": 0,
+        "draws": 0,
+        "combat_xp_earned": 10,
+        "gold_earned": 5,
+        "combat_levels_gained": 0,
+        "stat_points_earned": 0,
+        "starting_hp": 10,
+        "ending_hp": 8,
+        "max_hp": 10,
+        "potion_effects": (),
+        "potion_healing": 0,
+        "potion_luck_procs": 0,
+        "potion_bonus_combat_xp": 0,
+        "max_hp_effect_expired": False,
+        "enemies_encountered": {"Slime": 1},
+        "notable_battles": (),
+    }
+    values.update(overrides)
+    return SimpleNamespace(**values)
+
+
+class DummyPlayers:
+    def __init__(self) -> None:
+        self.player = Player(discord_user_id=1, guild_id=10, display_name="Scout", is_defending=True)
+
+    def get_or_create(self, *_args, **_kwargs) -> Player:
+        return self.player
+
+
+class SelectorPlayers:
+    def __init__(self, player: Player) -> None:
+        self.player = player
+
+    def get_or_create(self, *_args, **_kwargs) -> Player:
+        return self.player
+
+
+class EmptyPotionService:
+    def inventory_entries(self, *_args, **_kwargs) -> tuple:
+        return ()
+
+
+class SelectorExplorationService:
+    def __init__(self, player: Player) -> None:
+        self.players = SelectorPlayers(player)
+        self.potions = EmptyPotionService()
+
+
+class ExpiredDefenseService:
+    def __init__(self, report) -> None:
+        self.report = report
+        self.calls = 0
+
+    def resolve_if_expired(self, *_args, **_kwargs):
+        self.calls += 1
+        return self.report
+
+
+class DummyResponse:
+    def __init__(self) -> None:
+        self.edits: list[dict[str, object]] = []
+        self.messages: list[dict[str, object]] = []
+        self._done = False
+
+    def is_done(self) -> bool:
+        return self._done
+
+    async def edit_message(self, **kwargs) -> None:
+        self.edits.append(kwargs)
+        self._done = True
+
+    async def send_message(self, *args, **kwargs) -> None:
+        self.messages.append({"args": args, **kwargs})
+        self._done = True
+
+
 def test_exploration_choices_are_shuffled(monkeypatch: pytest.MonkeyPatch) -> None:
     choices = [
         DummyChoice("hero", "Heroic Action"),
@@ -156,32 +242,7 @@ def test_defending_result_view_can_suppress_return_button() -> None:
 
 @pytest.mark.asyncio
 async def test_resolving_defense_before_explore_stops_before_starting_exploration() -> None:
-    report = SimpleNamespace(
-        dungeon_level=1,
-        reason="exploring",
-        elapsed_seconds=60,
-        capped_seconds=60,
-        scheduled_battles=1,
-        completed_battles=1,
-        unresolved_attacks=0,
-        victories=1,
-        defeats=0,
-        draws=0,
-        combat_xp_earned=10,
-        gold_earned=5,
-        combat_levels_gained=0,
-        stat_points_earned=0,
-        starting_hp=10,
-        ending_hp=8,
-        max_hp=10,
-        potion_effects=(),
-        potion_healing=0,
-        potion_luck_procs=0,
-        potion_bonus_combat_xp=0,
-        max_hp_effect_expired=False,
-        enemies_encountered={"Slime": 1},
-        notable_battles=(),
-    )
+    report = _defense_report(reason="exploring")
 
     class ResolvingDefenseService:
         def resolve_before_explore(self, *_args, **_kwargs):
@@ -216,6 +277,69 @@ async def test_resolving_defense_before_explore_stops_before_starting_exploratio
     assert labels == ["Explore", "Defend", "Steward's Hall"]
 
 
+@pytest.mark.asyncio
+async def test_expired_defense_blocks_shop_with_continue_button() -> None:
+    report = _defense_report()
+    defense_service = ExpiredDefenseService(report)
+    response = DummyResponse()
+    interaction = SimpleNamespace(
+        guild_id=10,
+        user=SimpleNamespace(id=1, display_name="Scout"),
+        response=response,
+    )
+    view = PostExplorationView(
+        session_factory=DummyContextSessionFactory(),
+        exploration_service=SimpleNamespace(players=DummyPlayers()),
+        defense_service=defense_service,
+        shop_service=DummyShopService(),
+        owner_user_id=1,
+        is_defending=True,
+    )
+
+    await view.show_shop(interaction)
+
+    assert defense_service.calls == 1
+    assert response.edits[0]["embed"].title == "Defense Complete"
+    report_view = response.edits[0]["view"]
+    labels = [button.label for button in report_view.children if isinstance(button, discord.ui.Button)]
+    assert labels == ["Explore", "Defend", "Steward's Hall", "Continue to Shop"]
+
+
+@pytest.mark.asyncio
+async def test_expired_defense_blocks_hall_with_continue_button() -> None:
+    report = _defense_report()
+    defense_service = ExpiredDefenseService(report)
+    response = DummyResponse()
+    interaction = SimpleNamespace(
+        guild_id=10,
+        user=SimpleNamespace(id=1, display_name="Scout"),
+        response=response,
+    )
+    view = ShopView(
+        session_factory=DummyContextSessionFactory(),
+        exploration_service=SimpleNamespace(players=DummyPlayers()),
+        defense_service=defense_service,
+        shop_service=DummyShopService(),
+        owner_user_id=1,
+        is_defending=True,
+        stock=ShopStock(
+            combat_level=1,
+            generated_at=datetime(2026, 7, 3, 12, 0, tzinfo=UTC),
+            refreshes_at=datetime(2026, 7, 3, 13, 0, tzinfo=UTC),
+            items=(),
+        ),
+        player=Player(discord_user_id=1, guild_id=10, display_name="Scout"),
+    )
+
+    await view.show_hall(interaction)
+
+    assert defense_service.calls == 1
+    assert response.edits[0]["embed"].title == "Defense Complete"
+    report_view = response.edits[0]["view"]
+    labels = [button.label for button in report_view.children if isinstance(button, discord.ui.Button)]
+    assert labels == ["Explore", "Defend", "Steward's Hall", "Continue to Hall"]
+
+
 def test_dungeon_level_selectors_do_not_include_return_buttons() -> None:
     options = [discord.SelectOption(label="Level 1", value="1")]
     explore = ExploreLevelSelectView(
@@ -242,6 +366,88 @@ def test_dungeon_level_selectors_do_not_include_return_buttons() -> None:
         assert "Return from Dungeon" not in labels
         assert "Stop Defending" not in labels
         assert "Defend" not in labels
+
+
+@pytest.mark.asyncio
+async def test_explore_button_opens_selector_with_descend_confirmation() -> None:
+    player = Player(
+        discord_user_id=1,
+        guild_id=10,
+        display_name="Scout",
+        highest_unlocked_dungeon_level=2,
+    )
+    response = DummyResponse()
+    interaction = SimpleNamespace(
+        guild_id=10,
+        user=SimpleNamespace(id=1, display_name="Scout"),
+        response=response,
+    )
+    view = StewardsHallView(
+        session_factory=DummyContextSessionFactory(),
+        exploration_service=SelectorExplorationService(player),
+        defense_service=DummyDefenseService(),
+        shop_service=DummyShopService(),
+        owner_user_id=1,
+    )
+
+    await view.show_exploration_selector(interaction)
+
+    assert response.edits[0]["embed"].title == "Choose Dungeon Level"
+    selector_view = response.edits[0]["view"]
+    descend = next(
+        child
+        for child in selector_view.children
+        if isinstance(child, discord.ui.Button) and child.label == "Descend into the dungeon"
+    )
+    level_select = next(child for child in selector_view.children if isinstance(child, discord.ui.Select))
+    assert descend.disabled is True
+    assert [option.label for option in level_select.options] == ["Level 1", "Level 2", "Level 3 locked"]
+
+
+@pytest.mark.asyncio
+async def test_explore_level_selection_waits_for_descend_button() -> None:
+    player = Player(
+        discord_user_id=1,
+        guild_id=10,
+        display_name="Scout",
+        highest_unlocked_dungeon_level=2,
+    )
+    view = ExploreLevelSelectView(
+        session_factory=DummySessionFactory(),
+        exploration_service=DummyExplorationService(),
+        defense_service=DummyDefenseService(),
+        shop_service=DummyShopService(),
+        owner_user_id=1,
+        options=_dungeon_select_options(player),
+    )
+    level_select = next(child for child in view.children if isinstance(child, discord.ui.Select))
+    descend = next(
+        child
+        for child in view.children
+        if isinstance(child, discord.ui.Button) and child.label == "Descend into the dungeon"
+    )
+    started: list[tuple[object, int]] = []
+
+    async def start_exploration(interaction, dungeon_level: int = 1) -> None:
+        started.append((interaction, dungeon_level))
+
+    view.start_exploration = start_exploration
+    response = DummyResponse()
+    selection_interaction = SimpleNamespace(response=response)
+
+    level_select._values = ["2"]
+    await level_select.callback(selection_interaction)
+
+    assert started == []
+    assert response.edits == [{"view": view}]
+    assert view.selected_dungeon_level == 2
+    assert descend.disabled is False
+    assert level_select.placeholder == "Level 2 selected"
+
+    descend_interaction = SimpleNamespace(response=DummyResponse())
+    await descend.callback(descend_interaction)
+
+    assert started == [(descend_interaction, 2)]
 
 
 def test_dungeon_level_options_show_unlocked_levels_and_first_locked_only() -> None:
@@ -284,20 +490,21 @@ def test_hall_embed_uses_community_dungeon_details_without_action_list() -> None
     assert hall.fields[0].value == "**Shared community dungeon**"
     assert fields["Level"] == "4"
     assert fields["Gold"] == "1200"
-    assert fields["Hero / Villain Influence"] == "7 : 3"
     assert fields["Stability"] == "82/100"
+    assert fields["Hero / Villain Influence"] == "7 : 3"
     assert fields["Weekly Objective: Map the Moving Halls"].splitlines()[0] == "Complete 100 explorations."
     assert fields["Weekly Objective: Map the Moving Halls"].splitlines()[1].startswith("Progress: 17/100 (17%) | Ends <t:")
     assert "Weekly Objective" not in fields
     assert "Progress" not in fields
-    assert [field.name for field in hall.fields[:7]] == [
+    assert [field.name for field in hall.fields[:8]] == [
         "\u200b",
         "Level",
         "Gold",
-        "\u200b",
-        "Hero / Villain Influence",
         "Stability",
+        "Hero / Villain Influence",
         "Weekly Objective: Map the Moving Halls",
+        "Mode",
+        "Contributors",
     ]
 
 
@@ -335,6 +542,7 @@ def test_hall_keeps_inventory_button_but_defense_selector_uses_potion_dropdown()
     hall_labels = [button.label for button in hall.children if isinstance(button, discord.ui.Button)]
 
     assert "Inventory" in hall_labels
+    assert "Energy" not in hall_labels
     assert "Dungeon" not in hall_labels
     assert "Inventory" not in [button.label for button in defense.children if isinstance(button, discord.ui.Button)]
 

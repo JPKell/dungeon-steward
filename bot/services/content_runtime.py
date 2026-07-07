@@ -33,6 +33,7 @@ def _refresh(session: Session) -> dict[str, Any]:
     documents = load_content_documents_from_database(session)
 
     from bot import config
+    from bot.commands import admin as admin_commands
     from bot.commands import dungeon as dungeon_commands
     from bot.services import (
         combat_service,
@@ -106,6 +107,9 @@ def _refresh(session: Session) -> dict[str, Any]:
     for module in (dungeon_commands, defense_embeds, exploration_view, shop_embeds):
         module.DEFAULT_DISCORD_ASSETS = assets
     exploration_view.DEFAULT_DISCORD_EMOJIS = emojis
+    admin_commands.DEFAULT_DISCORD_EMOJIS = emojis
+    admin_commands.EquipmentService = equipment_service.EquipmentService
+    admin_commands.PotionService = potion_service.PotionService
     exploration_view.PotionService = potion_service.PotionService
     dungeon_commands.PotionService = potion_service.PotionService
     dungeon_commands.EncounterService = encounter_service.EncounterService

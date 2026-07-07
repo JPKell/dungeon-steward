@@ -41,7 +41,7 @@ from bot.utils.defense_embeds import build_defense_report_embed, build_defense_s
 from bot.utils.embeds import DEEP_NAVY, MIDNIGHT_BLUE, WARM_GOLD, embed
 from bot.utils.profile_embeds import build_profile_embed
 from bot.utils.shop_embeds import build_purchase_embed, build_shop_embed
-from bot.utils.time import discord_relative_timestamp, human_duration
+from bot.utils.time import human_duration
 from bot.views.exploration import (
     STAT_ALLOCATION_PROFILE,
     STAT_ALLOCATION_SUMMARY,
@@ -111,7 +111,13 @@ class DungeonGroup(app_commands.Group):
             )
         return bool(value)
 
-    def _defense_report_view(self, user_id: int, report) -> DefenseResolvedActionView:
+    def _defense_report_view(
+        self,
+        user_id: int,
+        report,
+        *,
+        continue_destination: str | None = None,
+    ) -> DefenseResolvedActionView:
         stat_context = STAT_ALLOCATION_SUMMARY if report.stat_points_earned > 0 else None
         return DefenseResolvedActionView(
             session_factory=self.session_factory,
@@ -120,6 +126,7 @@ class DungeonGroup(app_commands.Group):
             shop_service=self.shop,
             owner_user_id=user_id,
             stat_allocation_context=stat_context,
+            continue_destination=continue_destination,
         )
 
     async def _resolve_defense_before_explore(self, interaction: discord.Interaction) -> bool:
@@ -152,11 +159,53 @@ class DungeonGroup(app_commands.Group):
             return False
         return True
 
+    async def _resolve_expired_defense_before_screen(
+        self,
+        interaction: discord.Interaction,
+        *,
+        continue_destination: str,
+        ephemeral: bool = False,
+    ) -> bool:
+        if interaction.guild_id is None:
+            return True
+        try:
+            with self.session_factory() as db:
+                player = self.players.get_or_create(
+                    db,
+                    guild_id=interaction.guild_id,
+                    user_id=interaction.user.id,
+                    display_name=interaction.user.display_name,
+                )
+                report = self.defense.resolve_if_expired(db, player)
+                db.commit()
+        except Exception:
+            log.exception("Failed to resolve expired defense before screen")
+            await interaction.response.send_message(
+                "The defense ledger would not close cleanly. Please try again.",
+                ephemeral=True,
+            )
+            return False
+        if report is None:
+            return True
+        report_embed = build_defense_report_embed(report)
+        await interaction.response.send_message(
+            **banner_first_message_payload(report_embed),
+            view=self._defense_report_view(
+                interaction.user.id,
+                report,
+                continue_destination=continue_destination,
+            ),
+            ephemeral=ephemeral,
+        )
+        return False
+
     @app_commands.command(name="hall", description="Visit the Steward's Hall to choose your next dungeon action")
     async def hall(self, interaction: discord.Interaction) -> None:
         if interaction.guild_id is None:
             hall_embed = build_hall_embed()
         else:
+            if not await self._resolve_expired_defense_before_screen(interaction, continue_destination="hall"):
+                return
             with self.session_factory() as db:
                 dungeon = self.players.get_or_create_guild(db, guild_id=interaction.guild_id)
                 objective = self.weekly.get_active(db, guild_id=interaction.guild_id)
@@ -318,36 +367,6 @@ class DungeonGroup(app_commands.Group):
             ),
         )
 
-    @app_commands.command(name="energy", description="Check your dungeon energy")
-    async def energy_command(self, interaction: discord.Interaction) -> None:
-        if interaction.guild_id is None:
-            await interaction.response.send_message("Energy is server-specific.", ephemeral=True)
-            return
-        with self.session_factory() as db:
-            player = self.players.get_or_create(
-                db,
-                guild_id=interaction.guild_id,
-                user_id=interaction.user.id,
-                display_name=interaction.user.display_name,
-            )
-            state = self.energy.recalculate(player)
-            cooldown_seconds = get_explore_cooldown_minutes(player.explore_level) * 60
-            action_is_defending = player.is_defending
-            db.commit()
-        response = embed("Dungeon Energy", colour=MIDNIGHT_BLUE)
-        response.add_field(name="Energy", value=f"{state.energy}/{MAX_ENERGY}")
-        response.add_field(name="Regeneration", value=f"1 energy every {human_duration(cooldown_seconds)}")
-        response.add_field(name="Explorations Available", value=str(state.energy))
-        response.add_field(name="Next Energy", value=discord_relative_timestamp(state.next_energy_at))
-        response.add_field(name="Full Energy", value=discord_relative_timestamp(state.full_energy_at))
-        response.set_footer(text=f"Energy cap: {MAX_ENERGY} | Explore Level: {player.explore_level}")
-        DEFAULT_DISCORD_ASSETS.apply_banner(response, LOCATION_SERVICE.banner_asset_for("dungeon_energy"))
-        await interaction.response.send_message(
-            **banner_first_message_payload(response),
-            view=self._action_view(interaction.user.id, is_defending=action_is_defending),
-            ephemeral=True,
-        )
-
     @app_commands.command(name="defend", description="Defend a dungeon level from one-minute attacks")
     @app_commands.describe(dungeon_level="Dungeon difficulty from 1 through 20")
     async def defend(
@@ -426,6 +445,8 @@ class DungeonGroup(app_commands.Group):
     async def shop_command(self, interaction: discord.Interaction) -> None:
         if interaction.guild_id is None:
             await interaction.response.send_message("The shop is server-specific.", ephemeral=True)
+            return
+        if not await self._resolve_expired_defense_before_screen(interaction, continue_destination="shop", ephemeral=True):
             return
         with self.session_factory() as db:
             player = self.players.get_or_create(
@@ -577,6 +598,8 @@ class DungeonGroup(app_commands.Group):
         if interaction.guild_id is None:
             await interaction.response.send_message("Dungeon status is server-specific.", ephemeral=True)
             return
+        if not await self._resolve_expired_defense_before_screen(interaction, continue_destination="hall"):
+            return
         with self.session_factory() as db:
             dungeon = self.players.get_or_create_guild(db, guild_id=interaction.guild_id)
             objective = self.weekly.get_active(db, guild_id=interaction.guild_id)
@@ -690,7 +713,7 @@ class DungeonGroup(app_commands.Group):
             value=(
                 "/dungeon explore\n/dungeon defend\n/dungeon stop-defending\n"
                 "/dungeon shop\n/dungeon buy\n/dungeon stats\n/dungeon profile\n"
-                "/dungeon energy\n/dungeon status\n/dungeon leaderboard"
+                "/dungeon status\n/dungeon leaderboard"
             ),
             inline=False,
         )

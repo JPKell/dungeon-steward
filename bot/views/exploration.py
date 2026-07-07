@@ -78,6 +78,10 @@ STAT_LABELS = {
     "defense": "DEF",
     "speed": "SPD",
 }
+DEFENSE_CONTINUE_DESTINATIONS = {
+    "hall": "Continue to Hall",
+    "shop": "Continue to Shop",
+}
 
 
 class ExplorationView(discord.ui.View):
@@ -213,19 +217,18 @@ def build_hall_embed(
         hall.add_field(name="\u200b", value="**Shared community dungeon**", inline=False)
         hall.add_field(name="Level", value=str(dungeon.level))
         hall.add_field(name="Gold", value=str(dungeon.gold))
-        hall.add_field(name="\u200b", value="\u200b")
-        hall.add_field(name="Hero / Villain Influence", value=f"{dungeon.hero_influence} : {dungeon.villain_influence}")
         hall.add_field(name="Stability", value=f"{dungeon.stability}/100")
+        hall.add_field(name="Hero / Villain Influence", value=f"{dungeon.hero_influence} : {dungeon.villain_influence}")
     if objective is not None:
         objective_description = getattr(objective, "description", "")
         target = max(1, int(objective.target_value))
         displayed_progress = min(target, int(objective.progress_value or 0))
         percent = min(100.0, (displayed_progress / target) * 100)
         hall.add_field(
-            name=f"\nWeekly Objective: {objective.title}",
+            name=f"Weekly Objective: {objective.title}",
             value=(
                 f"{objective_description}\n"
-                f"Progress: {displayed_progress}/{target} ({percent:.0f}%)   |   "
+                f"Progress: {displayed_progress}/{target} ({percent:.0f}%) | "
                 f"Ends {discord_relative_timestamp(objective.ends_at)}"
             ),
             inline=False,
@@ -295,6 +298,30 @@ class DungeonActionView(discord.ui.View):
     def _add_stat_allocation_buttons(self) -> None:
         for stat, label in STAT_BUTTONS:
             self.add_item(StatAllocationButton(stat, label))
+
+    async def _edit_current_response(self, interaction: discord.Interaction, **kwargs) -> None:
+        response = getattr(interaction, "response", None)
+        is_done = False
+        if response is not None:
+            response_is_done = getattr(response, "is_done", None)
+            if callable(response_is_done):
+                is_done = response_is_done()
+        if response is not None and not is_done and hasattr(response, "edit_message"):
+            await response.edit_message(**kwargs)
+            return
+        await interaction.edit_original_response(**kwargs)
+
+    async def _send_navigation_error(self, interaction: discord.Interaction, message: str) -> None:
+        response = getattr(interaction, "response", None)
+        is_done = False
+        if response is not None:
+            response_is_done = getattr(response, "is_done", None)
+            if callable(response_is_done):
+                is_done = response_is_done()
+        if response is not None and not is_done and hasattr(response, "send_message"):
+            await response.send_message(message, ephemeral=True)
+            return
+        await interaction.followup.send(message, ephemeral=True)
 
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
         if interaction.user.id != self.owner_user_id:
@@ -453,7 +480,37 @@ class DungeonActionView(discord.ui.View):
                 ephemeral=True,
             )
             return
-        await self.start_exploration(interaction)
+        with self.session_factory() as db:
+            player = self.exploration_service.players.get_or_create(
+                db,
+                guild_id=interaction.guild_id,
+                user_id=interaction.user.id,
+                display_name=interaction.user.display_name,
+            )
+            sync_player_dungeon_progression(player)
+            options = _dungeon_select_options(player)
+            potion_entries = self.potion_service.inventory_entries(db, player)
+            db.commit()
+        selector = embed(
+            "Choose Dungeon Level",
+            "Select an unlocked dungeon level, then descend when ready.",
+            colour=DEEP_NAVY,
+        )
+        _add_potion_inventory_fields(selector, potion_service=self.potion_service, entries=potion_entries)
+        DEFAULT_DISCORD_ASSETS.apply_banner(selector, LOCATION_SERVICE.banner_asset_for("dungeon_selection"))
+        await interaction.response.edit_message(
+            **banner_first_message_payload(selector, attachment_parameter="attachments"),
+            view=ExploreLevelSelectView(
+                session_factory=self.session_factory,
+                exploration_service=self.exploration_service,
+                defense_service=self.defense_service,
+                shop_service=self.shop_service,
+                owner_user_id=self.owner_user_id,
+                options=options,
+                potion_entries=potion_entries,
+                is_defending=self.is_defending,
+            ),
+        )
 
     async def resolve_defense_before_explore(self, interaction: discord.Interaction) -> bool:
         if interaction.guild_id is None:
@@ -482,6 +539,44 @@ class DungeonActionView(discord.ui.View):
             return False
         return True
 
+    async def resolve_expired_defense_before_navigation(
+        self,
+        interaction: discord.Interaction,
+        *,
+        continue_destination: str,
+    ) -> bool:
+        if interaction.guild_id is None:
+            return True
+        try:
+            with self.session_factory() as db:
+                player = self.exploration_service.players.get_or_create(
+                    db,
+                    guild_id=interaction.guild_id,
+                    user_id=interaction.user.id,
+                    display_name=interaction.user.display_name,
+                )
+                report = self.defense_service.resolve_if_expired(db, player)
+                db.commit()
+        except Exception:
+            log.exception("Failed to resolve expired defense before navigation")
+            await self._send_navigation_error(
+                interaction,
+                "The defense ledger would not close cleanly. Please try again.",
+            )
+            return False
+        if report is None:
+            return True
+        report_embed = build_defense_report_embed(report)
+        await self._edit_current_response(
+            interaction,
+            **banner_first_message_payload(
+                report_embed,
+                attachment_parameter="attachments",
+                view=self.defense_report_view(report, continue_destination=continue_destination),
+            ),
+        )
+        return False
+
     async def show_defense_selector(self, interaction: discord.Interaction) -> None:
         if interaction.guild_id is None:
             await interaction.response.send_message("Defending only works in a server.", ephemeral=True)
@@ -502,6 +597,7 @@ class DungeonActionView(discord.ui.View):
             "Select any unlocked dungeon level. Higher levels pay better and hit harder.",
             colour=DEEP_NAVY,
         )
+        _add_potion_inventory_fields(selector, potion_service=self.potion_service, entries=potion_entries)
         DEFAULT_DISCORD_ASSETS.apply_banner(selector, LOCATION_SERVICE.banner_asset_for("defend"))
         await interaction.response.edit_message(
             **banner_first_message_payload(selector, attachment_parameter="attachments"),
@@ -546,6 +642,8 @@ class DungeonActionView(discord.ui.View):
     async def show_shop(self, interaction: discord.Interaction) -> None:
         if interaction.guild_id is None:
             await interaction.response.send_message("The shop is server-specific.", ephemeral=True)
+            return
+        if not await self.resolve_expired_defense_before_navigation(interaction, continue_destination="shop"):
             return
         with self.session_factory() as db:
             player = self.exploration_service.players.get_or_create(
@@ -802,7 +900,7 @@ class DungeonActionView(discord.ui.View):
             allow_defense_return_button=allow_defense_return_button,
         )
 
-    def defense_report_view(self, report) -> DefenseResolvedActionView:
+    def defense_report_view(self, report, *, continue_destination: str | None = None) -> DefenseResolvedActionView:
         stat_context = STAT_ALLOCATION_SUMMARY if report.stat_points_earned > 0 else None
         return DefenseResolvedActionView(
             session_factory=self.session_factory,
@@ -811,12 +909,15 @@ class DungeonActionView(discord.ui.View):
             shop_service=self.shop_service,
             owner_user_id=self.owner_user_id,
             stat_allocation_context=stat_context,
+            continue_destination=continue_destination,
         )
 
     async def show_hall(self, interaction: discord.Interaction, *, is_defending: bool | None = None) -> None:
         if interaction.guild_id is None:
             hall_embed = build_hall_embed()
         else:
+            if not await self.resolve_expired_defense_before_navigation(interaction, continue_destination="hall"):
+                return
             with self.session_factory() as db:
                 dungeon = self.exploration_service.players.get_or_create_guild(
                     db,
@@ -914,6 +1015,33 @@ class PostExplorationView(DungeonActionView):
 
 
 class DefenseResolvedActionView(DungeonActionView):
+    def __init__(
+        self,
+        *,
+        session_factory: sessionmaker,
+        exploration_service: ExplorationService,
+        defense_service: DefenseService,
+        shop_service: ShopService,
+        owner_user_id: int,
+        is_defending: bool = False,
+        stat_allocation_context: str | None = None,
+        allow_defense_return_button: bool = True,
+        continue_destination: str | None = None,
+    ) -> None:
+        super().__init__(
+            session_factory=session_factory,
+            exploration_service=exploration_service,
+            defense_service=defense_service,
+            shop_service=shop_service,
+            owner_user_id=owner_user_id,
+            is_defending=is_defending,
+            stat_allocation_context=stat_allocation_context,
+            allow_defense_return_button=allow_defense_return_button,
+        )
+        self.continue_destination = continue_destination
+        if continue_destination in DEFENSE_CONTINUE_DESTINATIONS:
+            self.add_item(DefenseContinueButton(continue_destination, DEFENSE_CONTINUE_DESTINATIONS[continue_destination]))
+
     @discord.ui.button(label="Explore", style=discord.ButtonStyle.primary)
     async def explore(
         self,
@@ -937,6 +1065,30 @@ class DefenseResolvedActionView(DungeonActionView):
         _button: discord.ui.Button,
     ) -> None:
         await self.show_hall(interaction, is_defending=False)
+
+
+class DefenseContinueButton(discord.ui.Button):
+    def __init__(self, destination: str, label: str) -> None:
+        super().__init__(
+            label=label,
+            style=discord.ButtonStyle.primary,
+            row=1,
+            custom_id=f"defense:continue:{destination}",
+        )
+        self.destination = destination
+
+    async def callback(self, interaction: discord.Interaction) -> None:
+        view = self.view
+        if not isinstance(view, DefenseResolvedActionView):
+            await interaction.response.send_message("This defense report is no longer available.", ephemeral=True)
+            return
+        if self.destination == "shop":
+            await view.show_shop(interaction)
+            return
+        if self.destination == "hall":
+            await view.show_hall(interaction, is_defending=False)
+            return
+        await interaction.response.send_message("That destination is no longer available.", ephemeral=True)
 
 
 class StewardsHallView(DungeonActionView):
@@ -989,41 +1141,6 @@ class StewardsHallView(DungeonActionView):
         await interaction.edit_original_response(
             **banner_first_message_payload(profile_embed, attachment_parameter="attachments"),
             view=self.compact_view(is_defending=player.is_defending, stat_allocation_context=stat_context),
-        )
-
-    @discord.ui.button(label="Energy", style=discord.ButtonStyle.secondary, row=0)
-    async def energy(
-        self,
-        interaction: discord.Interaction,
-        _button: discord.ui.Button,
-    ) -> None:
-        if interaction.guild_id is None:
-            await interaction.response.send_message(
-                "Energy is server-specific.",
-                ephemeral=True,
-            )
-            return
-        with self.session_factory() as db:
-            player = self.exploration_service.players.get_or_create(
-                db,
-                guild_id=interaction.guild_id,
-                user_id=interaction.user.id,
-                display_name=interaction.user.display_name,
-            )
-            state = self.exploration_service.energy.recalculate(player)
-            cooldown_seconds = get_explore_cooldown_minutes(player.explore_level) * 60
-            db.commit()
-        response = embed("Dungeon Energy", colour=MIDNIGHT_BLUE)
-        response.add_field(name="Energy", value=f"{state.energy}/{MAX_ENERGY}")
-        response.add_field(name="Regeneration", value=f"1 energy every {human_duration(cooldown_seconds)}")
-        response.add_field(name="Explorations Available", value=str(state.energy))
-        response.add_field(name="Next Energy", value=discord_relative_timestamp(state.next_energy_at))
-        response.add_field(name="Full Energy", value=discord_relative_timestamp(state.full_energy_at))
-        response.set_footer(text=f"Energy cap: {MAX_ENERGY} | Explore Level: {player.explore_level}")
-        DEFAULT_DISCORD_ASSETS.apply_banner(response, LOCATION_SERVICE.banner_asset_for("dungeon_energy"))
-        await interaction.response.edit_message(
-            **banner_first_message_payload(response, attachment_parameter="attachments"),
-            view=self.compact_view(),
         )
 
     @discord.ui.button(label="Inventory", style=discord.ButtonStyle.secondary, row=0)
@@ -1093,7 +1210,7 @@ class StewardsHallView(DungeonActionView):
         help_embed.description = (
             "Spend 1 energy with `/dungeon explore`, choose a response, and earn gold, XP, "
             "discoveries, and influence. Explore Level shortens energy recovery down to 30 minutes. "
-            "Defending resolves one attack per completed minute and awards Combat XP and gold. "
+            "\nDefending resolves one attack per completed minute and awards Combat XP and gold. "
             "The equipment shop refreshes hourly by Combat Level. "
             "Weekly objectives give the whole server a reason to keep returning."
         )
@@ -1102,7 +1219,7 @@ class StewardsHallView(DungeonActionView):
             value=(
                 "/dungeon explore\n/dungeon defend\n/dungeon stop-defending\n"
                 "/dungeon shop\n/dungeon buy\n/dungeon stats\n/dungeon profile\n"
-                "/dungeon energy\n/dungeon status\n/dungeon leaderboard"
+                "/dungeon status\n/dungeon leaderboard"
             ),
             inline=False,
         )
@@ -1220,6 +1337,7 @@ class ExploreLevelSelectView(DungeonActionView):
         options: list[discord.SelectOption],
         potion_entries: tuple[PotionInventoryEntry, ...] = (),
         is_defending: bool = False,
+        selected_dungeon_level: int | None = None,
     ) -> None:
         super().__init__(
             session_factory=session_factory,
@@ -1231,9 +1349,23 @@ class ExploreLevelSelectView(DungeonActionView):
             allow_defense_return_button=False,
         )
         self.origin = "explore"
-        self.add_item(ExploreLevelSelect(options))
+        self.options = options
+        self.potion_entries = potion_entries
+        self.selected_dungeon_level = selected_dungeon_level
+        self.add_item(ExploreLevelSelect(options, selected_dungeon_level=selected_dungeon_level))
         if potion_entries:
             self.add_item(PotionConsumeSelect(potion_entries[:25], row=1))
+        self.add_item(ExploreDescendButton(disabled=selected_dungeon_level is None))
+
+    def select_dungeon_level(self, dungeon_level: int) -> None:
+        self.selected_dungeon_level = dungeon_level
+        for child in self.children:
+            if isinstance(child, ExploreLevelSelect):
+                for option in child.options:
+                    option.default = option.value == str(dungeon_level)
+                child.placeholder = f"Level {dungeon_level} selected"
+            elif isinstance(child, ExploreDescendButton):
+                child.disabled = False
 
     @discord.ui.button(label="Back", style=discord.ButtonStyle.secondary, row=2)
     async def back(
@@ -1245,7 +1377,9 @@ class ExploreLevelSelectView(DungeonActionView):
 
 
 class ExploreLevelSelect(discord.ui.Select):
-    def __init__(self, options: list[discord.SelectOption]) -> None:
+    def __init__(self, options: list[discord.SelectOption], *, selected_dungeon_level: int | None = None) -> None:
+        for option in options:
+            option.default = option.value == str(selected_dungeon_level)
         super().__init__(
             placeholder="Choose dungeon level",
             min_values=1,
@@ -1258,7 +1392,28 @@ class ExploreLevelSelect(discord.ui.Select):
         if not isinstance(view, ExploreLevelSelectView):
             await interaction.response.send_message("This exploration selector is no longer available.", ephemeral=True)
             return
-        await view.start_exploration(interaction, int(self.values[0]))
+        view.select_dungeon_level(int(self.values[0]))
+        await interaction.response.edit_message(view=view)
+
+
+class ExploreDescendButton(discord.ui.Button):
+    def __init__(self, *, disabled: bool) -> None:
+        super().__init__(
+            label="Descend into the dungeon",
+            style=discord.ButtonStyle.primary,
+            disabled=disabled,
+            row=2,
+        )
+
+    async def callback(self, interaction: discord.Interaction) -> None:
+        view = self.view
+        if not isinstance(view, ExploreLevelSelectView):
+            await interaction.response.send_message("This exploration selector is no longer available.", ephemeral=True)
+            return
+        if view.selected_dungeon_level is None:
+            await interaction.response.send_message("Choose a dungeon level first.", ephemeral=True)
+            return
+        await view.start_exploration(interaction, view.selected_dungeon_level)
 
 
 def _dungeon_select_options(player: Player) -> list[discord.SelectOption]:
@@ -1439,6 +1594,28 @@ def _build_potion_inventory_embed(
         response.add_field(name="Active Effects", value="None", inline=False)
     response.add_field(name="Slots", value=potion_service.active_slot_usage(active), inline=False)
 
+    _add_potion_inventory_fields(response, potion_service=potion_service, entries=entries, emoji_service=emoji_service)
+
+    if replacement is not None:
+        response.add_field(
+            name="Replace Active Effect",
+            value=(
+                f"{replacement.active.item.name} will end early "
+                f"({discord_relative_timestamp(replacement.active.activation.effective_ends_at)})."
+            ),
+            inline=False,
+        )
+    return response
+
+
+def _add_potion_inventory_fields(
+    response: discord.Embed,
+    *,
+    potion_service: PotionService,
+    entries: tuple[PotionInventoryEntry, ...],
+    emoji_service: DiscordEmojiService | None = None,
+) -> None:
+    emoji_service = emoji_service or DEFAULT_DISCORD_EMOJIS
     if entries:
         owned_lines = [_potion_inventory_line(potion_service, entry, emoji_service) for entry in entries[:25]]
         for index, chunk in enumerate(_chunk_lines(owned_lines), start=1):
@@ -1452,17 +1629,6 @@ def _build_potion_inventory_embed(
             )
     else:
         response.add_field(name="Owned Potions", value="None", inline=False)
-
-    if replacement is not None:
-        response.add_field(
-            name="Replace Active Effect",
-            value=(
-                f"{replacement.active.item.name} will end early "
-                f"({discord_relative_timestamp(replacement.active.activation.effective_ends_at)})."
-            ),
-            inline=False,
-        )
-    return response
 
 
 def _potion_thumbnail_asset(

@@ -52,7 +52,7 @@ def build_shop_embed(
     response.set_footer(
         text=(
             "Buying an item equips it immediately and replaces the matching slot.\n"
-            "Items you already own are hidden.\n"
+            "Items you already own are hidden in shop.\n"
             f"Combat Level {stock.combat_level} stock. Refreshes today at {local_clock_time(stock.refreshes_at)}."
         )
     )

@@ -21,19 +21,23 @@ from bot.models import (
     WeeklyPlayerContribution,
 )
 from bot.services.content_runtime import refresh_runtime_content_from_database
+from bot.services.discord_emoji_service import DEFAULT_DISCORD_EMOJIS, DiscordEmojiService
 from bot.services.discovery_service import DiscoveryService
 from bot.services.encounter_service import EncounterService
 from bot.services.energy_service import EnergyService
-from bot.services.equipment_service import EQUIPMENT_SLOTS, EquipmentItem, EquipmentService
+from bot.services.equipment_service import EQUIPMENT_SLOTS, CombatStats, EquipmentItem, EquipmentService
 from bot.services.player_service import PlayerService
 from bot.services.potion_service import EXPECTED_POTION_GROUPS, POTION_TYPE_EMOJIS, PotionItem, PotionService
 from bot.services.progression_service import calculate_explore_level, grant_combat_xp, sync_combat_progression
 from bot.utils.embeds import embed
-from bot.utils.shop_embeds import format_item_stats, rarity_badge
+from bot.utils.profile_embeds import build_profile_embed
+from bot.utils.shop_embeds import SLOT_EMOJIS, format_item_stats, rarity_badge
+from bot.views.exploration import _build_potion_inventory_embed
 
 log = logging.getLogger(__name__)
 
 GrantCatalogKind = Literal["equipment", "potion"]
+InspectPage = Literal["profile", "potions", "equipment"]
 
 DIRECT_GRANT_CHOICES = (
     app_commands.Choice(name="Energy", value="energy"),
@@ -72,6 +76,7 @@ POTION_GROUP_LABELS = {
     "defense": "Defense",
     "luck": "Luck",
 }
+DISCORD_EMBED_FIELD_VALUE_LIMIT = 1024
 
 
 @dataclass(frozen=True)
@@ -271,6 +276,33 @@ class DungeonAdminGroup(app_commands.Group):
         response.add_field(name="Granted By", value=interaction.user.display_name)
         await interaction.response.send_message(embed=response, ephemeral=True)
 
+    @app_commands.command(name="inspect", description="View a player's profile, potion inventory, and equipment")
+    async def inspect(self, interaction: discord.Interaction, member: discord.Member) -> None:
+        if not await self._guard(interaction):
+            return
+        if interaction.guild_id is None:
+            await interaction.response.send_message("This command must be used in a server.", ephemeral=True)
+            return
+        with self.session_factory() as db:
+            player_exists = db.scalar(
+                select(Player.id).where(
+                    Player.guild_id == interaction.guild_id,
+                    Player.discord_user_id == member.id,
+                )
+            )
+        if player_exists is None:
+            await interaction.response.send_message(f"No dungeon profile found for {member.display_name}.", ephemeral=True)
+            return
+        view = AdminPlayerInspectView(
+            session_factory=self.session_factory,
+            invoker_user_id=interaction.user.id,
+            target_user_id=member.id,
+            target_display_name=member.display_name,
+            guild_id=interaction.guild_id,
+            energy=self.energy,
+        )
+        await interaction.response.send_message(embed=view.build_embed(), view=view, ephemeral=True)
+
     @app_commands.command(name="reset-player", description="Reset a player's dungeon progress")
     async def reset_player(self, interaction: discord.Interaction, member: discord.Member) -> None:
         if not await self._guard(interaction):
@@ -317,6 +349,184 @@ class DungeonAdminGroup(app_commands.Group):
         await interaction.response.send_message("Database content reloaded.", ephemeral=True)
 
 
+class _AdminInspectAssetService:
+    def apply_banner(self, _embed: discord.Embed, _asset_key: str | None) -> None:
+        return None
+
+    def apply_thumbnail(self, _embed: discord.Embed, _asset_key: str | None) -> None:
+        return None
+
+
+_ADMIN_INSPECT_ASSETS = _AdminInspectAssetService()
+
+
+class AdminPlayerInspectView(discord.ui.View):
+    PAGES: tuple[tuple[InspectPage, str], ...] = (
+        ("profile", "Profile"),
+        ("potions", "Potions"),
+        ("equipment", "Equipment"),
+    )
+
+    def __init__(
+        self,
+        *,
+        session_factory: sessionmaker,
+        invoker_user_id: int,
+        target_user_id: int,
+        target_display_name: str,
+        guild_id: int,
+        energy: EnergyService,
+        equipment: EquipmentService | None = None,
+        potions: PotionService | None = None,
+        emoji_service: DiscordEmojiService | None = None,
+        page: InspectPage = "profile",
+    ) -> None:
+        super().__init__(timeout=300)
+        self.session_factory = session_factory
+        self.invoker_user_id = invoker_user_id
+        self.target_user_id = target_user_id
+        self.target_display_name = target_display_name
+        self.guild_id = guild_id
+        self.energy = energy
+        self.equipment = equipment or EquipmentService()
+        self.potions = potions or PotionService()
+        self.emoji_service = emoji_service or DEFAULT_DISCORD_EMOJIS
+        self.page: InspectPage = page
+        self._refresh_components()
+
+    async def interaction_check(self, interaction: discord.Interaction) -> bool:
+        if interaction.user.id == self.invoker_user_id:
+            return True
+        await interaction.response.send_message("This inspect view belongs to another staff member.", ephemeral=True)
+        return False
+
+    def set_page(self, page: InspectPage) -> None:
+        self.page = page
+        self._refresh_components()
+
+    def build_embed(self) -> discord.Embed:
+        with self.session_factory() as db:
+            player = self._player(db)
+            if player is None:
+                return embed("Player Not Found", f"No dungeon profile found for {self.target_display_name}.")
+            if self.page == "profile":
+                return self._build_profile_page(db, player)
+            if self.page == "potions":
+                return self._build_potions_page(db, player)
+            return self._build_equipment_page(player)
+
+    def _player(self, db) -> Player | None:
+        return db.scalar(
+            select(Player).where(
+                Player.guild_id == self.guild_id,
+                Player.discord_user_id == self.target_user_id,
+            )
+        )
+
+    def _build_profile_page(self, db, player: Player) -> discord.Embed:
+        state = self.energy.recalculate(player)
+        sync_combat_progression(player)
+        stats = _effective_combat_stats(player, self.equipment)
+        response = build_profile_embed(
+            display_name=self.target_display_name,
+            player=player,
+            energy_state=state,
+            stats=stats,
+            asset_service=_ADMIN_INSPECT_ASSETS,
+        )
+        response.set_footer(text="Admin inspect | Profile")
+        db.commit()
+        return response
+
+    def _build_potions_page(self, db, player: Player) -> discord.Embed:
+        active = self.potions.active_effects_at(db, player)
+        entries = self.potions.inventory_entries(db, player)
+        response = _build_potion_inventory_embed(
+            potion_service=self.potions,
+            entries=entries,
+            active=active,
+            asset_service=_ADMIN_INSPECT_ASSETS,
+            emoji_service=self.emoji_service,
+        )
+        response.title = f"{self.target_display_name}'s Potion Inventory"
+        response.set_footer(text="Admin inspect | Potions")
+        return response
+
+    def _build_equipment_page(self, player: Player) -> discord.Embed:
+        response = embed(f"{self.target_display_name}'s Equipment")
+        stats = _effective_combat_stats(player, self.equipment)
+        bonuses = self.equipment.get_equipment_stat_bonuses(player)
+        response.add_field(
+            name="Effective Stats",
+            value=(
+                f"HP {player.current_hp}/{stats.max_hp}\n"
+                f"ATK {stats.attack}\n"
+                f"DEF {stats.defense}\n"
+                f"SPD {stats.speed}"
+            ),
+            inline=False,
+        )
+        response.add_field(
+            name="Equipment Bonuses",
+            value=(
+                f"HP +{bonuses['max_hp']}\n"
+                f"ATK +{bonuses['attack']}\n"
+                f"DEF +{bonuses['defense']}\n"
+                f"SPD +{bonuses['speed']}"
+            ),
+            inline=False,
+        )
+        for slot in EQUIPMENT_SLOTS:
+            item = self.equipment.get_or_none(getattr(player, slot), combat_level=player.combat_level)
+            response.add_field(
+                name=f"{SLOT_EMOJIS.get(slot, '📦')} {slot.title()}",
+                value=_equipment_inspect_value(item),
+                inline=False,
+            )
+        response.set_footer(text="Admin inspect | Equipment")
+        return response
+
+    def _refresh_components(self) -> None:
+        self.clear_items()
+        for page, label in self.PAGES:
+            self.add_item(AdminInspectPageButton(page, label, disabled=page == self.page))
+
+
+def _effective_combat_stats(player: Player, equipment: EquipmentService) -> CombatStats:
+    bonuses = equipment.get_equipment_stat_bonuses(player)
+    return CombatStats(
+        max_hp=max(1, int(player.max_hp or 1) + bonuses["max_hp"]),
+        attack=max(1, int(player.attack or 1) + bonuses["attack"]),
+        defense=max(0, int(player.defense or 0) + bonuses["defense"]),
+        speed=max(1, int(player.speed or 1) + bonuses["speed"]),
+    )
+
+
+def _equipment_inspect_value(item: EquipmentItem | None) -> str:
+    if item is None:
+        return "Empty"
+    return "\n".join(
+        (
+            f"{item.name} {rarity_badge(item.rarity)}",
+            format_item_stats(item),
+        )
+    )
+
+
+class AdminInspectPageButton(discord.ui.Button):
+    def __init__(self, page: InspectPage, label: str, *, disabled: bool = False) -> None:
+        super().__init__(label=label, style=discord.ButtonStyle.primary, disabled=disabled, row=0)
+        self.page = page
+
+    async def callback(self, interaction: discord.Interaction) -> None:
+        view = self.view
+        if not isinstance(view, AdminPlayerInspectView):
+            await interaction.response.send_message("This inspect view is no longer available.", ephemeral=True)
+            return
+        view.set_page(self.page)
+        await interaction.response.edit_message(embed=view.build_embed(), view=view)
+
+
 class AdminGrantBrowserView(discord.ui.View):
     PAGE_SIZE = 10
 
@@ -334,6 +544,7 @@ class AdminGrantBrowserView(discord.ui.View):
         energy: EnergyService,
         equipment: EquipmentService | None = None,
         potions: PotionService | None = None,
+        emoji_service: DiscordEmojiService | None = None,
     ) -> None:
         super().__init__(timeout=300)
         self.session_factory = session_factory
@@ -347,6 +558,7 @@ class AdminGrantBrowserView(discord.ui.View):
         self.energy = energy
         self.equipment = equipment or EquipmentService()
         self.potions = potions or PotionService()
+        self.emoji_service = emoji_service or DEFAULT_DISCORD_EMOJIS
         self.category = "all"
         self.page = 0
         self._refresh_components()
@@ -368,9 +580,10 @@ class AdminGrantBrowserView(discord.ui.View):
         page_items = self._page_items()
         if page_items:
             lines = [self._line_for(index, item) for index, item in enumerate(page_items, start=self._page_start() + 1)]
-            response.add_field(
+            _add_limited_line_fields(
+                response,
                 name=f"Page {self.page + 1}/{self._page_count()}",
-                value="\n".join(lines),
+                lines=lines,
                 inline=False,
             )
         else:
@@ -513,7 +726,7 @@ class AdminGrantBrowserView(discord.ui.View):
                 f"{index}. {rarity_badge(item.rarity)} {item.name} | {item.slot} | "
                 f"L{item.min_level}-{item.max_level} | {format_item_stats(item)}"
             )
-        emoji = POTION_TYPE_EMOJIS.get(item.effect_group, "")
+        emoji = _potion_emoji_markdown(item, self.emoji_service) or POTION_TYPE_EMOJIS.get(item.effect_group, "")
         return f"{index}. {emoji} {item.name} | T{item.tier} {item.rarity} | {self.potions.effect_summary(item)}"
 
     def option_for(self, item: EquipmentItem | PotionItem) -> discord.SelectOption:
@@ -526,7 +739,7 @@ class AdminGrantBrowserView(discord.ui.View):
                     100,
                 ),
             )
-        emoji = POTION_TYPE_EMOJIS.get(item.effect_group)
+        emoji = _potion_select_emoji(item, self.emoji_service) or POTION_TYPE_EMOJIS.get(item.effect_group)
         return discord.SelectOption(
             label=_limit_component_text(item.name, 100),
             value=item.key,
@@ -536,6 +749,57 @@ class AdminGrantBrowserView(discord.ui.View):
             ),
             emoji=emoji,
         )
+
+
+def _potion_asset_key(item: PotionItem) -> str | None:
+    if item.thumbnail_asset:
+        return item.thumbnail_asset
+    if item.effect_group in {"attack", "healing", "luck", "max_hp", "xp"}:
+        return f"item.potion.{item.effect_group}.{item.tier:02d}"
+    return None
+
+
+def _potion_emoji_markdown(item: PotionItem, emoji_service: DiscordEmojiService) -> str | None:
+    return emoji_service.markdown_for(_potion_asset_key(item))
+
+
+def _potion_select_emoji(item: PotionItem, emoji_service: DiscordEmojiService) -> discord.PartialEmoji | None:
+    registry_entry = emoji_service.registry_entry_for(_potion_asset_key(item))
+    if registry_entry is None:
+        return None
+    return discord.PartialEmoji(
+        name=registry_entry.name,
+        id=int(registry_entry.emoji_id),
+        animated=registry_entry.animated,
+    )
+
+
+def _add_limited_line_fields(
+    response: discord.Embed,
+    *,
+    name: str,
+    lines: list[str],
+    inline: bool,
+) -> None:
+    chunks: list[str] = []
+    current: list[str] = []
+    current_length = 0
+    for line in lines:
+        safe_line = _limit_component_text(line, DISCORD_EMBED_FIELD_VALUE_LIMIT)
+        separator_length = 1 if current else 0
+        if current and current_length + separator_length + len(safe_line) > DISCORD_EMBED_FIELD_VALUE_LIMIT:
+            chunks.append("\n".join(current))
+            current = [safe_line]
+            current_length = len(safe_line)
+            continue
+        current.append(safe_line)
+        current_length += separator_length + len(safe_line)
+    if current:
+        chunks.append("\n".join(current))
+
+    for index, chunk in enumerate(chunks):
+        field_name = name if index == 0 else f"{name} (continued)"
+        response.add_field(name=field_name, value=chunk, inline=inline)
 
 
 class AdminGrantCategorySelect(discord.ui.Select):
