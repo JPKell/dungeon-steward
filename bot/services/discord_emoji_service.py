@@ -111,7 +111,7 @@ def referenced_emoji_asset_keys(content_dir: Path = CONTENT_DIR) -> set[str]:
 def validate_emoji_asset_references(catalog: EmojiCatalog, content_dir: Path = CONTENT_DIR) -> None:
     missing = sorted(referenced_emoji_asset_keys(content_dir) - set(catalog.emojis))
     if missing:
-        raise AssetConfigError(f"Potion content references unknown emoji assets: {', '.join(missing)}")
+        raise AssetConfigError(f"Content references unknown emoji assets: {', '.join(missing)}")
 
 
 def load_emoji_catalog(
@@ -120,10 +120,19 @@ def load_emoji_catalog(
     asset_root: Path = ASSET_ROOT,
     validate_files: bool = False,
     document: dict[str, Any] | None = None,
+    image_catalog_document: dict[str, Any] | None = None,
 ) -> EmojiCatalog:
     catalog_path = path or DEFAULT_EMOJI_CATALOG_PATH
     if document is None and not catalog_path.exists():
-        return EmojiCatalog(version=1, emojis={})
+        emojis = _generated_equipment_emoji_definitions(
+            catalog_path=catalog_path,
+            asset_root=asset_root,
+            image_catalog_document=image_catalog_document,
+        )
+        if validate_files:
+            for definition in emojis.values():
+                validate_emoji_file(definition)
+        return EmojiCatalog(version=1, emojis=emojis)
     raw = document if document is not None else _load_json_object(catalog_path)
     version = raw.get("version")
     if version != 1:
@@ -142,6 +151,17 @@ def load_emoji_catalog(
         if validate_files:
             validate_emoji_file(definition)
         emojis[definition.key] = definition
+    generated = _generated_equipment_emoji_definitions(
+        catalog_path=catalog_path,
+        asset_root=asset_root,
+        image_catalog_document=image_catalog_document,
+    )
+    for key, definition in generated.items():
+        if key in emojis:
+            continue
+        if validate_files:
+            validate_emoji_file(definition)
+        emojis[key] = definition
     return EmojiCatalog(version=version, emojis=emojis)
 
 
@@ -363,7 +383,8 @@ def _collect_emoji_keys(value: Any, keys: set[str], *, content_file: str) -> Non
     if isinstance(value, dict):
         for field, item in value.items():
             is_legacy_potion_emoji = content_file == "potion_items.json" and field == "thumbnail_asset"
-            if (field == "emoji_asset" or is_legacy_potion_emoji) and isinstance(item, str) and item.strip():
+            is_equipment_emoji = content_file == "equipment.json" and field == "thumbnail_asset"
+            if (field == "emoji_asset" or is_legacy_potion_emoji or is_equipment_emoji) and isinstance(item, str) and item.strip():
                 keys.add(item.strip())
             else:
                 _collect_emoji_keys(item, keys, content_file=content_file)
@@ -388,6 +409,63 @@ def _optional_str(entry: dict[str, Any], field: str, key: str) -> str | None:
     return value.strip()
 
 
+def _generated_equipment_emoji_definitions(
+    *,
+    catalog_path: Path,
+    asset_root: Path,
+    image_catalog_document: dict[str, Any] | None = None,
+) -> dict[str, EmojiDefinition]:
+    image_catalog_path = catalog_path.with_name("image_assets.json")
+    if image_catalog_document is None:
+        if not image_catalog_path.exists():
+            return {}
+        image_catalog_document = _load_json_object(image_catalog_path)
+    version = image_catalog_document.get("version")
+    if version != 1:
+        raise AssetConfigError("image_assets.json version must be 1")
+    assets_raw = image_catalog_document.get("assets")
+    if not isinstance(assets_raw, dict):
+        raise AssetConfigError("image_assets.json must contain an assets object")
+
+    definitions: dict[str, EmojiDefinition] = {}
+    for key, entry in sorted(assets_raw.items()):
+        if not isinstance(key, str) or not key.startswith("equipment."):
+            continue
+        if not isinstance(entry, dict):
+            raise AssetConfigError(f"Image asset {key} must be an object")
+        slug = key.removeprefix("equipment.")
+        if not _FILENAME_RE.match(f"{slug}.png"):
+            raise AssetConfigError(f"{key} equipment emoji slug must use lowercase snake_case")
+        output = _asset_path(
+            f"assets/discord/emojis/equipment/{slug}.png",
+            catalog_path=catalog_path,
+            asset_root=asset_root,
+            key=key,
+            allowed_suffixes={".png"},
+            label="generated equipment emoji image",
+        )
+        source_raw = entry.get("source_path")
+        source_path = None
+        if source_raw is not None:
+            source_path = _asset_path(
+                _required_str(entry, "source_path", key),
+                catalog_path=catalog_path,
+                asset_root=asset_root,
+                key=key,
+                allowed_suffixes={".png", ".jpg", ".jpeg", ".webp"},
+                label="equipment emoji source image",
+            )
+        definitions[key] = EmojiDefinition(
+            key=key,
+            name=f"ds_eq_{slug}",
+            path=output,
+            alt_text=f"Equipment {slug.replace('_', ' ')}",
+            required=False,
+            source_path=source_path,
+        )
+    return definitions
+
+
 DEFAULT_DISCORD_EMOJIS = DiscordEmojiService()
 
 
@@ -395,10 +473,11 @@ def refresh_default_discord_emojis(
     *,
     catalog_document: dict[str, Any],
     registry_document: dict[str, Any],
+    image_catalog_document: dict[str, Any] | None = None,
 ) -> DiscordEmojiService:
     global DEFAULT_DISCORD_EMOJIS
     DEFAULT_DISCORD_EMOJIS = DiscordEmojiService(
-        catalog=load_emoji_catalog(document=catalog_document),
+        catalog=load_emoji_catalog(document=catalog_document, image_catalog_document=image_catalog_document),
         registry=load_emoji_registry(document=registry_document),
     )
     return DEFAULT_DISCORD_EMOJIS

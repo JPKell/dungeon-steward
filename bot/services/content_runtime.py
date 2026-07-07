@@ -96,7 +96,17 @@ def _refresh(session: Session) -> dict[str, Any]:
         catalog_document=_document_object(documents, "image_assets.json"),
         registry_document=_document_object(documents, "image_asset_registry.json"),
     )
-    emojis = discord_emoji_service.DiscordEmojiService()
+    emoji_catalog_document = _optional_document_object(documents, "emoji_assets.json")
+    emoji_registry_document = _optional_document_object(documents, "emoji_asset_registry.json")
+    image_catalog_document = _optional_document_object(documents, "image_assets.json")
+    if emoji_catalog_document is not None and emoji_registry_document is not None:
+        emojis = discord_emoji_service.refresh_default_discord_emojis(
+            catalog_document=emoji_catalog_document,
+            registry_document=emoji_registry_document,
+            image_catalog_document=image_catalog_document,
+        )
+    else:
+        emojis = discord_emoji_service.DiscordEmojiService()
     if emojis.catalog.emojis and not emojis.registry.emojis:
         log.warning("Loaded %s Discord emoji definitions but no registered emoji IDs.", len(emojis.catalog.emojis))
     else:
@@ -108,6 +118,7 @@ def _refresh(session: Session) -> dict[str, Any]:
         module.DEFAULT_DISCORD_ASSETS = assets
     defense_embeds.DEFAULT_DISCORD_EMOJIS = emojis
     exploration_view.DEFAULT_DISCORD_EMOJIS = emojis
+    shop_embeds.DEFAULT_DISCORD_EMOJIS = emojis
     admin_commands.DEFAULT_DISCORD_EMOJIS = emojis
     admin_commands.EquipmentService = equipment_service.EquipmentService
     admin_commands.PotionService = potion_service.PotionService
@@ -126,6 +137,11 @@ def _document_object(documents: dict[str, Any], filename: str) -> dict[str, Any]
     if not isinstance(value, dict):
         raise RuntimeContentError(f"{filename} was not loaded from content tables")
     return value
+
+
+def _optional_document_object(documents: dict[str, Any], filename: str) -> dict[str, Any] | None:
+    value = documents.get(filename)
+    return value if isinstance(value, dict) else None
 
 
 def _document_list(documents: dict[str, Any], filename: str) -> list[Any]:

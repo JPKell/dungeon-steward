@@ -14,6 +14,7 @@ from bot.services.shop_service import ShopService, ShopStock
 from bot.views.exploration import (
     STAT_ALLOCATION_PROFILE,
     DefenseLevelSelectView,
+    DefenseResolvedActionView,
     ExplorationView,
     ExploreLevelSelectView,
     PostExplorationView,
@@ -278,6 +279,75 @@ async def test_resolving_defense_before_explore_stops_before_starting_exploratio
 
 
 @pytest.mark.asyncio
+async def test_explore_buttons_start_exploration_without_opening_selector() -> None:
+    stock = ShopStock(
+        combat_level=1,
+        generated_at=datetime(2026, 7, 3, 12, 0, tzinfo=UTC),
+        refreshes_at=datetime(2026, 7, 3, 13, 0, tzinfo=UTC),
+        items=(),
+    )
+    player = Player(discord_user_id=1, guild_id=10, display_name="Scout")
+    views = (
+        PostExplorationView(
+            session_factory=DummySessionFactory(),
+            exploration_service=DummyExplorationService(),
+            defense_service=DummyDefenseService(),
+            shop_service=DummyShopService(),
+            owner_user_id=1,
+        ),
+        DefenseResolvedActionView(
+            session_factory=DummySessionFactory(),
+            exploration_service=DummyExplorationService(),
+            defense_service=DummyDefenseService(),
+            shop_service=DummyShopService(),
+            owner_user_id=1,
+        ),
+        StewardsHallView(
+            session_factory=DummySessionFactory(),
+            exploration_service=DummyExplorationService(),
+            defense_service=DummyDefenseService(),
+            shop_service=DummyShopService(),
+            owner_user_id=1,
+        ),
+        ShopView(
+            session_factory=DummySessionFactory(),
+            exploration_service=DummyExplorationService(),
+            defense_service=DummyDefenseService(),
+            shop_service=DummyShopService(),
+            owner_user_id=1,
+            stock=stock,
+            player=player,
+        ),
+    )
+    started: list[tuple[str, object, int]] = []
+    selector_calls: list[str] = []
+
+    for view in views:
+        view_name = type(view).__name__
+
+        async def start_exploration(interaction, dungeon_level: int = 1, *, marker: str = view_name) -> None:
+            started.append((marker, interaction, dungeon_level))
+
+        async def show_exploration_selector(_interaction, *, marker: str = view_name) -> None:
+            selector_calls.append(marker)
+
+        view.start_exploration = start_exploration
+        view.show_exploration_selector = show_exploration_selector
+        explore = next(child for child in view.children if isinstance(child, discord.ui.Button) and child.label == "Explore")
+        interaction = SimpleNamespace()
+
+        await explore.callback(interaction)
+
+    assert selector_calls == []
+    assert [(view_name, dungeon_level) for view_name, _interaction, dungeon_level in started] == [
+        ("PostExplorationView", 1),
+        ("DefenseResolvedActionView", 1),
+        ("StewardsHallView", 1),
+        ("ShopView", 1),
+    ]
+
+
+@pytest.mark.asyncio
 async def test_expired_defense_blocks_shop_with_continue_button() -> None:
     report = _defense_report()
     defense_service = ExpiredDefenseService(report)
@@ -432,6 +502,52 @@ async def test_explore_level_selection_waits_for_descend_button() -> None:
         started.append((interaction, dungeon_level))
 
     view.start_exploration = start_exploration
+    response = DummyResponse()
+    selection_interaction = SimpleNamespace(response=response)
+
+    level_select._values = ["2"]
+    await level_select.callback(selection_interaction)
+
+    assert started == []
+    assert response.edits == [{"view": view}]
+    assert view.selected_dungeon_level == 2
+    assert descend.disabled is False
+    assert level_select.placeholder == "Level 2 selected"
+
+    descend_interaction = SimpleNamespace(response=DummyResponse())
+    await descend.callback(descend_interaction)
+
+    assert started == [(descend_interaction, 2)]
+
+
+@pytest.mark.asyncio
+async def test_defense_level_selection_waits_for_descend_button() -> None:
+    player = Player(
+        discord_user_id=1,
+        guild_id=10,
+        display_name="Scout",
+        highest_unlocked_dungeon_level=2,
+    )
+    view = DefenseLevelSelectView(
+        session_factory=DummySessionFactory(),
+        exploration_service=DummyExplorationService(),
+        defense_service=DummyDefenseService(),
+        shop_service=DummyShopService(),
+        owner_user_id=1,
+        options=_dungeon_select_options(player),
+    )
+    level_select = next(child for child in view.children if isinstance(child, discord.ui.Select))
+    descend = next(
+        child
+        for child in view.children
+        if isinstance(child, discord.ui.Button) and child.label == "Descend into the dungeon"
+    )
+    started: list[tuple[object, int]] = []
+
+    async def start_defense(interaction, dungeon_level: int) -> None:
+        started.append((interaction, dungeon_level))
+
+    view.start_defense = start_defense
     response = DummyResponse()
     selection_interaction = SimpleNamespace(response=response)
 
@@ -634,7 +750,9 @@ def test_shop_view_uses_dropdown_and_confirm_button() -> None:
 
     assert len(select.options) == 1
     assert select.placeholder == "Browse Shop"
+    assert "⚪ Weapon" in (select.options[0].description or "")
     assert "Price 🪙 60" in (select.options[0].description or "")
+    assert "<:" not in (select.options[0].description or "")
     assert all(button.label not in {str(number) for number in range(1, 11)} for button in buttons)
     assert "Explore" in [button.label for button in buttons]
     assert "Defend" in [button.label for button in buttons]

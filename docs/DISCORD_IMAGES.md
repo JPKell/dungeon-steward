@@ -146,6 +146,16 @@ For enemies and potions that should also have an embed thumbnail, add the matchi
 }
 ```
 
+Equipment emojis are generated from `equipment.*` entries in `bot/content/image_assets.json`. The generated emoji output path is
+`assets/discord/emojis/equipment/<equipment_slug>.png`, and the application emoji name is `ds_eq_<equipment_slug>`.
+Run:
+
+```bash
+.venv/bin/python -m scripts.sync_assets --prepare-only --prefix equipment. --emojis-only
+.venv/bin/python -m scripts.sync_assets --dry-run --prefix equipment. --emojis-only
+.venv/bin/python -m scripts.sync_assets --prefix equipment. --emojis-only
+```
+
 Then point the content record at those keys, for example `thumbnail_asset: "enemy.slime"` and `emoji_asset: "enemy.slime"` in `bot/content/enemies.json`.
 
 ## Useful Filters

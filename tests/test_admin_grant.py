@@ -17,6 +17,7 @@ from bot.services.energy_service import EnergyService
 from bot.services.equipment_service import EquipmentService
 from bot.services.player_service import PlayerService
 from bot.services.potion_service import PotionService
+from bot.utils.shop_embeds import rarity_badge
 from tests.conftest import make_player
 
 
@@ -193,29 +194,42 @@ def test_admin_player_inspect_view_builds_profile_potions_and_equipment_pages(
     equipment = EquipmentService()
     item = next(item for item in equipment.items if item.slot == "weapon" and item.description)
     potions = PotionService()
+    emoji_definitions = {
+        "item.potion.xp.01": ("ds_p_xp_01", "123456789"),
+        "equipment.weapon_blade": ("ds_eq_weapon_blade", "111111111"),
+        "equipment.shield_ward": ("ds_eq_shield_ward", "222222222"),
+        "equipment.helm_helm": ("ds_eq_helm_helm", "333333333"),
+        "equipment.armor_cuirass": ("ds_eq_armor_cuirass", "444444444"),
+        "equipment.gloves_gauntlets": ("ds_eq_gloves_gauntlets", "777777777"),
+        "equipment.boots_greaves": ("ds_eq_boots_greaves", "555555555"),
+        "equipment.trinket_token": ("ds_eq_trinket_token", "666666666"),
+        f"equipment.{item.rarity}": ("ds_e_item_rarity", "888888888"),
+    }
     emoji_service = DiscordEmojiService(
         catalog=EmojiCatalog(
             version=1,
             emojis={
-                "item.potion.xp.01": EmojiDefinition(
-                    key="item.potion.xp.01",
-                    name="ds_p_xp_01",
-                    path=tmp_path / "xp_01.png",
-                    alt_text="XP potion",
+                key: EmojiDefinition(
+                    key=key,
+                    name=name,
+                    path=tmp_path / f"{name}.png",
+                    alt_text=name,
                 )
+                for key, (name, _emoji_id) in emoji_definitions.items()
             },
         ),
         registry=EmojiRegistry(
             version=1,
             emojis={
-                "item.potion.xp.01": EmojiRegistryEntry(
-                    key="item.potion.xp.01",
-                    name="ds_p_xp_01",
-                    emoji_id="123456789",
+                key: EmojiRegistryEntry(
+                    key=key,
+                    name=name,
+                    emoji_id=emoji_id,
                     sha256="a" * 64,
                     animated=False,
                     uploaded_at="2026-07-06T00:00:00+00:00",
                 )
+                for key, (name, emoji_id) in emoji_definitions.items()
             },
         ),
     )
@@ -250,9 +264,41 @@ def test_admin_player_inspect_view_builds_profile_potions_and_equipment_pages(
     assert equipment_page.title == "Inspect Target's Equipment"
     assert equipment_page.footer.text == "Admin inspect | Equipment"
     equipment_fields = {field.name: field.value for field in equipment_page.fields}
-    weapon_value = equipment_fields["⚔️ Weapon"]
-    assert item.name in weapon_value
+    assert equipment_page.fields[0].name == "Effective Stats"
+    effective_lines = equipment_page.fields[0].value.splitlines()
+    assert effective_lines[0] == "```text"
+    assert effective_lines[1].split() == ["HP", "ATK", "DEF", "SPD"]
+    assert effective_lines[2].split() == [
+        f"{player.current_hp}/{player.max_hp + item.hp}",
+        str(player.attack + item.attack),
+        str(player.defense + item.defense),
+        str(player.speed + item.speed),
+    ]
+    assert effective_lines[3] == "```"
+    assert equipment_page.fields[1].name == "Equipment Bonuses"
+    bonus_lines = equipment_page.fields[1].value.splitlines()
+    assert bonus_lines[0] == "```text"
+    assert bonus_lines[1].split() == ["HP", "ATK", "DEF", "SPD"]
+    assert bonus_lines[2].split() == [f"+{item.hp}", f"+{item.attack}", f"+{item.defense}", f"+{item.speed}"]
+    assert bonus_lines[3] == "```"
+    weapon_value = equipment_fields[f"{rarity_badge(item.rarity, emoji_service)} ⚔️ {item.name}"]
+    assert rarity_badge(item.rarity, emoji_service) not in weapon_value
     assert item.description not in weapon_value
+    assert equipment_fields["<:ds_eq_shield_ward:222222222> Empty Shield"] == "Empty"
+    assert equipment_fields["<:ds_eq_helm_helm:333333333> Empty Helm"] == "Empty"
+    assert equipment_fields["<:ds_eq_armor_cuirass:444444444> Empty Armor"] == "Empty"
+    assert equipment_fields["<:ds_eq_gloves_gauntlets:777777777> Empty Gloves"] == "Empty"
+    assert equipment_fields["<:ds_eq_boots_greaves:555555555> Empty Boots"] == "Empty"
+    assert equipment_fields["<:ds_eq_trinket_token:666666666> Empty Trinket"] == "Empty"
+
+    with session_factory() as db:
+        player = db.scalar(select(Player).where(Player.discord_user_id == 321, Player.guild_id == 10))
+        player.weapon = None
+        db.commit()
+
+    empty_weapon_page = view.build_embed()
+    empty_weapon_fields = {field.name: field.value for field in empty_weapon_page.fields}
+    assert empty_weapon_fields["<:ds_eq_weapon_blade:111111111> Empty Weapon"] == "Empty"
 
 
 def test_admin_equipment_picker_filters_and_equips_item(session_factory: sessionmaker[Session], now) -> None:

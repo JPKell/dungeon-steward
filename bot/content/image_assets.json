@@ -876,6 +876,76 @@
       "type": "location_banner",
       "path": "assets/discord/locations/user_profile.webp",
       "source_path": "assets/discord/source/banners/user_profile.png"
+    },
+    "equipment.common": {
+      "type": "thumbnail",
+      "path": "assets/discord/misc/common.webp",
+      "source_path": "assets/discord/source/misc/common.png"
+    },
+    "equipment.uncommon": {
+      "type": "thumbnail",
+      "path": "assets/discord/misc/uncommon.webp",
+      "source_path": "assets/discord/source/misc/uncommon.png"
+    },
+    "equipment.rare": {
+      "type": "thumbnail",
+      "path": "assets/discord/misc/rare.webp",
+      "source_path": "assets/discord/source/misc/rare.png"
+    },
+    "equipment.epic": {
+      "type": "thumbnail",
+      "path": "assets/discord/misc/epic.webp",
+      "source_path": "assets/discord/source/misc/epic.png"
+    },
+    "equipment.legendary": {
+      "type": "thumbnail",
+      "path": "assets/discord/misc/legendary.webp",
+      "source_path": "assets/discord/source/misc/legendary.png"
+    },
+    "equipment.mythic": {
+      "type": "thumbnail",
+      "path": "assets/discord/misc/mythic.webp",
+      "source_path": "assets/discord/source/misc/mythic.png"
+    },
+    "misc.gold": {
+      "type": "thumbnail",
+      "path": "assets/discord/misc/gold.webp",
+      "source_path": "assets/discord/source/misc/gold.png"
+    },
+    "misc.good": {
+      "type": "thumbnail",
+      "path": "assets/discord/misc/good.webp",
+      "source_path": "assets/discord/source/misc/good.png"
+    },
+    "misc.neutral": {
+      "type": "thumbnail",
+      "path": "assets/discord/misc/neutral.webp",
+      "source_path": "assets/discord/source/misc/neutral.png"
+    },
+    "misc.evil": {
+      "type": "thumbnail",
+      "path": "assets/discord/misc/evil.webp",
+      "source_path": "assets/discord/source/misc/evil.png"
+    },
+    "misc.crystal": {
+      "type": "thumbnail",
+      "path": "assets/discord/misc/crystal.webp",
+      "source_path": "assets/discord/source/misc/crystal.png"
+    },
+    "misc.dragon_scale": {
+      "type": "thumbnail",
+      "path": "assets/discord/misc/dragon_scale.webp",
+      "source_path": "assets/discord/source/misc/dragon_scale.png"
+    },
+    "misc.essence": {
+      "type": "thumbnail",
+      "path": "assets/discord/misc/essence.webp",
+      "source_path": "assets/discord/source/misc/essence.png"
+    },
+    "misc.soul_piece": {
+      "type": "thumbnail",
+      "path": "assets/discord/misc/soul_piece.webp",
+      "source_path": "assets/discord/source/misc/soul_piece.png"
     }
   }
 }

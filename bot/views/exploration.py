@@ -55,12 +55,12 @@ from bot.utils.defense_embeds import build_defense_report_embed, build_defense_s
 from bot.utils.embeds import DEEP_NAVY, MIDNIGHT_BLUE, WARM_GOLD, embed
 from bot.utils.profile_embeds import build_profile_embed
 from bot.utils.shop_embeds import (
+    GOLD_EMOJI,
+    RARITY_BADGES,
     SLOT_EMOJIS,
     build_purchase_embed,
     build_shop_embed,
-    format_gold,
     format_item_stats,
-    rarity_badge,
 )
 from bot.utils.time import discord_relative_timestamp, human_duration, utc_now
 
@@ -666,6 +666,7 @@ class DungeonActionView(discord.ui.View):
                 is_defending=self.is_defending,
                 stock=stock,
                 player=player,
+                emoji_service=DEFAULT_DISCORD_EMOJIS,
             ),
         )
 
@@ -710,6 +711,7 @@ class DungeonActionView(discord.ui.View):
                 stock=stock,
                 player=player,
                 selected_stock_number=stock_number,
+                emoji_service=DEFAULT_DISCORD_EMOJIS,
             ),
         )
 
@@ -984,7 +986,7 @@ class PostExplorationView(DungeonActionView):
         interaction: discord.Interaction,
         _button: discord.ui.Button,
     ) -> None:
-        await self.show_exploration_selector(interaction)
+        await self.start_exploration(interaction)
 
     @discord.ui.button(label="Defend", style=discord.ButtonStyle.success)
     async def defend(
@@ -1048,7 +1050,7 @@ class DefenseResolvedActionView(DungeonActionView):
         interaction: discord.Interaction,
         _button: discord.ui.Button,
     ) -> None:
-        await self.show_exploration_selector(interaction)
+        await self.start_exploration(interaction)
 
     @discord.ui.button(label="Defend", style=discord.ButtonStyle.success)
     async def defend(
@@ -1098,7 +1100,7 @@ class StewardsHallView(DungeonActionView):
         interaction: discord.Interaction,
         _button: discord.ui.Button,
     ) -> None:
-        await self.show_exploration_selector(interaction)
+        await self.start_exploration(interaction)
 
     @discord.ui.button(label="Profile", style=discord.ButtonStyle.secondary, row=0)
     async def profile(
@@ -1243,6 +1245,7 @@ class DefenseLevelSelectView(DungeonActionView):
         options: list[discord.SelectOption],
         potion_entries: tuple[PotionInventoryEntry, ...] = (),
         is_defending: bool = False,
+        selected_dungeon_level: int | None = None,
     ) -> None:
         super().__init__(
             session_factory=session_factory,
@@ -1254,9 +1257,23 @@ class DefenseLevelSelectView(DungeonActionView):
             allow_defense_return_button=False,
         )
         self.origin = "defense"
-        self.add_item(DefenseLevelSelect(options))
+        self.options = options
+        self.potion_entries = potion_entries
+        self.selected_dungeon_level = selected_dungeon_level
+        self.add_item(DefenseLevelSelect(options, selected_dungeon_level=selected_dungeon_level))
         if potion_entries:
             self.add_item(PotionConsumeSelect(potion_entries[:25], row=1))
+        self.add_item(DefenseDescendButton(disabled=selected_dungeon_level is None))
+
+    def select_dungeon_level(self, dungeon_level: int) -> None:
+        self.selected_dungeon_level = dungeon_level
+        for child in self.children:
+            if isinstance(child, DefenseLevelSelect):
+                for option in child.options:
+                    option.default = option.value == str(dungeon_level)
+                child.placeholder = f"Level {dungeon_level} selected"
+            elif isinstance(child, DefenseDescendButton):
+                child.disabled = False
 
     async def start_defense(self, interaction: discord.Interaction, dungeon_level: int) -> None:
         if interaction.guild_id is None:
@@ -1309,7 +1326,9 @@ class DefenseLevelSelectView(DungeonActionView):
 
 
 class DefenseLevelSelect(discord.ui.Select):
-    def __init__(self, options: list[discord.SelectOption]) -> None:
+    def __init__(self, options: list[discord.SelectOption], *, selected_dungeon_level: int | None = None) -> None:
+        for option in options:
+            option.default = option.value == str(selected_dungeon_level)
         super().__init__(
             placeholder="Choose dungeon level",
             min_values=1,
@@ -1322,7 +1341,28 @@ class DefenseLevelSelect(discord.ui.Select):
         if not isinstance(view, DefenseLevelSelectView):
             await interaction.response.send_message("This defense selector is no longer available.", ephemeral=True)
             return
-        await view.start_defense(interaction, int(self.values[0]))
+        view.select_dungeon_level(int(self.values[0]))
+        await interaction.response.edit_message(view=view)
+
+
+class DefenseDescendButton(discord.ui.Button):
+    def __init__(self, *, disabled: bool) -> None:
+        super().__init__(
+            label="Descend into the dungeon",
+            style=discord.ButtonStyle.primary,
+            disabled=disabled,
+            row=2,
+        )
+
+    async def callback(self, interaction: discord.Interaction) -> None:
+        view = self.view
+        if not isinstance(view, DefenseLevelSelectView):
+            await interaction.response.send_message("This defense selector is no longer available.", ephemeral=True)
+            return
+        if view.selected_dungeon_level is None:
+            await interaction.response.send_message("Choose a dungeon level first.", ephemeral=True)
+            return
+        await view.start_defense(interaction, view.selected_dungeon_level)
 
 
 class ExploreLevelSelectView(DungeonActionView):
@@ -1749,6 +1789,7 @@ class ShopView(DungeonActionView):
         stock: ShopStock,
         player: Player,
         selected_stock_number: int | None = None,
+        emoji_service: DiscordEmojiService | None = None,
     ) -> None:
         super().__init__(
             session_factory=session_factory,
@@ -1758,11 +1799,13 @@ class ShopView(DungeonActionView):
             owner_user_id=owner_user_id,
             is_defending=is_defending,
         )
+        emoji_service = emoji_service or DEFAULT_DISCORD_EMOJIS
         options = _shop_select_options(
             stock,
             player,
             shop_service,
             selected_stock_number=selected_stock_number,
+            emoji_service=emoji_service,
         )
         if options:
             self.add_item(ShopPurchaseSelect(options))
@@ -1775,7 +1818,7 @@ class ShopView(DungeonActionView):
         interaction: discord.Interaction,
         _button: discord.ui.Button,
     ) -> None:
-        await self.show_exploration_selector(interaction)
+        await self.start_exploration(interaction)
 
     @discord.ui.button(label="Defend", style=discord.ButtonStyle.success, row=2)
     async def defend(
@@ -1839,7 +1882,9 @@ def _shop_select_options(
     shop_service: ShopService,
     *,
     selected_stock_number: int | None = None,
+    emoji_service: DiscordEmojiService | None = None,
 ) -> list[discord.SelectOption]:
+    emoji_service = emoji_service or DEFAULT_DISCORD_EMOJIS
     options: list[discord.SelectOption] = []
     owned_item_keys = _owned_equipment_keys(player)
     for index, item in enumerate(stock.items, start=1):
@@ -1850,8 +1895,8 @@ def _shop_select_options(
             discord.SelectOption(
                 label=_shop_option_label(item),
                 value=str(index),
-                description=_shop_option_description(quote),
-                emoji=SLOT_EMOJIS.get(item.slot, "📦"),
+                description=_shop_option_description(quote, emoji_service),
+                emoji=_equipment_select_emoji(item, emoji_service) or SLOT_EMOJIS.get(item.slot, "📦"),
                 default=index == selected_stock_number,
             )
         )
@@ -1870,11 +1915,24 @@ def _shop_option_label(item: EquipmentItem) -> str:
     return _limit_component_text(item.name, 100)
 
 
-def _shop_option_description(quote: ShopPurchaseQuote) -> str:
+def _shop_option_description(quote: ShopPurchaseQuote, emoji_service: DiscordEmojiService) -> str:
+    del emoji_service
+    rarity = RARITY_BADGES.get(quote.item.rarity.lower(), "⚪")
     return _limit_component_text(
         (
-            f"{rarity_badge(quote.item.rarity)} {quote.item.slot.title()} | "
-            f"{format_item_stats(quote.item)} | Price {format_gold(quote.item.cost)}"
+            f"{rarity} {quote.item.slot.title()} | "
+            f"{format_item_stats(quote.item)} | Price {GOLD_EMOJI} {quote.item.cost}"
         ),
         100,
+    )
+
+
+def _equipment_select_emoji(item: EquipmentItem, emoji_service: DiscordEmojiService) -> discord.PartialEmoji | None:
+    registry_entry = emoji_service.registry_entry_for(item.thumbnail_asset)
+    if registry_entry is None:
+        return None
+    return discord.PartialEmoji(
+        name=registry_entry.name,
+        id=int(registry_entry.emoji_id),
+        animated=registry_entry.animated,
     )

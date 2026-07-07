@@ -550,6 +550,76 @@
       "name": "ds_p_xp_15",
       "path": "assets/discord/emojis/potions/xp_15.png",
       "source_path": "assets/discord/source/potions/xp_15.png"
+    },
+    "equipment.common": {
+      "name": "ds_e_common",
+      "path": "assets/discord/emojis/misc/common.png",
+      "source_path": "assets/discord/source/misc/common.png"
+    },
+    "equipment.uncommon": {
+      "name": "ds_e_uncommon",
+      "path": "assets/discord/emojis/misc/uncommon.png",
+      "source_path": "assets/discord/source/misc/uncommon.png"
+    },
+    "equipment.rare": {
+      "name": "ds_e_rare",
+      "path": "assets/discord/emojis/misc/rare.png",
+      "source_path": "assets/discord/source/misc/rare.png"
+    },
+    "equipment.epic": {
+      "name": "ds_e_epic",
+      "path": "assets/discord/emojis/misc/epic.png",
+      "source_path": "assets/discord/source/misc/epic.png"
+    },
+    "equipment.legendary": {
+      "name": "ds_e_legendary",
+      "path": "assets/discord/emojis/misc/legendary.png",
+      "source_path": "assets/discord/source/misc/legendary.png"
+    },
+    "equipment.mythic": {
+      "name": "ds_e_mythic",
+      "path": "assets/discord/emojis/misc/mythic.png",
+      "source_path": "assets/discord/source/misc/mythic.png"
+    },
+    "misc.gold": {
+      "name": "ds_m_gold",
+      "path": "assets/discord/emojis/misc/gold.png",
+      "source_path": "assets/discord/source/misc/gold.png"
+    },
+    "misc.good": {
+      "name": "ds_m_good",
+      "path": "assets/discord/emojis/misc/good.png",
+      "source_path": "assets/discord/source/misc/good.png"
+    },
+    "misc.neutral": {
+      "name": "ds_m_neutral",
+      "path": "assets/discord/emojis/misc/neutral.png",
+      "source_path": "assets/discord/source/misc/neutral.png"
+    },
+    "misc.evil": {
+      "name": "ds_m_evil",
+      "path": "assets/discord/emojis/misc/evil.png",
+      "source_path": "assets/discord/source/misc/evil.png"
+    },
+    "misc.crystal": {
+      "name": "ds_m_crystal",
+      "path": "assets/discord/emojis/misc/crystal.png",
+      "source_path": "assets/discord/source/misc/crystal.png"
+    },
+    "misc.dragon_scale": {
+      "name": "ds_m_dragon_scale",
+      "path": "assets/discord/emojis/misc/dragon_scale.png",
+      "source_path": "assets/discord/source/misc/dragon_scale.png"
+    },
+    "misc.essence": {
+      "name": "ds_m_essence",
+      "path": "assets/discord/emojis/misc/essence.png",
+      "source_path": "assets/discord/source/misc/essence.png"
+    },
+    "misc.soul_piece": {
+      "name": "ds_m_soul_piece",
+      "path": "assets/discord/emojis/misc/soul_piece.png",
+      "source_path": "assets/discord/source/misc/soul_piece.png"
     }
   }
 }

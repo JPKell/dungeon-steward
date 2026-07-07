@@ -15,6 +15,7 @@ Useful commands:
     .venv/bin/python -m scripts.sync_assets
     .venv/bin/python -m scripts.sync_assets --key location.shop
     .venv/bin/python -m scripts.sync_assets --prefix item.potion --emojis-only
+    .venv/bin/python -m scripts.sync_assets --prefix equipment. --emojis-only
 """
 
 from __future__ import annotations

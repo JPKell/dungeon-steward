@@ -2,773 +2,1221 @@
   "emojis": {
     "enemy.bandit": {
       "animated": false,
-      "emoji_id": "1523966665182941335",
+      "emoji_id": "1524114250543398965",
       "name": "ds_e_bandit",
-      "sha256": "55c3ee9077d3cbdfc3894ad484d2d30813d8926eaccbf7a93ac0348b5f53ebf6",
-      "uploaded_at": "2026-07-07T08:19:27.025020+00:00"
+      "sha256": "74207a6f57b5f0c560fe95bd86f87a2e07af22e7b1709f47d6b7de473f9166f9",
+      "uploaded_at": "2026-07-07T18:05:54.152953+00:00"
     },
     "enemy.blob": {
       "animated": false,
-      "emoji_id": "1523966666206085270",
+      "emoji_id": "1524114252451807463",
       "name": "ds_e_blob",
-      "sha256": "70d1119499050b17431852073aba0ebb24fb10659bcab1466c8e7d9f8baf82bb",
-      "uploaded_at": "2026-07-07T08:19:27.274172+00:00"
+      "sha256": "e978ef59b74dca524a0da51b9820bc3cf1cdaccb9cd4aec7d785ac2fbdbdc405",
+      "uploaded_at": "2026-07-07T18:05:54.673505+00:00"
     },
     "enemy.cave_spider": {
       "animated": false,
-      "emoji_id": "1523966667175100466",
+      "emoji_id": "1524114254758674452",
       "name": "ds_e_cave_spider",
-      "sha256": "7c1061d94ec9e20be97011952f7623d7598faa842e2226a979fb1ab07179da2a",
-      "uploaded_at": "2026-07-07T08:19:27.513816+00:00"
+      "sha256": "349f47ebe03ad63993ce2c51dd69800444db911916602fd921a64ae746e9ae99",
+      "uploaded_at": "2026-07-07T18:05:55.138501+00:00"
     },
     "enemy.ghoul": {
       "animated": false,
-      "emoji_id": "1523966668064161833",
+      "emoji_id": "1524114256923066549",
       "name": "ds_e_ghoul",
-      "sha256": "6216e13dc64dddc4ba215bf96406dba6fafa2e911d553ffc66912e4477d825d8",
-      "uploaded_at": "2026-07-07T08:19:27.754518+00:00"
+      "sha256": "01b387f13db08f1fb9bb3fe58c942f6e3d78cba6ac9bba83f66d85fef2530f2d",
+      "uploaded_at": "2026-07-07T18:05:55.683441+00:00"
     },
     "enemy.giant": {
       "animated": false,
-      "emoji_id": "1523966668911415319",
+      "emoji_id": "1524114258718232788",
       "name": "ds_e_giant",
-      "sha256": "39b8ec10ec3dfb2ed4185b4572410e92d9c3b9f4f3353df18b20002ea67f2ea3",
-      "uploaded_at": "2026-07-07T08:19:27.986768+00:00"
+      "sha256": "cf9f86463c6372859249ce2cde1bf58cd9ee49a71918be016aa8bb7dcf576f83",
+      "uploaded_at": "2026-07-07T18:05:56.175414+00:00"
     },
     "enemy.giant_rat": {
       "animated": false,
-      "emoji_id": "1523966670303924275",
+      "emoji_id": "1524114261402452038",
       "name": "ds_e_giant_rat",
-      "sha256": "bea7785320bc5040598d1d540420c1b93d289fc9397cd5538b23c14fa11dd0ba",
-      "uploaded_at": "2026-07-07T08:19:28.246426+00:00"
+      "sha256": "a1215dbd340de7bfe5d171fa3c59f9874a793e8bbbe9774bffe009a7613cd5b8",
+      "uploaded_at": "2026-07-07T18:05:56.722716+00:00"
     },
     "enemy.goblin": {
       "animated": false,
-      "emoji_id": "1523966671188922401",
+      "emoji_id": "1524114262992224287",
       "name": "ds_e_goblin",
-      "sha256": "579912a0c48b0993215f95658a0913517055bbff636ffd5bfe83e6c80f4e1f43",
-      "uploaded_at": "2026-07-07T08:19:28.493857+00:00"
+      "sha256": "89034dfea2a6637f31efddaabf90d97f1558bef37eaaf066c47477fc718b40a4",
+      "uploaded_at": "2026-07-07T18:05:57.167149+00:00"
     },
     "enemy.hobgoblin": {
       "animated": false,
-      "emoji_id": "1523966672401338419",
+      "emoji_id": "1524114264913215559",
       "name": "ds_e_hobgoblin",
-      "sha256": "85c0f5a1e07c0a7b9c9f5ca3b29ff0d489fa8497e0f88e06344486d319c7cb95",
-      "uploaded_at": "2026-07-07T08:19:28.760490+00:00"
+      "sha256": "f50c161ef30546257b49505e1db485b1a4fb6356046a1d9362bc71eb7a1c9ac0",
+      "uploaded_at": "2026-07-07T18:05:57.557062+00:00"
     },
     "enemy.kobold": {
       "animated": false,
-      "emoji_id": "1523966673487659020",
+      "emoji_id": "1524114266926350386",
       "name": "ds_e_kobold",
-      "sha256": "2adee927e3979a811926e62ee10a8298ea8bd67256cca0dbd12aefd01b4e5881",
-      "uploaded_at": "2026-07-07T08:19:29.083466+00:00"
+      "sha256": "0c6e1b7ebbdf2270568a27dde391febc5a2f673cc7b379b3db3c52633e5f5fee",
+      "uploaded_at": "2026-07-07T18:05:58.034351+00:00"
     },
     "enemy.lesser_dragon": {
       "animated": false,
-      "emoji_id": "1523966674921852979",
+      "emoji_id": "1524114268797141095",
       "name": "ds_e_lesser_dragon",
-      "sha256": "1a6b726b8a1a09a91b53928291cb3f3dbcea5a9bba817bc9f0b10ee1d0db4b3c",
-      "uploaded_at": "2026-07-07T08:19:29.368946+00:00"
+      "sha256": "5c4e90bf8108eb5c7ecbc3332972437b5def5698c7b234601fa1d5aba01db9fe",
+      "uploaded_at": "2026-07-07T18:05:58.464923+00:00"
     },
     "enemy.minotaur": {
       "animated": false,
-      "emoji_id": "1523966675840401530",
+      "emoji_id": "1524114270630052111",
       "name": "ds_e_minotaur",
-      "sha256": "d6ec56b0ee525092540ebfb8ff554b4f9e8c18180ae94375dc27f914f02fb824",
-      "uploaded_at": "2026-07-07T08:19:29.595491+00:00"
+      "sha256": "8030d225452c127162d7fbe1eeb75835f386163cc3d11dd901983ff583a77e8f",
+      "uploaded_at": "2026-07-07T18:05:58.936668+00:00"
     },
     "enemy.necromancer": {
       "animated": false,
-      "emoji_id": "1523966676687650948",
+      "emoji_id": "1524114272421154857",
       "name": "ds_e_necromancer",
-      "sha256": "d875eb5464051e7c741a1d02311aa90093eb147c4e8288b5da307c24d692375d",
-      "uploaded_at": "2026-07-07T08:19:29.834980+00:00"
+      "sha256": "e97db6578f02a2ecef89617134293cfe3d3c241d25b1145607e3f99d16f3c439",
+      "uploaded_at": "2026-07-07T18:05:59.337396+00:00"
     },
     "enemy.ogre": {
       "animated": false,
-      "emoji_id": "1523966677551943743",
+      "emoji_id": "1524114274090483962",
       "name": "ds_e_ogre",
-      "sha256": "d5e8bc54be0b28445a0302bffd7c58ffa376bae35d51efcf2157c8fa3668e4db",
-      "uploaded_at": "2026-07-07T08:19:30.064494+00:00"
+      "sha256": "052833e6bf3d24e65708858ebfe1c96e71e5f879f497a419d08e11c93a1a8fb1",
+      "uploaded_at": "2026-07-07T18:05:59.746516+00:00"
     },
     "enemy.orc": {
       "animated": false,
-      "emoji_id": "1523966678768025655",
+      "emoji_id": "1524114275843575878",
       "name": "ds_e_orc",
-      "sha256": "09facc9ed38fbd32a4dcfdb6c33647529f53e17d0336452493dbaae1d2c65829",
-      "uploaded_at": "2026-07-07T08:19:30.336170+00:00"
+      "sha256": "f40f418f05a72191e2b6956da60f5177409b826ba647c4ec61a5470a451ec647",
+      "uploaded_at": "2026-07-07T18:06:00.173668+00:00"
     },
     "enemy.skeleton": {
       "animated": false,
-      "emoji_id": "1523966680118595595",
+      "emoji_id": "1524114277718425770",
       "name": "ds_e_skeleton",
-      "sha256": "60a491c48d6893539445dce5de7889ee749298622138b94822c44e7340c56c20",
-      "uploaded_at": "2026-07-07T08:19:30.587503+00:00"
+      "sha256": "b974aa073e27c640f66247082dce97202e0aab61c5232fbf88da9da13c42a908",
+      "uploaded_at": "2026-07-07T18:06:00.622364+00:00"
     },
     "enemy.stone_golem": {
       "animated": false,
-      "emoji_id": "1523966681217499278",
+      "emoji_id": "1524114279672840244",
       "name": "ds_e_stone_golem",
-      "sha256": "8dac2dba4223760ec8c1f46f3f039d1e813c733df793a204ebc455686c011020",
-      "uploaded_at": "2026-07-07T08:19:30.875225+00:00"
+      "sha256": "833f870bc7d017c6cccb395d089177fbe02b94511dbd7d9a7a35137dcb35e82e",
+      "uploaded_at": "2026-07-07T18:06:01.072053+00:00"
     },
     "enemy.troll": {
       "animated": false,
-      "emoji_id": "1523966682266079375",
+      "emoji_id": "1524114281950613675",
       "name": "ds_e_troll",
-      "sha256": "26c09d6ce0aa267f3b304b49cb9660819136eb95b6decf332f865a40594d7e28",
-      "uploaded_at": "2026-07-07T08:19:31.099706+00:00"
+      "sha256": "12c5a31331245562a36c0840a8b385b875c40a8900e27084c7a4adb16532454e",
+      "uploaded_at": "2026-07-07T18:06:01.631491+00:00"
     },
     "enemy.vampire": {
       "animated": false,
-      "emoji_id": "1523966683331428402",
+      "emoji_id": "1524114283720474696",
       "name": "ds_e_vampire",
-      "sha256": "f831cfa08770fd4c22941f72a46f9a39c77fd18675b3f71bbd89505a0bf2fac8",
-      "uploaded_at": "2026-07-07T08:19:31.380053+00:00"
+      "sha256": "d110d04bc585662a6ddfc165095b0efe5273d494310cffd1293d246cbc19ec00",
+      "uploaded_at": "2026-07-07T18:06:02.154096+00:00"
     },
     "enemy.wraith": {
       "animated": false,
-      "emoji_id": "1523966684422078534",
+      "emoji_id": "1524114286190924057",
       "name": "ds_e_wraith",
-      "sha256": "08c75fa22ed83505a60b4d6aa05170c01db3406e6e0870848977da84c553de00",
-      "uploaded_at": "2026-07-07T08:19:31.624698+00:00"
+      "sha256": "82effb6ba63bfeab2638741ca20d6f89d192d8edc45d3eb25b3dd47a4738327d",
+      "uploaded_at": "2026-07-07T18:06:02.644138+00:00"
     },
     "enemy.zombie": {
       "animated": false,
-      "emoji_id": "1523966685634363423",
+      "emoji_id": "1524114289328263278",
       "name": "ds_e_zombie",
-      "sha256": "4f6dfe7e7c16f697cf6f777440849a8553c757bce314932ec203a49252258f83",
-      "uploaded_at": "2026-07-07T08:19:31.909736+00:00"
+      "sha256": "3d2b48b2952e8f2c4e4ab80182756cdc3cdc1a4c3f8d40084a1364b8d1749331",
+      "uploaded_at": "2026-07-07T18:06:03.366467+00:00"
+    },
+    "equipment.armor_carapace": {
+      "animated": false,
+      "emoji_id": "1524114290859311185",
+      "name": "ds_eq_armor_carapace",
+      "sha256": "3478dff51861d3284e1103477b30ed780c261c137bc9536c5626e287c1a74f20",
+      "uploaded_at": "2026-07-07T18:06:03.806884+00:00"
+    },
+    "equipment.armor_cuirass": {
+      "animated": false,
+      "emoji_id": "1524114293031833822",
+      "name": "ds_eq_armor_cuirass",
+      "sha256": "76d444881966283dc0999b1c1802c69044ffc91f7f0a641e94991663e2c76db5",
+      "uploaded_at": "2026-07-07T18:06:04.265158+00:00"
+    },
+    "equipment.armor_harness": {
+      "animated": false,
+      "emoji_id": "1524114295389032508",
+      "name": "ds_eq_armor_harness",
+      "sha256": "2f85894b0475aeac34e81724c32e947d89f8d3e50ae2074a4046897ad2efa963",
+      "uploaded_at": "2026-07-07T18:06:04.869718+00:00"
+    },
+    "equipment.armor_hauberk": {
+      "animated": false,
+      "emoji_id": "1524114297507156159",
+      "name": "ds_eq_armor_hauberk",
+      "sha256": "c0699ec6052125df52dbf5fa5f46198b484717a68bc20ef21017a8636e9efa93",
+      "uploaded_at": "2026-07-07T18:06:05.320149+00:00"
+    },
+    "equipment.armor_mail": {
+      "animated": false,
+      "emoji_id": "1524114299302449183",
+      "name": "ds_eq_armor_mail",
+      "sha256": "157336905818c9156fb105fb1d7e5d88535e25023082126fdc1a949581904001",
+      "uploaded_at": "2026-07-07T18:06:05.748531+00:00"
+    },
+    "equipment.armor_plate": {
+      "animated": false,
+      "emoji_id": "1524114301093281812",
+      "name": "ds_eq_armor_plate",
+      "sha256": "c53542c3ab947149adaa5495457dd4dce6253f0fd21557bafe83645262655679",
+      "uploaded_at": "2026-07-07T18:06:06.187934+00:00"
+    },
+    "equipment.armor_vestment": {
+      "animated": false,
+      "emoji_id": "1524114302552903892",
+      "name": "ds_eq_armor_vestment",
+      "sha256": "eb2ca809a2636b0cec1820d88259cf6db592d0f208ec41205d534ea6c20ab9d6",
+      "uploaded_at": "2026-07-07T18:06:06.610591+00:00"
+    },
+    "equipment.boots_boots": {
+      "animated": false,
+      "emoji_id": "1524114304524091606",
+      "name": "ds_eq_boots_boots",
+      "sha256": "86f4cd07333e8ed43d14411c2a578552dc0ed1560b3da25595f9eca63d34e443",
+      "uploaded_at": "2026-07-07T18:06:07.102642+00:00"
+    },
+    "equipment.boots_footguards": {
+      "animated": false,
+      "emoji_id": "1524114306462122165",
+      "name": "ds_eq_boots_footguards",
+      "sha256": "b160e36475c1b40e3dfad078177f8fc7822dbc152a80a9a2f9ce42291c1dde68",
+      "uploaded_at": "2026-07-07T18:06:07.566356+00:00"
+    },
+    "equipment.boots_greaves": {
+      "animated": false,
+      "emoji_id": "1524114308638969998",
+      "name": "ds_eq_boots_greaves",
+      "sha256": "f6cc7d7b9e3f5b2b35a96199368757cc9fadd00d17787f3bb69a56f2227998f3",
+      "uploaded_at": "2026-07-07T18:06:07.978026+00:00"
+    },
+    "equipment.boots_sabatons": {
+      "animated": false,
+      "emoji_id": "1524114310547111956",
+      "name": "ds_eq_boots_sabatons",
+      "sha256": "a983d0df45040fa6dcd53f1bbc43bf20d634911c73155665a5e971a4a707a48e",
+      "uploaded_at": "2026-07-07T18:06:08.471420+00:00"
+    },
+    "equipment.boots_sandals": {
+      "animated": false,
+      "emoji_id": "1524114312531283978",
+      "name": "ds_eq_boots_sandals",
+      "sha256": "8fca42829fae4f0d623c36329ccc9abcc340e19e84404329202209263d1ad86f",
+      "uploaded_at": "2026-07-07T18:06:08.893706+00:00"
+    },
+    "equipment.boots_striders": {
+      "animated": false,
+      "emoji_id": "1524114314339029082",
+      "name": "ds_eq_boots_striders",
+      "sha256": "5617290956f3bb96b329751c1e420a2e1ebe89bceb217f95dd13296d66fc9fbe",
+      "uploaded_at": "2026-07-07T18:06:09.355390+00:00"
+    },
+    "equipment.boots_treads": {
+      "animated": false,
+      "emoji_id": "1524114316326863108",
+      "name": "ds_eq_boots_treads",
+      "sha256": "2f4f900820d27dce0ad46573ae6e91b236b094f2c878cd4ccdf2845a6ba86abe",
+      "uploaded_at": "2026-07-07T18:06:09.910963+00:00"
+    },
+    "equipment.common": {
+      "animated": false,
+      "emoji_id": "1524114317723566140",
+      "name": "ds_e_common",
+      "sha256": "231187e1240832c31e014ad7a961cb3647a1555840fe1ad784942bb6e21b9823",
+      "uploaded_at": "2026-07-07T18:06:10.145996+00:00"
+    },
+    "equipment.epic": {
+      "animated": false,
+      "emoji_id": "1524114319061553322",
+      "name": "ds_e_epic",
+      "sha256": "7bd3bad324b6ee2e235a0c0c595444ac592a36d597a592be2b80f53d18bad9e1",
+      "uploaded_at": "2026-07-07T18:06:10.474617+00:00"
+    },
+    "equipment.gloves_bracers": {
+      "animated": false,
+      "emoji_id": "1524114320747659305",
+      "name": "ds_eq_gloves_bracers",
+      "sha256": "f093f756df381b52c74b9bf92fc9f8927d1412efa09abc09ffd6c8f902052753",
+      "uploaded_at": "2026-07-07T18:06:10.880087+00:00"
+    },
+    "equipment.gloves_claws": {
+      "animated": false,
+      "emoji_id": "1524114322668785786",
+      "name": "ds_eq_gloves_claws",
+      "sha256": "ed4d7d3ec79288865f1a5553b35c16018f674acda3f75321088a8734aa509750",
+      "uploaded_at": "2026-07-07T18:06:11.333887+00:00"
+    },
+    "equipment.gloves_gauntlets": {
+      "animated": false,
+      "emoji_id": "1524114324564742184",
+      "name": "ds_eq_gloves_gauntlets",
+      "sha256": "4c483e9a7996f57a3e3b31bb89ff0232f9d5cda38608c754824607e15bc486cf",
+      "uploaded_at": "2026-07-07T18:06:11.785076+00:00"
+    },
+    "equipment.gloves_gloves": {
+      "animated": false,
+      "emoji_id": "1524114326489661683",
+      "name": "ds_eq_gloves_gloves",
+      "sha256": "5d00433370d92c8027b6b6cf5db8613f86c213d722173a550256fa8c330dc8e6",
+      "uploaded_at": "2026-07-07T18:06:12.221371+00:00"
+    },
+    "equipment.gloves_grips": {
+      "animated": false,
+      "emoji_id": "1524114328436084978",
+      "name": "ds_eq_gloves_grips",
+      "sha256": "60a7186df1bba1e133ecbeb8aaa7412e59ea13f157342f951366a5f994e643c5",
+      "uploaded_at": "2026-07-07T18:06:12.695896+00:00"
+    },
+    "equipment.gloves_knuckles": {
+      "animated": false,
+      "emoji_id": "1524114331220836362",
+      "name": "ds_eq_gloves_knuckles",
+      "sha256": "e73f34f42c8a06af4e1a1a0116c47ad8502e228165d7bc83458c7b6f7bf3d98d",
+      "uploaded_at": "2026-07-07T18:06:13.399527+00:00"
+    },
+    "equipment.gloves_wraps": {
+      "animated": false,
+      "emoji_id": "1524114333355737158",
+      "name": "ds_eq_gloves_wraps",
+      "sha256": "a55098212d32370aae7b6351bb3bbae76b3e415fbe7f0c9bd993d55b0b6af938",
+      "uploaded_at": "2026-07-07T18:06:13.875839+00:00"
+    },
+    "equipment.helm_coif": {
+      "animated": false,
+      "emoji_id": "1524114335503483041",
+      "name": "ds_eq_helm_coif",
+      "sha256": "2b9e87a84c4739cadeb5d716925b0d8664ab89f3a57f7963163618c6e8e12ddc",
+      "uploaded_at": "2026-07-07T18:06:14.401051+00:00"
+    },
+    "equipment.helm_crown": {
+      "animated": false,
+      "emoji_id": "1524114337504038922",
+      "name": "ds_eq_helm_crown",
+      "sha256": "29aa01bde10e23cbbc155a4a2590d483c3b7f8c45a1084f2e36437e2f869cc46",
+      "uploaded_at": "2026-07-07T18:06:14.876318+00:00"
+    },
+    "equipment.helm_greathelm": {
+      "animated": false,
+      "emoji_id": "1524114339160654005",
+      "name": "ds_eq_helm_greathelm",
+      "sha256": "5b9647b2d5fd2e81ae74bc4dea609e35bd0483206d417c1ba379f66178cb837e",
+      "uploaded_at": "2026-07-07T18:06:15.244642+00:00"
+    },
+    "equipment.helm_helm": {
+      "animated": false,
+      "emoji_id": "1524114340758945943",
+      "name": "ds_eq_helm_helm",
+      "sha256": "48ecbab1eafecd1fda7073f472a08e4813cd00a157885d97cf958e6677fdb10c",
+      "uploaded_at": "2026-07-07T18:06:15.712530+00:00"
+    },
+    "equipment.helm_hood": {
+      "animated": false,
+      "emoji_id": "1524114343002771526",
+      "name": "ds_eq_helm_hood",
+      "sha256": "14304bd79069b130537730a5a3e313815866dcfa1016187aa1e2648173b27c05",
+      "uploaded_at": "2026-07-07T18:06:16.233677+00:00"
+    },
+    "equipment.helm_mask": {
+      "animated": false,
+      "emoji_id": "1524114345062301867",
+      "name": "ds_eq_helm_mask",
+      "sha256": "eb7a78e1d6798158b8cb9a844883100f728c6322a2f0c302b317e5a07c2a5481",
+      "uploaded_at": "2026-07-07T18:06:16.674482+00:00"
+    },
+    "equipment.helm_visor": {
+      "animated": false,
+      "emoji_id": "1524114347339808911",
+      "name": "ds_eq_helm_visor",
+      "sha256": "f2a9eb33d4f9c7b4f893b0630723bbb7cfdde89d1695d02c6afb7904447603e9",
+      "uploaded_at": "2026-07-07T18:06:17.230973+00:00"
+    },
+    "equipment.legendary": {
+      "animated": false,
+      "emoji_id": "1524114348446978340",
+      "name": "ds_e_legendary",
+      "sha256": "361d1cd5a4ec2f3413520a3c77ab09e3c144560d0d78266152e89edf6385a0cb",
+      "uploaded_at": "2026-07-07T18:06:17.472072+00:00"
+    },
+    "equipment.mythic": {
+      "animated": false,
+      "emoji_id": "1524114349428445367",
+      "name": "ds_e_mythic",
+      "sha256": "6f84631ee163acd0a7ff92dbcfb2d1d71f8098c85bd1fc5469ca603098d49875",
+      "uploaded_at": "2026-07-07T18:06:17.693549+00:00"
+    },
+    "equipment.rare": {
+      "animated": false,
+      "emoji_id": "1524114350699446563",
+      "name": "ds_e_rare",
+      "sha256": "7dd05f4e7d7deffb9c6b49b476f6c982205d7c9a0ff7864a6d25880c0c744b76",
+      "uploaded_at": "2026-07-07T18:06:18.019372+00:00"
+    },
+    "equipment.shield_aegis": {
+      "animated": false,
+      "emoji_id": "1524114352507195513",
+      "name": "ds_eq_shield_aegis",
+      "sha256": "62ea0b882d3c3bd390117855af968cbbb9136c7114ff663309e0d8569b7292cc",
+      "uploaded_at": "2026-07-07T18:06:18.423572+00:00"
+    },
+    "equipment.shield_barrier": {
+      "animated": false,
+      "emoji_id": "1524114354398564462",
+      "name": "ds_eq_shield_barrier",
+      "sha256": "f267b1be6cf45ff7f5f3c672be1707fb3ddea930af55d2549b3affdfefee0824",
+      "uploaded_at": "2026-07-07T18:06:18.921536+00:00"
+    },
+    "equipment.shield_buckler": {
+      "animated": false,
+      "emoji_id": "1524114356470546614",
+      "name": "ds_eq_shield_buckler",
+      "sha256": "2cf0e95a6dfaf5f70cea13697ad5863c2ef33ed7d11c3da88d73cd94c048f1db",
+      "uploaded_at": "2026-07-07T18:06:19.458737+00:00"
+    },
+    "equipment.shield_bulwark": {
+      "animated": false,
+      "emoji_id": "1524114358467166358",
+      "name": "ds_eq_shield_bulwark",
+      "sha256": "5688367c310524aa4b9ba9c61d1a40e542228c65e3019d74112946cf0a117e41",
+      "uploaded_at": "2026-07-07T18:06:19.842230+00:00"
+    },
+    "equipment.shield_guard": {
+      "animated": false,
+      "emoji_id": "1524114359951818927",
+      "name": "ds_eq_shield_guard",
+      "sha256": "7f740808de7e373ce083305d40dceadf1bd59c3502115114f7a1b68e29e725aa",
+      "uploaded_at": "2026-07-07T18:06:20.281807+00:00"
+    },
+    "equipment.shield_rampart": {
+      "animated": false,
+      "emoji_id": "1524114361986191440",
+      "name": "ds_eq_shield_rampart",
+      "sha256": "caf47a49296c42b27f378ddfe4b3b8965e1477a04c66f45f069c89194647da4c",
+      "uploaded_at": "2026-07-07T18:06:20.691367+00:00"
+    },
+    "equipment.shield_ward": {
+      "animated": false,
+      "emoji_id": "1524114363286556873",
+      "name": "ds_eq_shield_ward",
+      "sha256": "59fdfca4364e35d8b4c7ad495b7ebb11fad942fe17eec28b9038d5da64bd787e",
+      "uploaded_at": "2026-07-07T18:06:21.090363+00:00"
+    },
+    "equipment.trinket_charm": {
+      "animated": false,
+      "emoji_id": "1524114366012854324",
+      "name": "ds_eq_trinket_charm",
+      "sha256": "ee2933f883b1f6f11b44330ec3c6531307bb85f832c5035a8f130e5dc0cfe3b6",
+      "uploaded_at": "2026-07-07T18:06:21.730817+00:00"
+    },
+    "equipment.trinket_compass": {
+      "animated": false,
+      "emoji_id": "1524114368168722552",
+      "name": "ds_eq_trinket_compass",
+      "sha256": "178c3aaffd38951b010e9950a3ace903bfbbf9b653aab11f1df55cec0dbaf716",
+      "uploaded_at": "2026-07-07T18:06:22.182147+00:00"
+    },
+    "equipment.trinket_idol": {
+      "animated": false,
+      "emoji_id": "1524114369930334471",
+      "name": "ds_eq_trinket_idol",
+      "sha256": "974adbd5985861ba500b3d02dd574a2e8319a5c149de3beea062e8ba9ee5c18d",
+      "uploaded_at": "2026-07-07T18:06:22.636390+00:00"
+    },
+    "equipment.trinket_reliquary": {
+      "animated": false,
+      "emoji_id": "1524114371901521981",
+      "name": "ds_eq_trinket_reliquary",
+      "sha256": "27aa5cd6481ff46379854cca8cbcaa251bfd333036e4f184c5269e12875fc33d",
+      "uploaded_at": "2026-07-07T18:06:23.052638+00:00"
+    },
+    "equipment.trinket_sigil": {
+      "animated": false,
+      "emoji_id": "1524114373906534471",
+      "name": "ds_eq_trinket_sigil",
+      "sha256": "d4fa149649232bccd8254956e2492cee7f35a2b5a051d6de8effa892e61585c1",
+      "uploaded_at": "2026-07-07T18:06:23.548162+00:00"
+    },
+    "equipment.trinket_talisman": {
+      "animated": false,
+      "emoji_id": "1524114376355872959",
+      "name": "ds_eq_trinket_talisman",
+      "sha256": "f2429cafd90f2e34e76172243d64c2e5b422834c483b6a249b4a49f799252bae",
+      "uploaded_at": "2026-07-07T18:06:24.139515+00:00"
+    },
+    "equipment.trinket_token": {
+      "animated": false,
+      "emoji_id": "1524114378083795114",
+      "name": "ds_eq_trinket_token",
+      "sha256": "8bb8ef6cb1305285fd977e0bb98e9ccfe512fc04bb95afbfbd813b051d14e1e5",
+      "uploaded_at": "2026-07-07T18:06:24.535098+00:00"
+    },
+    "equipment.uncommon": {
+      "animated": false,
+      "emoji_id": "1524114379203674296",
+      "name": "ds_e_uncommon",
+      "sha256": "13925cc687cc98a6c82abd413aefba98c944d9aa154b2dded513f0168d9afef7",
+      "uploaded_at": "2026-07-07T18:06:24.896618+00:00"
+    },
+    "equipment.weapon_axe": {
+      "animated": false,
+      "emoji_id": "1524114381330317372",
+      "name": "ds_eq_weapon_axe",
+      "sha256": "fe8329f9f4780f86dcb96d5621a3aacd225bea9e99a0d1a1e763bf4620957dd6",
+      "uploaded_at": "2026-07-07T18:06:25.302884+00:00"
+    },
+    "equipment.weapon_blade": {
+      "animated": false,
+      "emoji_id": "1524114383108571367",
+      "name": "ds_eq_weapon_blade",
+      "sha256": "63d1941b1c68ecc6056f6e7fddd4815e252d6ab66dfddfee74ed0add509dfe77",
+      "uploaded_at": "2026-07-07T18:06:25.733003+00:00"
+    },
+    "equipment.weapon_dirk": {
+      "animated": false,
+      "emoji_id": "1524114385922949221",
+      "name": "ds_eq_weapon_dirk",
+      "sha256": "906e23ea2ca961fa91216457e5541e23704a0f2221bc30fd293a1d88b57b15c7",
+      "uploaded_at": "2026-07-07T18:06:26.405168+00:00"
+    },
+    "equipment.weapon_glaive": {
+      "animated": false,
+      "emoji_id": "1524114387718377482",
+      "name": "ds_eq_weapon_glaive",
+      "sha256": "246c4d721e40a90c44c917beaf006227a526dbc3d150f2497a29e0368f54ed53",
+      "uploaded_at": "2026-07-07T18:06:26.836695+00:00"
+    },
+    "equipment.weapon_hammer": {
+      "animated": false,
+      "emoji_id": "1524114389722988694",
+      "name": "ds_eq_weapon_hammer",
+      "sha256": "160b51fe3bb6a4e0f9434eebf5248b2a8a0b0939e79378bc0df0e30cd8fa784e",
+      "uploaded_at": "2026-07-07T18:06:27.320018+00:00"
+    },
+    "equipment.weapon_pike": {
+      "animated": false,
+      "emoji_id": "1524114391652499496",
+      "name": "ds_eq_weapon_pike",
+      "sha256": "820010bdabab9ec4c2149ce1ce260af564b69aa1a1b052aa6679f30dc159ddcc",
+      "uploaded_at": "2026-07-07T18:06:27.791526+00:00"
+    },
+    "equipment.weapon_saber": {
+      "animated": false,
+      "emoji_id": "1524114393518964846",
+      "name": "ds_eq_weapon_saber",
+      "sha256": "3ba1a0318918fed4181abe262ca871b529799fd25944f70c7c8065a470b5b1e1",
+      "uploaded_at": "2026-07-07T18:06:28.218075+00:00"
+    },
+    "equipment.weapon_spear": {
+      "animated": false,
+      "emoji_id": "1524114395196686447",
+      "name": "ds_eq_weapon_spear",
+      "sha256": "57975e621b617fc7e105956953ae031eafeaf0ae1f0ba9a13d661d47ab7e2a0c",
+      "uploaded_at": "2026-07-07T18:06:28.657903+00:00"
     },
     "item.potion.attack.01": {
       "animated": false,
-      "emoji_id": "1523966687483789322",
+      "emoji_id": "1524114397574729758",
       "name": "ds_p_atk_01",
-      "sha256": "4c09d6e462c0dfde27af88192b8c76c1fc949715c54d89edbf34a49b2f2a4d39",
-      "uploaded_at": "2026-07-07T08:19:32.350255+00:00"
+      "sha256": "0c1dd2cc63334280d46284bd16438f920217d8efee041dbd3efe37234350d56d",
+      "uploaded_at": "2026-07-07T18:06:29.180152+00:00"
     },
     "item.potion.attack.02": {
       "animated": false,
-      "emoji_id": "1523966689136345218",
+      "emoji_id": "1524114399353372712",
       "name": "ds_p_atk_02",
-      "sha256": "29fab4ef7019f79d2a1c65ad75151ecea6253f7f8df4d9cf28cf4ef1f27fb708",
-      "uploaded_at": "2026-07-07T08:19:32.753103+00:00"
+      "sha256": "d195cd61850fdafce882e6f8fb054e5aea5ac1eaba0e5c3f7642bc9c247968d9",
+      "uploaded_at": "2026-07-07T18:06:29.625388+00:00"
     },
     "item.potion.attack.03": {
       "animated": false,
-      "emoji_id": "1523966691518845058",
+      "emoji_id": "1524114401295073531",
       "name": "ds_p_atk_03",
-      "sha256": "36967864fd41adcbd63a72f00a2c734852f450630993e8c08734c26008c1e19e",
-      "uploaded_at": "2026-07-07T08:19:33.360310+00:00"
+      "sha256": "46fee474a2a265100ddd146ed03dda682505e7db376686d2c881448c87a1317a",
+      "uploaded_at": "2026-07-07T18:06:30.112279+00:00"
     },
     "item.potion.attack.04": {
       "animated": false,
-      "emoji_id": "1523966693129326614",
+      "emoji_id": "1524114403631566939",
       "name": "ds_p_atk_04",
-      "sha256": "aad57fa96be16150fe182ce80896267faccb626b6b248761aac975f1880e2f79",
-      "uploaded_at": "2026-07-07T08:19:33.813033+00:00"
+      "sha256": "c3f858e321ac45ad525accf28bacc1710ad7dee07f8b59f2bc3ead8ada63b3a9",
+      "uploaded_at": "2026-07-07T18:06:31.148334+00:00"
     },
     "item.potion.attack.05": {
       "animated": false,
-      "emoji_id": "1523966695436320898",
+      "emoji_id": "1524114407464898721",
       "name": "ds_p_atk_05",
-      "sha256": "38f04fd45c67b68a14d9e4456406270a58650d8dffef377ba91b163f688eb9a7",
-      "uploaded_at": "2026-07-07T08:19:34.249119+00:00"
+      "sha256": "e8662b154a99ea77496dbce12104b826c8a98f1280ac221d45105bf651e8fa37",
+      "uploaded_at": "2026-07-07T18:06:31.561677+00:00"
     },
     "item.potion.attack.06": {
       "animated": false,
-      "emoji_id": "1523966697160052806",
+      "emoji_id": "1524114409121906780",
       "name": "ds_p_atk_06",
-      "sha256": "cd27e70fa0e65bd5b3dac20e71690f8d5671097ee82bcf26bef1cae6116a1da5",
-      "uploaded_at": "2026-07-07T08:19:34.668317+00:00"
+      "sha256": "980cf337877aa57ceddd970ffeb6adb459fbb48711cccbd61126b6d2a0143f0a",
+      "uploaded_at": "2026-07-07T18:06:32.009986+00:00"
     },
     "item.potion.attack.07": {
       "animated": false,
-      "emoji_id": "1523966698951282778",
+      "emoji_id": "1524114412460576908",
       "name": "ds_p_atk_07",
-      "sha256": "7a4e24b8ce44a468ba53f4a5a445bae8f5689a88ca1103ecf156eef71419e2f9",
-      "uploaded_at": "2026-07-07T08:19:35.082724+00:00"
+      "sha256": "2626751450182534f1d2c6a45a133eacbfa27bd13f216ca22e5c7a4d8c88c193",
+      "uploaded_at": "2026-07-07T18:06:32.851309+00:00"
     },
     "item.potion.attack.08": {
       "animated": false,
-      "emoji_id": "1523966700628873257",
+      "emoji_id": "1524114414817775859",
       "name": "ds_p_atk_08",
-      "sha256": "9c552f84785d65b7735fc0c177e91d0b75c99afcf47c54aa2428a379710b2d21",
-      "uploaded_at": "2026-07-07T08:19:35.485740+00:00"
+      "sha256": "909955556dcf708b27a776493e6a657f7b580e4d42666fdfb1407acc821f42fb",
+      "uploaded_at": "2026-07-07T18:06:33.348128+00:00"
     },
     "item.potion.attack.09": {
       "animated": false,
-      "emoji_id": "1523966702407254026",
+      "emoji_id": "1524114416663138376",
       "name": "ds_p_atk_09",
-      "sha256": "bd3fd42e1998528541f1225d1324dc68f2225dcc07ba95bff1e2b6e552a403ed",
-      "uploaded_at": "2026-07-07T08:19:35.890571+00:00"
+      "sha256": "519377b43c63b47cc6fc0b5bfa2d2f827d25527fcecf5839dcb15c6bf3caabe1",
+      "uploaded_at": "2026-07-07T18:06:33.836581+00:00"
     },
     "item.potion.attack.10": {
       "animated": false,
-      "emoji_id": "1523966703967408148",
+      "emoji_id": "1524114419087310908",
       "name": "ds_p_atk_10",
-      "sha256": "624e1854d8365372cc7cd8ae1abe3309f5e2f28ea9da7b655f6534af0201bd74",
-      "uploaded_at": "2026-07-07T08:19:36.271366+00:00"
+      "sha256": "aeedc6684a8d25fd905a200df62010589a6930dda616ab4100b69442ea82d77d",
+      "uploaded_at": "2026-07-07T18:06:34.310918+00:00"
     },
     "item.potion.attack.11": {
       "animated": false,
-      "emoji_id": "1523966705414570005",
+      "emoji_id": "1524114420484276618",
       "name": "ds_p_atk_11",
-      "sha256": "c2393e77025c63473e61a5ae9d0b3dd3106ac965f257c8ae65417caa00572ce8",
-      "uploaded_at": "2026-07-07T08:19:36.689329+00:00"
+      "sha256": "d14580812ff87f6190d21b80ba4c4db7e4a61094935442d4cee8850fccf3a9f3",
+      "uploaded_at": "2026-07-07T18:06:34.745916+00:00"
     },
     "item.potion.attack.12": {
       "animated": false,
-      "emoji_id": "1523966707444617376",
+      "emoji_id": "1524114423097200712",
       "name": "ds_p_atk_12",
-      "sha256": "638081982de33821cb459957e98a952dd86c22b6ce7a19157237e8e069d4415e",
-      "uploaded_at": "2026-07-07T08:19:37.095390+00:00"
+      "sha256": "6e152f94074ee9531b8d3529ad2a0389eadc2142719a4d0c63c5a293980f3bf2",
+      "uploaded_at": "2026-07-07T18:06:35.332430+00:00"
     },
     "item.potion.attack.13": {
       "animated": false,
-      "emoji_id": "1523966709063487518",
+      "emoji_id": "1524114425131438272",
       "name": "ds_p_atk_13",
-      "sha256": "3d05f2b73ea6f6906f3c2414de1fe8a5529e60967e9a3803fff3d6655c9d3810",
-      "uploaded_at": "2026-07-07T08:19:37.497406+00:00"
+      "sha256": "931ad2b0170520c5ce824de176a0ca39052638544d1ca5b4bd0fa2c49256e31d",
+      "uploaded_at": "2026-07-07T18:06:35.738819+00:00"
     },
     "item.potion.attack.14": {
       "animated": false,
-      "emoji_id": "1523966710997188739",
+      "emoji_id": "1524114426532466730",
       "name": "ds_p_atk_14",
-      "sha256": "4cbb4bd0ef2f4fe6ae9ce1f4682852c3f9adfaf802fda746e4434b6552df0810",
-      "uploaded_at": "2026-07-07T08:19:37.958364+00:00"
+      "sha256": "4970302d493b58601d25422969be25545095bad2d79f2607b737f167cc3fe722",
+      "uploaded_at": "2026-07-07T18:06:36.203394+00:00"
     },
     "item.potion.attack.15": {
       "animated": false,
-      "emoji_id": "1523966712708337775",
+      "emoji_id": "1524114429120352277",
       "name": "ds_p_atk_15",
-      "sha256": "235e306cda637c838a33d9aded2f0e8556c363b0999d078cac235b48a3977497",
-      "uploaded_at": "2026-07-07T08:19:38.365934+00:00"
+      "sha256": "7a190fe6c45e486800572c54cacc05b4f7f874fb6dfbd816e57b9c8a9197831f",
+      "uploaded_at": "2026-07-07T18:06:36.777954+00:00"
     },
     "item.potion.defense.01": {
       "animated": false,
-      "emoji_id": "1523966713773817857",
+      "emoji_id": "1524114431368495205",
       "name": "ds_p_def_01",
-      "sha256": "466028b082af155565ac68317b0803033d118e48b77b315ff997e6ae11cd61e1",
-      "uploaded_at": "2026-07-07T08:19:38.608498+00:00"
+      "sha256": "b9b1e5d0b8781dfdc0e95b939201a49f946c0f4f481df56bd7f6311fe8000026",
+      "uploaded_at": "2026-07-07T18:06:37.241379+00:00"
     },
     "item.potion.defense.02": {
       "animated": false,
-      "emoji_id": "1523966714537054299",
+      "emoji_id": "1524114433083969576",
       "name": "ds_p_def_02",
-      "sha256": "7fa237ebea549c69969dfba4166246611b948d449ae80990736e35eece23bb3d",
-      "uploaded_at": "2026-07-07T08:19:38.894356+00:00"
+      "sha256": "b7b3a6d45f248a652e3a284ab473e4802d0389d3851ff63cc8adb62975d4e43c",
+      "uploaded_at": "2026-07-07T18:06:37.664116+00:00"
     },
     "item.potion.defense.03": {
       "animated": false,
-      "emoji_id": "1523966717078929528",
+      "emoji_id": "1524114434942046338",
       "name": "ds_p_def_03",
-      "sha256": "d669d2dcfbe97f87b1c01ac8f60872ed98ed3f3b582e9b5b8d5029ce7c61dd11",
-      "uploaded_at": "2026-07-07T08:19:39.411318+00:00"
+      "sha256": "da1b5608403a81cfaaad3ff196386a2c5ca055ae6603666d04f5a0ce9d714356",
+      "uploaded_at": "2026-07-07T18:06:38.095421+00:00"
     },
     "item.potion.defense.04": {
       "animated": false,
-      "emoji_id": "1523966718018457613",
+      "emoji_id": "1524114437181804767",
       "name": "ds_p_def_04",
-      "sha256": "f73a490050cce861a781b0c3b382ddccc3f550e62978db7d81d08af0fa465e0a",
-      "uploaded_at": "2026-07-07T08:19:39.650987+00:00"
+      "sha256": "e41fa0a8b4c2695decaec7217e6136e5aade42271edfc36849ce5d379f5dacba",
+      "uploaded_at": "2026-07-07T18:06:38.663703+00:00"
     },
     "item.potion.defense.05": {
       "animated": false,
-      "emoji_id": "1523966719369019423",
+      "emoji_id": "1524114439043944470",
       "name": "ds_p_def_05",
-      "sha256": "0d8bff1e89ccab289a46f5b1158b109a696a8fbc615d998374ac260257681582",
-      "uploaded_at": "2026-07-07T08:19:39.978479+00:00"
+      "sha256": "37151814e2cfb568e035a1670880d506bb8479d317257b5bff3cccab3224330c",
+      "uploaded_at": "2026-07-07T18:06:39.110861+00:00"
     },
     "item.potion.defense.06": {
       "animated": false,
-      "emoji_id": "1523966720123867253",
+      "emoji_id": "1524114441212264611",
       "name": "ds_p_def_06",
-      "sha256": "1f7ba074da948a06195cf43a089a79728972e61ba8337c20e7d193596860da4d",
-      "uploaded_at": "2026-07-07T08:19:40.233437+00:00"
+      "sha256": "f41b5d30ada221197310dd6ce008e816615fad508cfd8da3c0bda79d2316a9c6",
+      "uploaded_at": "2026-07-07T18:06:39.634108+00:00"
     },
     "item.potion.defense.07": {
       "animated": false,
-      "emoji_id": "1523966721533149326",
+      "emoji_id": "1524114443187781853",
       "name": "ds_p_def_07",
-      "sha256": "9f2e2dde46179210a18674488f2228b5613f82c13cf82d3d6b6a0092f2169ddd",
-      "uploaded_at": "2026-07-07T08:19:40.471985+00:00"
+      "sha256": "6319f6dfa86cd520feb143771ca8fbd7af7b4ea12ab5b4acb5a2e34d03aefb5e",
+      "uploaded_at": "2026-07-07T18:06:40.077585+00:00"
     },
     "item.potion.defense.08": {
       "animated": false,
-      "emoji_id": "1523966722564948140",
+      "emoji_id": "1524114445129744605",
       "name": "ds_p_def_08",
-      "sha256": "5e7557fa9c2fe4f99da8b45d4e606b56670f0d6d09e311070ed040a87f41ace3",
-      "uploaded_at": "2026-07-07T08:19:40.725660+00:00"
+      "sha256": "99aa17637714659288b5e7ee39a82ba29548111081d485ed7eb22dec28f28eb3",
+      "uploaded_at": "2026-07-07T18:06:40.581495+00:00"
     },
     "item.potion.defense.09": {
       "animated": false,
-      "emoji_id": "1523966723525578783",
+      "emoji_id": "1524114447264645128",
       "name": "ds_p_def_09",
-      "sha256": "32f563480b3d4898a20f1883c24c21bdaebd9282da675ce8d2b7c9d9ec92c67b",
-      "uploaded_at": "2026-07-07T08:19:40.947172+00:00"
+      "sha256": "ba059618c3b4e0e1460e6cece96e888278ec430cec9d79d96a26af9cc1df638d",
+      "uploaded_at": "2026-07-07T18:06:41.033348+00:00"
     },
     "item.potion.defense.10": {
       "animated": false,
-      "emoji_id": "1523966724196536441",
+      "emoji_id": "1524114449085235361",
       "name": "ds_p_def_10",
-      "sha256": "d970c9da59506c8d34951dc72197f9338c650b9ca3146372975624d24b778a02",
-      "uploaded_at": "2026-07-07T08:19:41.193301+00:00"
+      "sha256": "c32fd4378c997bb16a31ceda42281b69647592a193b141b75d16552d50b632b8",
+      "uploaded_at": "2026-07-07T18:06:41.467429+00:00"
     },
     "item.potion.defense.11": {
       "animated": false,
-      "emoji_id": "1523966725593239585",
+      "emoji_id": "1524114450880270356",
       "name": "ds_p_def_11",
-      "sha256": "da6dbb7efe0476a099c06c7e35ef6d82636c78b039ad1b0ebadfc3fd858d8cba",
-      "uploaded_at": "2026-07-07T08:19:41.453997+00:00"
+      "sha256": "391a644c1b5506f0688f775fd77b38b37707676f9882a723d0bb7287505cca92",
+      "uploaded_at": "2026-07-07T18:06:41.894618+00:00"
     },
     "item.potion.defense.12": {
       "animated": false,
-      "emoji_id": "1523966726671302777",
+      "emoji_id": "1524114452981743737",
       "name": "ds_p_def_12",
-      "sha256": "42b5c6014da4fd2621cb8f06480c0f280f28f722b46a83d5f5299e55837f8b8f",
-      "uploaded_at": "2026-07-07T08:19:41.695072+00:00"
+      "sha256": "c71398f19be8067b9f1a1e8218389dd7a147d6343635fca3ddbfdbbbdba9cdbf",
+      "uploaded_at": "2026-07-07T18:06:42.402918+00:00"
     },
     "item.potion.defense.13": {
       "animated": false,
-      "emoji_id": "1523966727615025192",
+      "emoji_id": "1524114455342874775",
       "name": "ds_p_def_13",
-      "sha256": "4094d2697146bdb6aecd74232ef0aebfa64313b9960c9ab42c57a9d62c304316",
-      "uploaded_at": "2026-07-07T08:19:41.916611+00:00"
+      "sha256": "b6999cd43731345f52d13164de0bad7c2aca2583a99811faf7b061cb222d4c7b",
+      "uploaded_at": "2026-07-07T18:06:43.019159+00:00"
     },
     "item.potion.defense.14": {
       "animated": false,
-      "emoji_id": "1523966728470663301",
+      "emoji_id": "1524114458270498998",
       "name": "ds_p_def_14",
-      "sha256": "21b901ca5e66ccc6615a148f89b1684a10b985046adf6c120313367c8870b75f",
-      "uploaded_at": "2026-07-07T08:19:42.161750+00:00"
+      "sha256": "607f7c6f24910b8d65e9decc8aadcddee57cfce792ef4fe631bb55b4aea6d9d5",
+      "uploaded_at": "2026-07-07T18:06:43.670875+00:00"
     },
     "item.potion.defense.15": {
       "animated": false,
-      "emoji_id": "1523966729749925908",
+      "emoji_id": "1524114459990425721",
       "name": "ds_p_def_15",
-      "sha256": "ab49b6372c1714309a724ef45a1f26c4e970efa0276c42ba4060f0e9ca4767a5",
-      "uploaded_at": "2026-07-07T08:19:42.430166+00:00"
+      "sha256": "f85145d779d4747837fd084512d9d9aacd7bca788d238e1790903068038680ef",
+      "uploaded_at": "2026-07-07T18:06:44.072137+00:00"
     },
     "item.potion.healing.01": {
       "animated": false,
-      "emoji_id": "1523966731507470386",
+      "emoji_id": "1524114462724980836",
       "name": "ds_p_heal_01",
-      "sha256": "8abc61402f43c07591f2e0a2b2d64cde6451c9f634db0d8c1a9e949ef2537663",
-      "uploaded_at": "2026-07-07T08:19:42.846542+00:00"
+      "sha256": "6e3b653539f730e0df7d514c2f6b503d90243a5d18119e36242b81b895a32f99",
+      "uploaded_at": "2026-07-07T18:06:44.737187+00:00"
     },
     "item.potion.healing.02": {
       "animated": false,
-      "emoji_id": "1523966733184929902",
+      "emoji_id": "1524114464415285320",
       "name": "ds_p_heal_02",
-      "sha256": "612c6cc45f6c1e83a6e871259be3c81c86593c3993f8b37a76d7497205179ebc",
-      "uploaded_at": "2026-07-07T08:19:43.242831+00:00"
+      "sha256": "4a645d223520e845e550c5a63a303b3710811d03ba77fdad7bb0f8155868b9a9",
+      "uploaded_at": "2026-07-07T18:06:45.154863+00:00"
     },
     "item.potion.healing.03": {
       "animated": false,
-      "emoji_id": "1523966734955057183",
+      "emoji_id": "1524114466328018984",
       "name": "ds_p_heal_03",
-      "sha256": "42ef02af869560bd9e663124971c142482ce338359c5779c8fcbab84fc6833f5",
-      "uploaded_at": "2026-07-07T08:19:43.677016+00:00"
+      "sha256": "25239a74d37b7e20ede1f6cc013fcd4f755faa8a1fb7835d6d262b6a25abe5f9",
+      "uploaded_at": "2026-07-07T18:06:45.579386+00:00"
     },
     "item.potion.healing.04": {
       "animated": false,
-      "emoji_id": "1523966736813129880",
+      "emoji_id": "1524114467988836502",
       "name": "ds_p_heal_04",
-      "sha256": "3d21949629a27d5eeadc857fa6179b2ba150c5774ef3ce67909557998a863565",
-      "uploaded_at": "2026-07-07T08:19:44.124199+00:00"
+      "sha256": "fe0a0ed384808c6a3aeef67863f99b4562ecefdd3488e98759bde1d54b3060fd",
+      "uploaded_at": "2026-07-07T18:06:45.969902+00:00"
     },
     "item.potion.healing.05": {
       "animated": false,
-      "emoji_id": "1523966738360828008",
+      "emoji_id": "1524114469922275389",
       "name": "ds_p_heal_05",
-      "sha256": "cdb5a6ce5fcc3c49ebec64e9e978e030712545dd5f803faa05b7f0c9b99d0d03",
-      "uploaded_at": "2026-07-07T08:19:44.574141+00:00"
+      "sha256": "d177fbad4d8d4f5700d6a67a705be84cdab90aaa29bb57d079b117b49e701e23",
+      "uploaded_at": "2026-07-07T18:06:46.434623+00:00"
     },
     "item.potion.healing.06": {
       "animated": false,
-      "emoji_id": "1523966740524961812",
+      "emoji_id": "1524114471692275953",
       "name": "ds_p_heal_06",
-      "sha256": "13665fc6753c927fdbd1523f2397653b9d0dba2af11bbe3a4376d6caa62be11f",
-      "uploaded_at": "2026-07-07T08:19:45.015915+00:00"
+      "sha256": "d43cafeb0828cabfe0da6074f0b8830f2ca061545869d24cebb8c3f89706f91d",
+      "uploaded_at": "2026-07-07T18:06:46.872955+00:00"
     },
     "item.potion.healing.07": {
       "animated": false,
-      "emoji_id": "1523966742257205400",
+      "emoji_id": "1524114473940549762",
       "name": "ds_p_heal_07",
-      "sha256": "9afd753303eff377085bb0cb92027259e32ada5958628f482ebb2a86e7e86df6",
-      "uploaded_at": "2026-07-07T08:19:45.424575+00:00"
+      "sha256": "e358fbd4dba9f8d3c2920336f1d65fdbd97970621185e9608aacfd182b713081",
+      "uploaded_at": "2026-07-07T18:06:47.384263+00:00"
     },
     "item.potion.healing.08": {
       "animated": false,
-      "emoji_id": "1523966744140447856",
+      "emoji_id": "1524114475601625291",
       "name": "ds_p_heal_08",
-      "sha256": "55572c8fcb028bc3ebc3130e2f103ceac7c5fed0105fca5987c2808517e5d7fa",
-      "uploaded_at": "2026-07-07T08:19:45.863319+00:00"
+      "sha256": "085b81a3316f54e174ad30420463ea40da41af3d11545d3b3f66a6ad74407945",
+      "uploaded_at": "2026-07-07T18:06:47.836866+00:00"
     },
     "item.potion.healing.09": {
       "animated": false,
-      "emoji_id": "1523966746120290464",
+      "emoji_id": "1524114477765886093",
       "name": "ds_p_heal_09",
-      "sha256": "11f13646f78557f569213c516b47c536b061aa6f6500f2fbd838ee08fe72343a",
-      "uploaded_at": "2026-07-07T08:19:46.331420+00:00"
+      "sha256": "1071330144629f6c7e6c24677b7cf028aa22c759b8aca57a64a1c1ec3bbfcb14",
+      "uploaded_at": "2026-07-07T18:06:48.314807+00:00"
     },
     "item.potion.healing.10": {
       "animated": false,
-      "emoji_id": "1523966747793690694",
+      "emoji_id": "1524114479581757580",
       "name": "ds_p_heal_10",
-      "sha256": "43cddcc1529f62e83437503ddbc260394d2d8cb062a4cea373165120f6b0b885",
-      "uploaded_at": "2026-07-07T08:19:46.730696+00:00"
+      "sha256": "03bb319ebce6c04529c38d4007ac0b9793788ba4e0afd49d36314574cf833bd0",
+      "uploaded_at": "2026-07-07T18:06:48.737080+00:00"
     },
     "item.potion.healing.11": {
       "animated": false,
-      "emoji_id": "1523966749475602442",
+      "emoji_id": "1524114481163141243",
       "name": "ds_p_heal_11",
-      "sha256": "ccc9f1f246b93abe9213dc8fc60a84338447aed939857cdacfffba402de1c1ab",
-      "uploaded_at": "2026-07-07T08:19:47.119993+00:00"
+      "sha256": "296a80e7fa10574f513a6f9197a4b1a2508a57272d1b1eb7bb5e31215b5de739",
+      "uploaded_at": "2026-07-07T18:06:49.147179+00:00"
     },
     "item.potion.healing.12": {
       "animated": false,
-      "emoji_id": "1523966751111516190",
+      "emoji_id": "1524114483314823338",
       "name": "ds_p_heal_12",
-      "sha256": "014990bb0c6f861cf4c1ecfa7227cc0ba263af3dc2b98319e5f6621ab167eb06",
-      "uploaded_at": "2026-07-07T08:19:47.526199+00:00"
+      "sha256": "48e44da41218227b217a8139d7ac63c276f31fbe892c77edbc4aaa6dc807fd56",
+      "uploaded_at": "2026-07-07T18:06:49.644244+00:00"
     },
     "item.potion.healing.13": {
       "animated": false,
-      "emoji_id": "1523966752776654890",
+      "emoji_id": "1524114485126758521",
       "name": "ds_p_heal_13",
-      "sha256": "7581258fedb790623de896afdc7f722884a2f689568f85558b22c461b826fc57",
-      "uploaded_at": "2026-07-07T08:19:47.953034+00:00"
+      "sha256": "bcb639389a0606eac195496a3ca4f9fb0226b745f6862d4f0de60b013c2bc34a",
+      "uploaded_at": "2026-07-07T18:06:50.060448+00:00"
     },
     "item.potion.healing.14": {
       "animated": false,
-      "emoji_id": "1523966754559098890",
+      "emoji_id": "1524114486859137254",
       "name": "ds_p_heal_14",
-      "sha256": "0d9505f92beee78d480c0a9e18805c54cdfc3184f7f8dc97a97707fd4bfc506d",
-      "uploaded_at": "2026-07-07T08:19:48.361307+00:00"
+      "sha256": "71398c16c87d5a025787b7f8809517a6b5065c871bac1bc975f49f135765f6b2",
+      "uploaded_at": "2026-07-07T18:06:50.480407+00:00"
     },
     "item.potion.healing.15": {
       "animated": false,
-      "emoji_id": "1523966756480094319",
+      "emoji_id": "1524114488276549856",
       "name": "ds_p_heal_15",
-      "sha256": "bd0e22e6294e7b9249687f788bb081a7a8f32c2de349adbd61939cff707b7d98",
-      "uploaded_at": "2026-07-07T08:19:48.818332+00:00"
+      "sha256": "2ea203433047ee02bc4dec4fdab5474cb2cdcc1405b476a4addc317e3292fc3d",
+      "uploaded_at": "2026-07-07T18:06:50.964739+00:00"
     },
     "item.potion.luck.01": {
       "animated": false,
-      "emoji_id": "1523966757914677320",
+      "emoji_id": "1524114490658914566",
       "name": "ds_p_luck_01",
-      "sha256": "2728f961ccbd4393360decc111aa56ca902116d9a717c4b4bfa781c70b25ff8a",
-      "uploaded_at": "2026-07-07T08:19:49.207630+00:00"
+      "sha256": "4a85d3634ee99159e734e9289db4dd4ffd25a16f8d96aec4bf7bcfd57b3ad095",
+      "uploaded_at": "2026-07-07T18:06:51.420465+00:00"
     },
     "item.potion.luck.02": {
       "animated": false,
-      "emoji_id": "1523966759445463194",
+      "emoji_id": "1524114492970106901",
       "name": "ds_p_luck_02",
-      "sha256": "4942b6fad64f863328d614b56d0de2255474e14a43f2c86c5014aa3b528c29d3",
-      "uploaded_at": "2026-07-07T08:19:49.627018+00:00"
+      "sha256": "69eb374eb6af5905907c8085873b2c701a8070d24b4e293189c65bb18111914f",
+      "uploaded_at": "2026-07-07T18:06:51.936843+00:00"
     },
     "item.potion.luck.03": {
       "animated": false,
-      "emoji_id": "1523966761802666105",
+      "emoji_id": "1524114494761205942",
       "name": "ds_p_luck_03",
-      "sha256": "027b9714954c7160415322bf40a1577e617dbb1e27c47b02086b779de016e19d",
-      "uploaded_at": "2026-07-07T08:19:50.088044+00:00"
+      "sha256": "a6bf45dbcde4387b1ad42e911e66501613db5604aa8caf6a08cc2667f212c1a2",
+      "uploaded_at": "2026-07-07T18:06:52.391789+00:00"
     },
     "item.potion.luck.04": {
       "animated": false,
-      "emoji_id": "1523966763732172901",
+      "emoji_id": "1524114496690323630",
       "name": "ds_p_luck_04",
-      "sha256": "01f5c6b7f045e00ee65ec267a499115ab24043fa6c4170f3db0ea88dc2e1a329",
-      "uploaded_at": "2026-07-07T08:19:50.537019+00:00"
+      "sha256": "bf10489b14b91c7f5e7d923017e1aa6092890c6a25b391d0a6e2902fcdafc972",
+      "uploaded_at": "2026-07-07T18:06:52.807939+00:00"
     },
     "item.potion.luck.05": {
       "animated": false,
-      "emoji_id": "1523966765611352136",
+      "emoji_id": "1524114498183495961",
       "name": "ds_p_luck_05",
-      "sha256": "aa9ba72169e32f6dee0bf3425f8b10b5d705c6fbf57a108067cb9e1971260b14",
-      "uploaded_at": "2026-07-07T08:19:50.989260+00:00"
+      "sha256": "6039a4fa22f24aad2e5b4e6b5ae1d59d6da2bd2b5f5bbc98ba7afb150d2ac036",
+      "uploaded_at": "2026-07-07T18:06:53.270829+00:00"
     },
     "item.potion.luck.06": {
       "animated": false,
-      "emoji_id": "1523966767410450532",
+      "emoji_id": "1524114500406476820",
       "name": "ds_p_luck_06",
-      "sha256": "2d25667c7751c844349bc9defe8dafceaf1185d9413903d9fc6de2ca9b6f556d",
-      "uploaded_at": "2026-07-07T08:19:51.403606+00:00"
+      "sha256": "0390707bf36e9960e36091f44a004bda429e4705bd3b7a922cc295ceef599837",
+      "uploaded_at": "2026-07-07T18:06:53.727529+00:00"
     },
     "item.potion.luck.07": {
       "animated": false,
-      "emoji_id": "1523966769054613586",
+      "emoji_id": "1524114503107612854",
       "name": "ds_p_luck_07",
-      "sha256": "35ce2d783914277f5b93835a0542d86a48ad17b852ad9bd541b7236e62a10175",
-      "uploaded_at": "2026-07-07T08:19:51.801715+00:00"
+      "sha256": "d03897f1a885cb3ee3b9794fce935e1e40dd725589f968dc5946b340b35349ab",
+      "uploaded_at": "2026-07-07T18:06:54.429693+00:00"
     },
     "item.potion.luck.08": {
       "animated": false,
-      "emoji_id": "1523966770770083941",
+      "emoji_id": "1524114505238446252",
       "name": "ds_p_luck_08",
-      "sha256": "8673f86864b33b5c49e022d719e38b33c12a518b9fb63cee1d424b391726017b",
-      "uploaded_at": "2026-07-07T08:19:52.211605+00:00"
+      "sha256": "8ae44a5004289dd36348f9f4e37c297cc3a7cd40477c317a085fdecd55fac04a",
+      "uploaded_at": "2026-07-07T18:06:54.866533+00:00"
     },
     "item.potion.luck.09": {
       "animated": false,
-      "emoji_id": "1523966772573638717",
+      "emoji_id": "1524114506836476076",
       "name": "ds_p_luck_09",
-      "sha256": "eecee4f5bce30fc1bb83be285a24d36dd729fc840782cafda46ea435eeb0c775",
-      "uploaded_at": "2026-07-07T08:19:52.632398+00:00"
+      "sha256": "9f9bfb6589eb9074cf40d6be0801a05ef0e9b61b23867a08cf00248120ecc3ff",
+      "uploaded_at": "2026-07-07T18:06:55.307860+00:00"
     },
     "item.potion.luck.10": {
       "animated": false,
-      "emoji_id": "1523966774020669524",
+      "emoji_id": "1524114508782633063",
       "name": "ds_p_luck_10",
-      "sha256": "10a83cc81076a127294ca0fc264ff29708ed4516c5125c1e123c595db7892373",
-      "uploaded_at": "2026-07-07T08:19:53.097273+00:00"
+      "sha256": "d07834c17ec22adf0a614c7ab9f4f071992f3dc844fd952e87ed51ff7d672d70",
+      "uploaded_at": "2026-07-07T18:06:55.794396+00:00"
     },
     "item.potion.luck.11": {
       "animated": false,
-      "emoji_id": "1523966776222679140",
+      "emoji_id": "1524114510800097507",
       "name": "ds_p_luck_11",
-      "sha256": "de40cb76a924858d4eea8199c2a96a4c69c00aa66fab3b1989ddbe2ddb94bedd",
-      "uploaded_at": "2026-07-07T08:19:53.499889+00:00"
+      "sha256": "7702d08b7a66745629dc90ca49059e5d416e6069a8465dd009d34446ce26ac5b",
+      "uploaded_at": "2026-07-07T18:06:56.232072+00:00"
     },
     "item.potion.luck.12": {
       "animated": false,
-      "emoji_id": "1523966777824907324",
+      "emoji_id": "1524114512968683733",
       "name": "ds_p_luck_12",
-      "sha256": "fa180a1cfb77354ea8709de0caa25bb4147898146cf95c6115b258a90ee0cfc4",
-      "uploaded_at": "2026-07-07T08:19:53.901503+00:00"
+      "sha256": "8b596e17696c39a963738cbac5ae39ffa5fb87b3b20e8df3816983863a1739fe",
+      "uploaded_at": "2026-07-07T18:06:56.699243+00:00"
     },
     "item.potion.luck.13": {
       "animated": false,
-      "emoji_id": "1523966779536183307",
+      "emoji_id": "1524114514801594530",
       "name": "ds_p_luck_13",
-      "sha256": "fb010ffdfcc66a6e4ca21205044541a543d58701d6a9f87ce1c72fd3ca12b141",
-      "uploaded_at": "2026-07-07T08:19:54.288730+00:00"
+      "sha256": "babbd9207a269319f2946863aae74c1800d6a2c206d69c9949a9844c294b1d11",
+      "uploaded_at": "2026-07-07T18:06:57.139521+00:00"
     },
     "item.potion.luck.14": {
       "animated": false,
-      "emoji_id": "1523966781348384798",
+      "emoji_id": "1524114516495962313",
       "name": "ds_p_luck_14",
-      "sha256": "4c0d516748dd0d3a024792c7b00c61350256a2e58b2edf8c8cc049062651d883",
-      "uploaded_at": "2026-07-07T08:19:54.732268+00:00"
+      "sha256": "498aec790abdfb2d1cd6f2f546e774249c15285f215be23bc587620366e5e8d9",
+      "uploaded_at": "2026-07-07T18:06:57.534732+00:00"
     },
     "item.potion.luck.15": {
       "animated": false,
-      "emoji_id": "1523966783046811769",
+      "emoji_id": "1524114518433730592",
       "name": "ds_p_luck_15",
-      "sha256": "d64e15ff91c027542b4014e1946cdc2114710dd735c46db2fa765aa12fdaf50b",
-      "uploaded_at": "2026-07-07T08:19:55.147145+00:00"
+      "sha256": "89432f81bcda293386392082c76f799becb7828b5bfabf20267ab188818183aa",
+      "uploaded_at": "2026-07-07T18:06:57.990551+00:00"
     },
     "item.potion.max_hp.01": {
       "animated": false,
-      "emoji_id": "1523966784737251398",
+      "emoji_id": "1524114520153260053",
       "name": "ds_p_hp_01",
-      "sha256": "77fbe86cec16b4d33be78db1db59e581ba6e46a3b2644173025b74453ed773d0",
-      "uploaded_at": "2026-07-07T08:19:55.543465+00:00"
+      "sha256": "dd297cc89acb58639adf3fef2ea16dbc525f97c5dc621a34301d3dd28c2a42da",
+      "uploaded_at": "2026-07-07T18:06:58.416146+00:00"
     },
     "item.potion.max_hp.02": {
       "animated": false,
-      "emoji_id": "1523966787350298727",
+      "emoji_id": "1524114521592168449",
       "name": "ds_p_hp_02",
-      "sha256": "733870668ab5692088219c9b5b2d78c069bb92472eb6117f91987b50103a5537",
-      "uploaded_at": "2026-07-07T08:19:56.223490+00:00"
+      "sha256": "e21e22597ff3849ee42c7eb2d581d219d17d26e7a1a7e660af91db6757d6de95",
+      "uploaded_at": "2026-07-07T18:06:58.838006+00:00"
     },
     "item.potion.max_hp.03": {
       "animated": false,
-      "emoji_id": "1523966789489393795",
+      "emoji_id": "1524114523802566656",
       "name": "ds_p_hp_03",
-      "sha256": "eb9b252e084aaae067c8549314e74bbed086d01226e911dc369d7045fa139881",
-      "uploaded_at": "2026-07-07T08:19:56.722867+00:00"
+      "sha256": "a38878040ad964acaad8b9122945dd0a22bef411f2927aaf9c2fcfd1e73ed89d",
+      "uploaded_at": "2026-07-07T18:06:59.269377+00:00"
     },
     "item.potion.max_hp.04": {
       "animated": false,
-      "emoji_id": "1523966791435685908",
+      "emoji_id": "1524114525106868397",
       "name": "ds_p_hp_04",
-      "sha256": "a3e715510a7519c5b08cf059e456c219c44b89c497f7dba80f8d728b90f30be9",
-      "uploaded_at": "2026-07-07T08:19:57.149154+00:00"
+      "sha256": "4f93a9f178d4c2d5f86a9c104799e1775e257d46bae569972ca759181f872316",
+      "uploaded_at": "2026-07-07T18:06:59.701655+00:00"
     },
     "item.potion.max_hp.05": {
       "animated": false,
-      "emoji_id": "1523966793234780201",
+      "emoji_id": "1524114527413735595",
       "name": "ds_p_hp_05",
-      "sha256": "e03fbf5dc9f357d8f158c91543ff38fe1d3420cf965e12bb6281f7db7e9205f8",
-      "uploaded_at": "2026-07-07T08:19:57.560842+00:00"
+      "sha256": "24823feddf96e8e5250d740de83d35ff1fe157ddfb137d8902d4be51999a860a",
+      "uploaded_at": "2026-07-07T18:07:00.145168+00:00"
     },
     "item.potion.max_hp.06": {
       "animated": false,
-      "emoji_id": "1523966794598191116",
+      "emoji_id": "1524114529674592358",
       "name": "ds_p_hp_06",
-      "sha256": "cec53ccf352ef2d852e656de2ce54c304d7b43c794f4423a3307821a3693fe3e",
-      "uploaded_at": "2026-07-07T08:19:57.975244+00:00"
+      "sha256": "e56bfd50b4f91c7c9d1e9f92962dc7584fe2ed3caa87df35eab7325742f47805",
+      "uploaded_at": "2026-07-07T18:07:00.722172+00:00"
     },
     "item.potion.max_hp.07": {
       "animated": false,
-      "emoji_id": "1523966796703600680",
+      "emoji_id": "1524114531650113699",
       "name": "ds_p_hp_07",
-      "sha256": "803487226d8e720048f8e180e4bb25884752a1093ca85b2d6b73c2ddbf71b926",
-      "uploaded_at": "2026-07-07T08:19:58.397715+00:00"
+      "sha256": "0dd07a4a95ae06e4766978288503ab229c092ae2d6babe608b6064f7740b49bd",
+      "uploaded_at": "2026-07-07T18:07:01.138051+00:00"
     },
     "item.potion.max_hp.08": {
       "animated": false,
-      "emoji_id": "1523966798582644777",
+      "emoji_id": "1524114533226905712",
       "name": "ds_p_hp_08",
-      "sha256": "be885791226991c9f2ea61cd32a8c7a7d9b6d7d718f959cc96c1b79844145918",
-      "uploaded_at": "2026-07-07T08:19:58.858639+00:00"
+      "sha256": "d951a245c905ed08734c04fa0ac5be87c9a6bf43448ff1609b165e5b00f6fecf",
+      "uploaded_at": "2026-07-07T18:07:01.526230+00:00"
     },
     "item.potion.max_hp.09": {
       "animated": false,
-      "emoji_id": "1523966800159576107",
+      "emoji_id": "1524114534925729812",
       "name": "ds_p_hp_09",
-      "sha256": "901c94dc1248239285c11eecfedc0fc654afb8ac3dea50fd78582a9e67728f83",
-      "uploaded_at": "2026-07-07T08:19:59.315426+00:00"
+      "sha256": "dc144dd96bc4143b2710cca44c5cfe34c3adde2f8aa9a02bbfb231b3b5941cb6",
+      "uploaded_at": "2026-07-07T18:07:01.939355+00:00"
     },
     "item.potion.max_hp.10": {
       "animated": false,
-      "emoji_id": "1523966802265116703",
+      "emoji_id": "1524114537224208484",
       "name": "ds_p_hp_10",
-      "sha256": "398a8160ec8b3138806f7302fab01b5c9d0a0da1e5f2922d1271ce4d255d8c05",
-      "uploaded_at": "2026-07-07T08:19:59.718873+00:00"
+      "sha256": "6563b1ef461a464b25fff8462a90e67721a24d5606f6302984d961739b1b701d",
+      "uploaded_at": "2026-07-07T18:07:02.521332+00:00"
     },
     "item.potion.max_hp.11": {
       "animated": false,
-      "emoji_id": "1523966804261863454",
+      "emoji_id": "1524114540197839089",
       "name": "ds_p_hp_11",
-      "sha256": "5ad026e56f74c9faacfad128521416c54348e704808ec7ecefd391cb9ebd9247",
-      "uploaded_at": "2026-07-07T08:20:00.219866+00:00"
+      "sha256": "f7d4b8df5cafa3f3f6d522732ce7ac0a108e06ab1c7d2a291f4034aceea48e3b",
+      "uploaded_at": "2026-07-07T18:07:03.205732+00:00"
     },
     "item.potion.max_hp.12": {
       "animated": false,
-      "emoji_id": "1523966807172714617",
+      "emoji_id": "1524114542139932924",
       "name": "ds_p_hp_12",
-      "sha256": "c2ea5b3eed3f90b0b595aaaa9f98d554c4b4f28635a30cb69f5fc7fe02dbbf5f",
-      "uploaded_at": "2026-07-07T08:20:00.884969+00:00"
+      "sha256": "5be7650f8f56aea73249c25f9505f566d289c67c91f94710431e596bffed4dd6",
+      "uploaded_at": "2026-07-07T18:07:03.667483+00:00"
     },
     "item.potion.max_hp.13": {
       "animated": false,
-      "emoji_id": "1523966809043243038",
+      "emoji_id": "1524114543658143926",
       "name": "ds_p_hp_13",
-      "sha256": "07e4e60de63918d80f2a62ef999254048b50eac2e441da1a122068a6e70d3519",
-      "uploaded_at": "2026-07-07T08:20:01.344580+00:00"
+      "sha256": "30d129c3a272e2f1e547ee1e3d20d48c0dda2c548371c0bdae4a0014544ffb87",
+      "uploaded_at": "2026-07-07T18:07:04.120203+00:00"
     },
     "item.potion.max_hp.14": {
       "animated": false,
-      "emoji_id": "1523966812289761410",
+      "emoji_id": "1524114546141302874",
       "name": "ds_p_hp_14",
-      "sha256": "0bcece9048437306abe8db8452c45434a060fa949a15243e267a05fe3736630d",
-      "uploaded_at": "2026-07-07T08:20:02.127651+00:00"
+      "sha256": "45ca9195b58c055e3df05a601164be7ccf57bdb97a1f4458d8996cf861b91dd0",
+      "uploaded_at": "2026-07-07T18:07:04.641504+00:00"
     },
     "item.potion.max_hp.15": {
       "animated": false,
-      "emoji_id": "1523966814147579975",
+      "emoji_id": "1524114548024414250",
       "name": "ds_p_hp_15",
-      "sha256": "1d8536038fc4aba90abd1709ad749349b7edf1f80261af4e3ff517b566ca3746",
-      "uploaded_at": "2026-07-07T08:20:02.593071+00:00"
+      "sha256": "adf01936d2e205370a4589fbf6afbeed1aded9e8964c6ac072bb10ed94ba8e35",
+      "uploaded_at": "2026-07-07T18:07:05.142317+00:00"
     },
     "item.potion.xp.01": {
       "animated": false,
-      "emoji_id": "1523966816177754124",
+      "emoji_id": "1524114550474145882",
       "name": "ds_p_xp_01",
-      "sha256": "946349294af877f6dda9d8a5674ab2b864d1427f86d9a71165a1454e366171ff",
-      "uploaded_at": "2026-07-07T08:20:03.110101+00:00"
+      "sha256": "9ddb81f33dd043cd6f96dd21dd05b64377ca35ddfa26b2d3bf550d7be38f715e",
+      "uploaded_at": "2026-07-07T18:07:05.666396+00:00"
     },
     "item.potion.xp.02": {
       "animated": false,
-      "emoji_id": "1523966818153136148",
+      "emoji_id": "1524114552541941831",
       "name": "ds_p_xp_02",
-      "sha256": "1ada7b638ca36f1912d4fa88ca4c0636f98109e5deef1bb97250d0da5ca7cbbc",
-      "uploaded_at": "2026-07-07T08:20:03.506718+00:00"
+      "sha256": "a4c9eb0219c147e3134fc28f679fa04d3092d9fa905531db1ffa0474d2212612",
+      "uploaded_at": "2026-07-07T18:07:06.180786+00:00"
     },
     "item.potion.xp.03": {
       "animated": false,
-      "emoji_id": "1523966819897970820",
+      "emoji_id": "1524114554408276129",
       "name": "ds_p_xp_03",
-      "sha256": "aa4b4d91feb93aae419a8716e35e2fde7915450e0fbdcf14cbb2984eed2797ca",
-      "uploaded_at": "2026-07-07T08:20:03.908735+00:00"
+      "sha256": "01097e2dd16f0d436242a58d324ee23b40670efd7a0371095480943b403867f0",
+      "uploaded_at": "2026-07-07T18:07:06.606455+00:00"
     },
     "item.potion.xp.04": {
       "animated": false,
-      "emoji_id": "1523966821580144741",
+      "emoji_id": "1524114556194914511",
       "name": "ds_p_xp_04",
-      "sha256": "3f12926b407119d683671bad0daf31c6670ccba4e773e81d63f585ee37ae94da",
-      "uploaded_at": "2026-07-07T08:20:04.336524+00:00"
+      "sha256": "01227f2d3377efd23b8da4b128b8b688fb122078ceb00b0b8db584469a77d315",
+      "uploaded_at": "2026-07-07T18:07:07.083483+00:00"
     },
     "item.potion.xp.05": {
       "animated": false,
-      "emoji_id": "1523966823173853268",
+      "emoji_id": "1524114558351048845",
       "name": "ds_p_xp_05",
-      "sha256": "a288cd95b4978a5dfa742f18212d3f4a5110a47b51fe750c662e2521f7c7f8ff",
-      "uploaded_at": "2026-07-07T08:20:04.754844+00:00"
+      "sha256": "56ec5d1a2542daa19fa80f604bf6098a366453ebbe21e8642f9b7811619a1fa9",
+      "uploaded_at": "2026-07-07T18:07:07.575138+00:00"
     },
     "item.potion.xp.06": {
       "animated": false,
-      "emoji_id": "1523966825510207490",
+      "emoji_id": "1524114560397873172",
       "name": "ds_p_xp_06",
-      "sha256": "b821eaca4d1c44dff87d1d76f421b5a703c2f4ae12ea0cac55c8da6c2065e6c1",
-      "uploaded_at": "2026-07-07T08:20:05.333211+00:00"
+      "sha256": "f70681172c9056e042b7e4d8811152216fad02ff157de55d22a02f1bc838f04d",
+      "uploaded_at": "2026-07-07T18:07:08.017242+00:00"
     },
     "item.potion.xp.07": {
       "animated": false,
-      "emoji_id": "1523966827502501971",
+      "emoji_id": "1524114562515992861",
       "name": "ds_p_xp_07",
-      "sha256": "5fb41f826ec0f664f457ab65b56d394924d06890bb52d884c55fd0d6362d26ed",
-      "uploaded_at": "2026-07-07T08:20:05.842049+00:00"
+      "sha256": "cc1de7de31825f49dceaf48f34fa4c7a3c2b9fa2d6059ff65a45ea8350565fd2",
+      "uploaded_at": "2026-07-07T18:07:08.601475+00:00"
     },
     "item.potion.xp.08": {
       "animated": false,
-      "emoji_id": "1523966829532287117",
+      "emoji_id": "1524114564420206685",
       "name": "ds_p_xp_08",
-      "sha256": "ba677f9ceef1e5ee9a50ad896a9d4303f339fb06a4193e55cbbe76c4672d36cf",
-      "uploaded_at": "2026-07-07T08:20:06.254095+00:00"
+      "sha256": "44e26a2f0712bd6bbc19bc2973b70dcec543712f51be4b6c8d40e5a06ce349bf",
+      "uploaded_at": "2026-07-07T18:07:09.010023+00:00"
     },
     "item.potion.xp.09": {
       "animated": false,
-      "emoji_id": "1523966831470313483",
+      "emoji_id": "1524114566030557287",
       "name": "ds_p_xp_09",
-      "sha256": "68ae74ae6e76b574565e887d6fec35457807e7f129529154121e7eb891dcf610",
-      "uploaded_at": "2026-07-07T08:20:06.703182+00:00"
+      "sha256": "bfba7dd54dd46a7b22c4af9e59038bf8e0b318c79b0b3cc9d810bb72b7b0c6e9",
+      "uploaded_at": "2026-07-07T18:07:09.420104+00:00"
     },
     "item.potion.xp.10": {
       "animated": false,
-      "emoji_id": "1523966833344909422",
+      "emoji_id": "1524114568429965354",
       "name": "ds_p_xp_10",
-      "sha256": "6fdcd39724616f44daa071f050a18fec4bf676360aa7448fc6d6e14faff5fec4",
-      "uploaded_at": "2026-07-07T08:20:07.144904+00:00"
+      "sha256": "ac39eeaffaab130987a85a8ba9582b6568cc2afb13ecda39966e6561e18f1475",
+      "uploaded_at": "2026-07-07T18:07:09.995876+00:00"
     },
     "item.potion.xp.11": {
       "animated": false,
-      "emoji_id": "1523966835219763324",
+      "emoji_id": "1524114570875244565",
       "name": "ds_p_xp_11",
-      "sha256": "54547037919e2026962462da381efa4712cfe2b43c9141a4b18cc9b0e6980dde",
-      "uploaded_at": "2026-07-07T08:20:07.580885+00:00"
+      "sha256": "e9d1f195cf75c23ccccaffc122088e0291b333667b4cccf8536b4893134d0972",
+      "uploaded_at": "2026-07-07T18:07:10.591553+00:00"
     },
     "item.potion.xp.12": {
       "animated": false,
-      "emoji_id": "1523966837056999481",
+      "emoji_id": "1524114573098094812",
       "name": "ds_p_xp_12",
-      "sha256": "80fbd221661a2dbd8bf683263c5f47940d08cd00e00a10fd48ba7015cc7410e3",
-      "uploaded_at": "2026-07-07T08:20:08.033902+00:00"
+      "sha256": "291dc894d801b2c714ec3e376a22ebf71dea0e06d6388b41aa9c51cb91bab930",
+      "uploaded_at": "2026-07-07T18:07:11.024294+00:00"
     },
     "item.potion.xp.13": {
       "animated": false,
-      "emoji_id": "1523966838860550255",
+      "emoji_id": "1524114574473957632",
       "name": "ds_p_xp_13",
-      "sha256": "4b5e921475aa9139ca1f4ab282adb576b2b7765c798fcc85a7d938b1ad27368a",
-      "uploaded_at": "2026-07-07T08:20:08.438373+00:00"
+      "sha256": "9c0a2a42f2cf8c83f4e392cd987b46ba20e78666ab984232c17ca3bbccc00986",
+      "uploaded_at": "2026-07-07T18:07:11.422497+00:00"
     },
     "item.potion.xp.14": {
       "animated": false,
-      "emoji_id": "1523966840651649084",
+      "emoji_id": "1524114576541483188",
       "name": "ds_p_xp_14",
-      "sha256": "cb820b8d5c2be4b790ef696d7904a024aaf9b694d8618a11d08e86168aedb9dd",
-      "uploaded_at": "2026-07-07T08:20:08.865065+00:00"
+      "sha256": "01f252605431036e9e41ce3653e22e47cc9d8a6c6f93c7b916e1791aecbc9ac1",
+      "uploaded_at": "2026-07-07T18:07:11.866173+00:00"
     },
     "item.potion.xp.15": {
       "animated": false,
-      "emoji_id": "1523966842438287491",
+      "emoji_id": "1524114577904766987",
       "name": "ds_p_xp_15",
-      "sha256": "418f6d77ff690add470a4b4082e8ea5ffa4fc600410469a3f4e2d84f80ff45c1",
-      "uploaded_at": "2026-07-07T08:20:09.293272+00:00"
+      "sha256": "854ba6ad0638f16fe09382a71d3b5b362c01e572003181accbe12fe0ee6eefd2",
+      "uploaded_at": "2026-07-07T18:07:12.281227+00:00"
+    },
+    "misc.crystal": {
+      "animated": false,
+      "emoji_id": "1524114579326636182",
+      "name": "ds_m_crystal",
+      "sha256": "ea4bae437acb0ad30f8ac1bb1c7f8a0ff67e3073a833fc2e10e50c5f1a3ef0c2",
+      "uploaded_at": "2026-07-07T18:07:12.522451+00:00"
+    },
+    "misc.dragon_scale": {
+      "animated": false,
+      "emoji_id": "1524114580350177497",
+      "name": "ds_m_dragon_scale",
+      "sha256": "b81a2875f7385d599db0baef9b9e84b7b335963bb9676a4e08d4c019bf70a442",
+      "uploaded_at": "2026-07-07T18:07:12.840584+00:00"
+    },
+    "misc.essence": {
+      "animated": false,
+      "emoji_id": "1524114581642019036",
+      "name": "ds_m_essence",
+      "sha256": "0ecc4002aeecaf8e9627c97d664d716a6122466a0e42e69916521e5ff0006403",
+      "uploaded_at": "2026-07-07T18:07:13.066853+00:00"
+    },
+    "misc.evil": {
+      "animated": false,
+      "emoji_id": "1524114582686269663",
+      "name": "ds_m_evil",
+      "sha256": "8a95f485ef2be62d03f6134ccd1e91fe153a8a4f9653ce226ab117b9251b9e5e",
+      "uploaded_at": "2026-07-07T18:07:13.323596+00:00"
+    },
+    "misc.gold": {
+      "animated": false,
+      "emoji_id": "1524114583667736606",
+      "name": "ds_m_gold",
+      "sha256": "50fa3c54fb46bcdb24408507a13321e09f8d833dc9090a1063975dcbc51f15cb",
+      "uploaded_at": "2026-07-07T18:07:13.543048+00:00"
+    },
+    "misc.good": {
+      "animated": false,
+      "emoji_id": "1524114584716443678",
+      "name": "ds_m_good",
+      "sha256": "46d3da025a5edd7af5f39b4b84c91336389584ae607da7d8567665d80873ebcd",
+      "uploaded_at": "2026-07-07T18:07:13.799981+00:00"
+    },
+    "misc.neutral": {
+      "animated": false,
+      "emoji_id": "1524114585714688012",
+      "name": "ds_m_neutral",
+      "sha256": "6276f10e77a911e66c3d4ce5b80d010ce719db4fa7e070291e06b77099339999",
+      "uploaded_at": "2026-07-07T18:07:14.065754+00:00"
+    },
+    "misc.soul_piece": {
+      "animated": false,
+      "emoji_id": "1524114586566131934",
+      "name": "ds_m_soul_piece",
+      "sha256": "add17b57ca95c4745c4f20b3880c65edc9bcaf9335db97631c5359e7bdeea4a0",
+      "uploaded_at": "2026-07-07T18:07:14.319752+00:00"
     }
   },
   "version": 1
