@@ -38,6 +38,14 @@ class DummyEncounter:
         self.choices = choices
 
 
+class StubEmojiService:
+    def markdown_for(self, asset_key: str | None) -> str | None:
+        return {
+            "misc.good": "<:good:3>",
+            "misc.evil": "<:evil:4>",
+        }.get(asset_key)
+
+
 class DummySessionFactory:
     pass
 
@@ -595,7 +603,7 @@ def test_hall_embed_uses_community_dungeon_details_without_action_list() -> None
         ends_at=datetime(2026, 7, 3, 13, 0, tzinfo=UTC),
     )
 
-    hall = build_hall_embed(dungeon=dungeon, objective=objective)
+    hall = build_hall_embed(dungeon=dungeon, objective=objective, emoji_service=StubEmojiService())
     fields = {field.name: field.value for field in hall.fields}
 
     assert hall.title == "Steward's Hall"
@@ -607,7 +615,7 @@ def test_hall_embed_uses_community_dungeon_details_without_action_list() -> None
     assert fields["Level"] == "4"
     assert fields["Gold"] == "1200"
     assert fields["Stability"] == "82/100"
-    assert fields["Hero / Villain Influence"] == "7 : 3"
+    assert fields["Influence"] == "<:good:3> 7 : <:evil:4> 3"
     assert fields["Weekly Objective: Map the Moving Halls"].splitlines()[0] == "Complete 100 explorations."
     assert fields["Weekly Objective: Map the Moving Halls"].splitlines()[1].startswith("Progress: 17/100 (17%) | Ends <t:")
     assert "Weekly Objective" not in fields
@@ -617,7 +625,7 @@ def test_hall_embed_uses_community_dungeon_details_without_action_list() -> None
         "Level",
         "Gold",
         "Stability",
-        "Hero / Villain Influence",
+        "Influence",
         "Weekly Objective: Map the Moving Halls",
         "Mode",
         "Contributors",

@@ -201,6 +201,7 @@ def build_hall_embed(
     estimated_reward: int | None = None,
     contribution_leaders: list[tuple[str, int]] | None = None,
     asset_service: DiscordAssetService = DEFAULT_DISCORD_ASSETS,
+    emoji_service: DiscordEmojiService = DEFAULT_DISCORD_EMOJIS,
 ) -> discord.Embed:
     hall = embed(
         "Steward's Hall",
@@ -218,7 +219,7 @@ def build_hall_embed(
         hall.add_field(name="Level", value=str(dungeon.level))
         hall.add_field(name="Gold", value=str(dungeon.gold))
         hall.add_field(name="Stability", value=f"{dungeon.stability}/100")
-        hall.add_field(name="Hero / Villain Influence", value=f"{dungeon.hero_influence} : {dungeon.villain_influence}")
+        hall.add_field(name="Influence", value=_influence_value(dungeon.hero_influence, dungeon.villain_influence, emoji_service))
     if objective is not None:
         objective_description = getattr(objective, "description", "")
         target = max(1, int(objective.target_value))
@@ -253,6 +254,12 @@ def build_hall_embed(
             )
     asset_service.apply_banner(hall, LOCATION_SERVICE.banner_asset_for("stewards_hall"))
     return hall
+
+
+def _influence_value(hero_influence: int, villain_influence: int, emoji_service: DiscordEmojiService) -> str:
+    good = emoji_service.markdown_for("misc.good") or "Good"
+    evil = emoji_service.markdown_for("misc.evil") or "Evil"
+    return f"{good} {hero_influence} : {evil} {villain_influence}"
 
 
 class DungeonActionView(discord.ui.View):

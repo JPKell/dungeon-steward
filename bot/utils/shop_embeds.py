@@ -40,6 +40,7 @@ SLOT_EMOJIS = {
 GOLD_EMOJI = "🪙"
 GOLD_EMOJI_ASSET = "misc.gold"
 GOLD_THUMBNAIL_ASSET = "misc.gold"
+DISCORD_FIELD_VALUE_LIMIT = 1024
 
 EMPTY_EQUIPMENT_EMOJI_ASSETS = {
     "weapon": "equipment.weapon_blade",
@@ -66,7 +67,8 @@ def build_shop_embed(
         _shop_title(player, emoji_service),
         colour=DEEP_NAVY,
     )
-    response.add_field(name="Equipped", value=_equipped_summary(player, equipment, emoji_service), inline=False)
+    for index, value in enumerate(_equipped_summary_fields(player, equipment, emoji_service)):
+        response.add_field(name="Equipped" if index == 0 else "Equipped Continued", value=value, inline=False)
     if selected_quote is not None:
         response.add_field(
             name="____________\nSelected Purchase",
@@ -95,6 +97,7 @@ def build_purchase_embed(
         "Equipment Purchased",
         (
             f"Equipped {purchase.item.name} in your {purchase.item.slot} slot. "
+            f"Refreshes today at {discord_timestamp(purchase.stock.refreshes_at, 't')}."
         ),
         colour=WARM_GOLD,
     )
@@ -103,7 +106,7 @@ def build_purchase_embed(
     if purchase.trade_in_value > 0:
         response.add_field(name="Trade", value=format_gold(purchase.trade_in_value))
     response.add_field(name="Remaining", value=format_gold(purchase.remaining_gold))
-    response.add_field(name="Stats", value=format_purchase_item_stats(purchase.item), inline=False)
+    response.add_field(name="Stats", value=format_item_stats(purchase.item), inline=False)
     if purchase.item.description:
         response.add_field(name="Description", value=purchase.item.description, inline=False)
     if purchase.replaced_item is not None:
@@ -158,22 +161,31 @@ def _stock_summary(stock: ShopStock) -> str:
     return "\n".join(lines)
 
 
-def _equipped_summary(player: Player, equipment: EquipmentService, emoji_service: DiscordEmojiService) -> str:
-    equipped = []
+def _equipped_summary_fields(player: Player, equipment: EquipmentService, emoji_service: DiscordEmojiService) -> list[str]:
+    fields: list[str] = []
+    current = ""
     for slot in ("weapon", "shield", "helm", "armor", "gloves", "boots", "trinket"):
         item = equipment.get_or_none(getattr(player, slot))
         if item is None:
             emoji = empty_equipment_marker(slot, emoji_service)
-            equipped.append(f"{emoji} Empty")
-            continue
-        emoji = equipment_marker(item, emoji_service)
-        rarity = rarity_badge(item.rarity, emoji_service)
-        trade_value = int(item.cost * 0.1)
-        equipped.append(
-            f"{rarity} {emoji} {item.name}\n"
-            f"{format_item_stats(item)} | Trade-in {format_gold(trade_value, emoji_service)}"
-        )
-    return "\n\n".join(equipped)
+            block = f"{emoji} Empty"
+        else:
+            emoji = equipment_marker(item, emoji_service)
+            rarity = rarity_badge(item.rarity, emoji_service)
+            trade_value = int(item.cost * 0.1)
+            block = (
+                f"{rarity} {emoji} {item.name}\n"
+                f"{format_item_stats(item)} | Trade-in {format_gold(trade_value, emoji_service)}"
+            )
+        candidate = block if not current else f"{current}\n\n{block}"
+        if len(candidate) > DISCORD_FIELD_VALUE_LIMIT and current:
+            fields.append(current)
+            current = block
+        else:
+            current = candidate
+    if current:
+        fields.append(current)
+    return fields
 
 
 def _selected_purchase_summary(quote: ShopPurchaseQuote, player: Player, emoji_service: DiscordEmojiService) -> str:

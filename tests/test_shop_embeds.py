@@ -11,13 +11,11 @@ from bot.utils.shop_embeds import build_purchase_embed, build_shop_embed
 
 
 class StubEquipmentService:
-    def __init__(self, item: EquipmentItem) -> None:
-        self.item = item
+    def __init__(self, *items: EquipmentItem) -> None:
+        self.items = {item.key: item for item in items}
 
     def get_or_none(self, key: str | None) -> EquipmentItem | None:
-        if key == self.item.key:
-            return self.item
-        return None
+        return self.items.get(key)
 
 
 def _equipment_emoji_service(tmp_path) -> DiscordEmojiService:
@@ -176,6 +174,83 @@ def test_shop_embed_uses_requested_empty_equipment_emojis(tmp_path) -> None:
     assert "<:ds_eq_gloves_gauntlets:777777777> Empty" in equipped
     assert "<:ds_eq_boots_greaves:555555555> Empty" in equipped
     assert "<:ds_eq_trinket_token:666666666> Empty" in equipped
+
+
+def test_shop_embed_splits_equipped_summary_before_discord_field_limit(tmp_path) -> None:
+    slots = ("weapon", "shield", "helm", "armor", "gloves", "boots", "trinket")
+    items = tuple(
+        EquipmentItem(
+            key=f"{slot}-item",
+            name=f"Polished {slot.title()} of Midnight Inventory",
+            slot=slot,
+            rarity="legendary",
+            min_level=1,
+            max_level=10,
+            cost=999,
+            hp=10,
+            attack=11,
+            defense=12,
+            speed=13,
+            thumbnail_asset=f"equipment.{slot}_custom",
+        )
+        for slot in slots
+    )
+    player = Player(
+        discord_user_id=1,
+        guild_id=10,
+        display_name="Test Player",
+        gold=250,
+        **{slot: f"{slot}-item" for slot in slots},
+    )
+    stock = ShopStock(
+        combat_level=5,
+        generated_at=datetime(2026, 7, 3, 12, 0, tzinfo=UTC),
+        refreshes_at=datetime(2026, 7, 3, 13, 0, tzinfo=UTC),
+        items=(),
+    )
+    emoji_keys = [*(f"equipment.{slot}_custom" for slot in slots), "equipment.legendary", "misc.gold"]
+    emoji_service = DiscordEmojiService(
+        catalog=EmojiCatalog(
+            version=1,
+            emojis={
+                key: EmojiDefinition(
+                    key=key,
+                    name=f"ds_{key.replace('.', '_')}",
+                    path=tmp_path / f"{key.replace('.', '_')}.png",
+                    alt_text=key,
+                )
+                for key in emoji_keys
+            },
+        ),
+        registry=EmojiRegistry(
+            version=1,
+            emojis={
+                key: EmojiRegistryEntry(
+                    key=key,
+                    name=f"ds_{key.replace('.', '_')}",
+                    emoji_id=f"15241145836677366{index:02}",
+                    sha256="a" * 64,
+                    animated=False,
+                    uploaded_at="2026-07-06T00:00:00+00:00",
+                )
+                for index, key in enumerate(emoji_keys)
+            },
+        ),
+    )
+
+    embed = build_shop_embed(
+        stock,
+        player=player,
+        equipment=StubEquipmentService(*items),
+        emoji_service=emoji_service,
+    )
+
+    equipped_fields = [field for field in embed.fields if field.name.startswith("Equipped")]
+    equipped_text = "\n".join(field.value for field in equipped_fields)
+
+    assert len(equipped_fields) > 1
+    assert all(len(field.value) <= 1024 for field in equipped_fields)
+    assert all(item.name in equipped_text for item in items)
 
 
 def test_shop_embed_selected_purchase_shows_net_trade_in_price(tmp_path) -> None:
@@ -367,7 +442,7 @@ def test_purchase_embed_uses_embed_timestamp_for_refreshes() -> None:
     assert "<t:" in embed.description
     assert embed.footer.text == "Shop refreshes"
     stats_field = next(field for field in embed.fields if field.name == "Stats")
-    assert stats_field.value == "HP | ATK | DEF | SPD\n4 | 8 | 3 | 2"
+    assert stats_field.value == "HP 4 | ATK 8 | DEF 3 | SPD 2"
     assert stats_field.inline is False
 
 

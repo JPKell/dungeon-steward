@@ -9,6 +9,16 @@ from bot.utils.profile_embeds import build_profile_embed
 from bot.utils.time import discord_relative_timestamp
 
 
+class StubEmojiService:
+    def markdown_for(self, asset_key: str | None) -> str | None:
+        return {
+            "equipment.weapon_blade": "<:blade:1>",
+            "equipment.trinket_compass": "<:compass:2>",
+            "misc.good": "<:good:3>",
+            "misc.evil": "<:evil:4>",
+        }.get(asset_key)
+
+
 def test_profile_embed_groups_combat_and_explore_sections() -> None:
     player = Player(
         discord_user_id=1,
@@ -44,9 +54,10 @@ def test_profile_embed_groups_combat_and_explore_sections() -> None:
         player=player,
         energy_state=state,
         stats=stats,
+        emoji_service=StubEmojiService(),
     )
 
-    assert response.description == "Corridor Scout\n⚔️ **Combat - Level 7** ⚔️"
+    assert response.description == "Corridor Scout\n<:blade:1> **Combat - Level 7** <:blade:1>"
     assert [field.name for field in response.fields] == [
         "HP",
         "Gold",
@@ -58,7 +69,7 @@ def test_profile_embed_groups_combat_and_explore_sections() -> None:
         "\u200b",
         "Explorations",
         "Discoveries",
-        "Hero / Villain Influence",
+        "Influence",
         "Energy",
         "Next Energy",
         "Full Energy",
@@ -72,10 +83,10 @@ def test_profile_embed_groups_combat_and_explore_sections() -> None:
     assert response.fields[4].value == "11"
     assert response.fields[5].value == "12"
     assert response.fields[6].value == "3"
-    assert response.fields[7].value == "🧭 **Explore - Level 4** 🧭"
+    assert response.fields[7].value == "<:compass:2> **Explore - Level 4** <:compass:2>"
     assert response.fields[8].value == "14"
     assert response.fields[9].value == "5"
-    assert response.fields[10].value == "6 : 4"
+    assert response.fields[10].value == "<:good:3> 6 : <:evil:4> 4"
     assert response.fields[11].value == "8/12"
     assert response.fields[12].value == discord_relative_timestamp(state.next_energy_at)
     assert response.fields[13].value == discord_relative_timestamp(state.full_energy_at)
@@ -117,12 +128,13 @@ def test_profile_embed_hides_zero_unspent_stat_points() -> None:
         player=player,
         energy_state=state,
         stats=stats,
+        emoji_service=StubEmojiService(),
     )
 
     assert "Unspent Stat Points" not in [field.name for field in response.fields]
-    assert response.description == "Dungeon Visitor\n⚔️ **Combat - Level 1** ⚔️"
+    assert response.description == "Dungeon Visitor\n<:blade:1> **Combat - Level 1** <:blade:1>"
     explore_header = next(field for field in response.fields if field.name == "\u200b")
-    assert explore_header.value == "🧭 **Explore - Level 1** 🧭"
+    assert explore_header.value == "<:compass:2> **Explore - Level 1** <:compass:2>"
     fields = {field.name: field for field in response.fields}
     assert fields["Energy"].value == "12/12"
     assert fields["Next Energy"].value == discord_relative_timestamp(state.next_energy_at)
