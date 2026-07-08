@@ -483,13 +483,24 @@ class DiscordAssetService:
         attachment_parameter: str = "files",
         view: Any = _MISSING,
     ) -> dict[str, Any]:
+        image_url = _embed_image_url(embed)
         content = embed.copy()
-        if self._banner_attachment_filenames(embed):
+        files = self.files_for_message_embed(embed)
+        if image_url:
+            import discord
+
             content.set_image(url=None)
-        payload = {
-            "embed": content,
-            attachment_parameter: self.files_for_message_embed(embed),
-        }
+            banner = discord.Embed(color=getattr(embed, "color", None))
+            banner.set_image(url=image_url)
+            payload = {
+                "embeds": [banner, content],
+                attachment_parameter: files,
+            }
+        else:
+            payload = {
+                "embed": content,
+                attachment_parameter: files,
+            }
         if view is not _MISSING and view is not None:
             payload["view"] = view
         return payload

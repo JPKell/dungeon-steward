@@ -312,10 +312,12 @@ def test_thumbnail_and_banner_application_to_embed(tmp_path: Path) -> None:
     payload = service.message_payload_with_banner_attachment(embed)
     files = payload["files"]
     try:
-        assert sorted(payload) == ["embed", "files"]
-        assert payload["embed"].title == "Assets"
-        assert payload["embed"].image.url == "https://cdn.discordapp.com/attachments/1/5/test_hall.png"
-        assert payload["embed"].thumbnail.url == "https://cdn.discordapp.com/attachments/1/3/test_item.png"
+        assert sorted(payload) == ["embeds", "files"]
+        banner, content = payload["embeds"]
+        assert banner.image.url == "https://cdn.discordapp.com/attachments/1/5/test_hall.png"
+        assert content.title == "Assets"
+        assert content.image.url is None
+        assert content.thumbnail.url == "https://cdn.discordapp.com/attachments/1/3/test_item.png"
         assert files == []
     finally:
         for file in files:
@@ -364,8 +366,10 @@ def test_development_fallback_uses_local_attachments_for_unregistered_images(tmp
     payload = service.message_payload_with_banner_attachment(embed)
     files = payload["files"]
     try:
-        assert payload["embed"].title == "No registry yet"
-        assert payload["embed"].image.url is None
+        banner, content = payload["embeds"]
+        assert banner.image.url == "attachment://test_hall.png"
+        assert content.title == "No registry yet"
+        assert content.image.url is None
         assert [file.filename for file in files] == ["test_hall.png"]
     finally:
         for file in files:
