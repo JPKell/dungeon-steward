@@ -90,7 +90,7 @@ sudo chown -R kellrond-bot:kellrond-bot /var/www/kellrond-discord-bot
 Clone or copy the repository into `/var/www/kellrond-discord-bot`:
 
 ```bash
-sudo -u kellrond-bot git clone <repo-url> /var/www/kellrond-discord-bot
+sudo -u kellrond-bot git clone https://github.com/JPKell/dungeon-steward.git /var/www/kellrond-discord-bot
 cd /var/www/kellrond-discord-bot
 sudo -u kellrond-bot python3.12 -m venv .venv
 sudo -u kellrond-bot .venv/bin/pip install --upgrade pip
@@ -128,7 +128,7 @@ postgresql+psycopg://kellrond_bot:<password>@localhost:5432/kellrond_discord_bot
 
 ## 7. Create Production Environment File
 
-Create `/etc/kellrond-discord-bot.env`:
+Create `/etc/kellrond-bot.env`:
 
 ```dotenv
 ENVIRONMENT=production
@@ -148,8 +148,8 @@ DUNGEON_ADMIN_STATEMENT_TIMEOUT_MS=
 Lock it down:
 
 ```bash
-sudo chown root:kellrond-bot /etc/kellrond-discord-bot.env
-sudo chmod 640 /etc/kellrond-discord-bot.env
+sudo chown root:kellrond-bot /etc/kellrond-bot.env
+sudo chmod 640 /etc/kellrond-bot.env
 ```
 
 For first launch in one test server, temporarily set `DISCORD_TEST_GUILD_ID=<guild-id>`. For real production global commands, leave it empty. Global command updates can take longer to appear in Discord.
@@ -158,9 +158,9 @@ For first launch in one test server, temporarily set `DISCORD_TEST_GUILD_ID=<gui
 
 ```bash
 cd /var/www/kellrond-discord-bot
-sudo -u kellrond-bot bash -lc 'set -a; source /etc/kellrond-discord-bot.env; set +a; cd /var/www/kellrond-discord-bot; .venv/bin/alembic upgrade head'
-sudo -u kellrond-bot bash -lc 'set -a; source /etc/kellrond-discord-bot.env; set +a; cd /var/www/kellrond-discord-bot; .venv/bin/python -m scripts.content_db load'
-sudo -u kellrond-bot bash -lc 'set -a; source /etc/kellrond-discord-bot.env; set +a; cd /var/www/kellrond-discord-bot; .venv/bin/python -m scripts.validate_content'
+sudo -u kellrond-bot bash -lc 'set -a; source /etc/kellrond-bot.env; set +a; cd /var/www/kellrond-discord-bot; .venv/bin/alembic upgrade head'
+sudo -u kellrond-bot bash -lc 'set -a; source /etc/kellrond-bot.env; set +a; cd /var/www/kellrond-discord-bot; .venv/bin/python -m scripts.content_db load'
+sudo -u kellrond-bot bash -lc 'set -a; source /etc/kellrond-bot.env; set +a; cd /var/www/kellrond-discord-bot; .venv/bin/python -m scripts.validate_content'
 ```
 
 The `source` step keeps passwords with punctuation intact. If you prefer an interactive shell, run commands from a root shell after exporting the env file instead:
@@ -168,7 +168,7 @@ The `source` step keeps passwords with punctuation intact. If you prefer an inte
 ```bash
 sudo -iu root
 set -a
-. /etc/kellrond-discord-bot.env
+. /etc/kellrond-bot.env
 set +a
 cd /var/www/kellrond-discord-bot
 sudo -u kellrond-bot -E .venv/bin/alembic upgrade head
@@ -188,14 +188,14 @@ Run a safe dry run first:
 
 ```bash
 cd /var/www/kellrond-discord-bot
-sudo -u kellrond-bot bash -lc 'set -a; source /etc/kellrond-discord-bot.env; set +a; cd /var/www/kellrond-discord-bot; .venv/bin/python -m scripts.sync_assets --prepare-only'
-sudo -u kellrond-bot bash -lc 'set -a; source /etc/kellrond-discord-bot.env; set +a; cd /var/www/kellrond-discord-bot; .venv/bin/python -m scripts.sync_assets --dry-run'
+sudo -u kellrond-bot bash -lc 'set -a; source /etc/kellrond-bot.env; set +a; cd /var/www/kellrond-discord-bot; .venv/bin/python -m scripts.sync_assets --prepare-only'
+sudo -u kellrond-bot bash -lc 'set -a; source /etc/kellrond-bot.env; set +a; cd /var/www/kellrond-discord-bot; .venv/bin/python -m scripts.sync_assets --dry-run'
 ```
 
 Then upload and write the registries:
 
 ```bash
-sudo -u kellrond-bot bash -lc 'set -a; source /etc/kellrond-discord-bot.env; set +a; cd /var/www/kellrond-discord-bot; .venv/bin/python -m scripts.sync_assets'
+sudo -u kellrond-bot bash -lc 'set -a; source /etc/kellrond-bot.env; set +a; cd /var/www/kellrond-discord-bot; .venv/bin/python -m scripts.sync_assets'
 ```
 
 Review changed registry files and keep them with your deployed code. The runtime bot reads those registries so embeds can use Discord CDN URLs and inline custom emoji IDs without attaching local files to every message.
@@ -203,9 +203,9 @@ Review changed registry files and keep them with your deployed code. The runtime
 Useful targeted syncs:
 
 ```bash
-sudo -u kellrond-bot bash -lc 'set -a; source /etc/kellrond-discord-bot.env; set +a; cd /var/www/kellrond-discord-bot; .venv/bin/python -m scripts.sync_assets --prefix location.'
-sudo -u kellrond-bot bash -lc 'set -a; source /etc/kellrond-discord-bot.env; set +a; cd /var/www/kellrond-discord-bot; .venv/bin/python -m scripts.sync_assets --prefix equipment. --emojis-only'
-sudo -u kellrond-bot bash -lc 'set -a; source /etc/kellrond-discord-bot.env; set +a; cd /var/www/kellrond-discord-bot; .venv/bin/python -m scripts.sync_assets --emojis-only'
+sudo -u kellrond-bot bash -lc 'set -a; source /etc/kellrond-bot.env; set +a; cd /var/www/kellrond-discord-bot; .venv/bin/python -m scripts.sync_assets --prefix location.'
+sudo -u kellrond-bot bash -lc 'set -a; source /etc/kellrond-bot.env; set +a; cd /var/www/kellrond-discord-bot; .venv/bin/python -m scripts.sync_assets --prefix equipment. --emojis-only'
+sudo -u kellrond-bot bash -lc 'set -a; source /etc/kellrond-bot.env; set +a; cd /var/www/kellrond-discord-bot; .venv/bin/python -m scripts.sync_assets --emojis-only'
 ```
 
 See `docs/DISCORD_IMAGES.md` for asset sizes, source paths, and replacement flow.
@@ -270,10 +270,10 @@ cd /var/www/kellrond-discord-bot
 sudo systemctl stop kellrond-discord-bot
 sudo -u kellrond-bot git pull
 sudo -u kellrond-bot .venv/bin/pip install -r requirements.txt
-sudo -u kellrond-bot bash -lc 'set -a; source /etc/kellrond-discord-bot.env; set +a; cd /var/www/kellrond-discord-bot; .venv/bin/alembic upgrade head'
-sudo -u kellrond-bot bash -lc 'set -a; source /etc/kellrond-discord-bot.env; set +a; cd /var/www/kellrond-discord-bot; .venv/bin/python -m scripts.content_db load'
-sudo -u kellrond-bot bash -lc 'set -a; source /etc/kellrond-discord-bot.env; set +a; cd /var/www/kellrond-discord-bot; .venv/bin/python -m scripts.sync_assets --dry-run'
-sudo -u kellrond-bot bash -lc 'set -a; source /etc/kellrond-discord-bot.env; set +a; cd /var/www/kellrond-discord-bot; .venv/bin/python -m scripts.sync_assets'
+sudo -u kellrond-bot bash -lc 'set -a; source /etc/kellrond-bot.env; set +a; cd /var/www/kellrond-discord-bot; .venv/bin/alembic upgrade head'
+sudo -u kellrond-bot bash -lc 'set -a; source /etc/kellrond-bot.env; set +a; cd /var/www/kellrond-discord-bot; .venv/bin/python -m scripts.content_db load'
+sudo -u kellrond-bot bash -lc 'set -a; source /etc/kellrond-bot.env; set +a; cd /var/www/kellrond-discord-bot; .venv/bin/python -m scripts.sync_assets --dry-run'
+sudo -u kellrond-bot bash -lc 'set -a; source /etc/kellrond-bot.env; set +a; cd /var/www/kellrond-discord-bot; .venv/bin/python -m scripts.sync_assets'
 sudo systemctl start kellrond-discord-bot
 sudo systemctl status kellrond-discord-bot
 ```
@@ -283,7 +283,7 @@ If the asset registry files changed during `sync_assets`, commit or otherwise pr
 ## 14. Token Rotation
 
 1. Regenerate the bot token in the Discord Developer Portal.
-2. Update `DISCORD_BOT_TOKEN` in `/etc/kellrond-discord-bot.env`.
+2. Update `DISCORD_BOT_TOKEN` in `/etc/kellrond-bot.env`.
 3. Restart:
 
 ```bash

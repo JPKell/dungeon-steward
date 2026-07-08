@@ -731,6 +731,8 @@ async def _sync_images_with_discord(
     finally:
         if not client.is_closed():
             await client.close()
+    if client.sync_error is not None:
+        raise client.sync_error
 
 
 class _ImageSyncClient(discord.Client):
@@ -742,23 +744,37 @@ class _ImageSyncClient(discord.Client):
         registry: AssetRegistry,
         registry_path: Path,
     ) -> None:
-        super().__init__(intents=discord.Intents.none())
+        super().__init__(intents=discord.Intents.default())
         self.channel_id = channel_id
         self.planned = planned
         self.registry = registry
         self.registry_path = registry_path
+        self.sync_error: BaseException | None = None
 
     async def on_ready(self) -> None:
         try:
             channel = self.get_channel(self.channel_id) or await self.fetch_channel(self.channel_id)
-            validate_channel_permissions(channel, getattr(channel.guild, "me", None) or self.user)
+            validate_channel_permissions(channel, await self._member_for_permissions(channel))
             updated_registry = await sync_registry_with_channel(channel, self.planned, self.registry)
             write_registry_atomic(updated_registry, self.registry_path)
             uploaded_count = sum(1 for item in self.planned if item.action in {"uploaded", "updated"})
             unchanged_count = sum(1 for item in self.planned if item.action == "unchanged")
             print(f"Image sync: uploaded_or_updated={uploaded_count} unchanged={unchanged_count}")
+        except Exception as error:
+            self.sync_error = error
         finally:
             await self.close()
+
+    async def _member_for_permissions(self, channel: Any) -> Any:
+        guild = getattr(channel, "guild", None)
+        if guild is None:
+            return self.user
+        member = getattr(guild, "me", None)
+        if member is not None:
+            return member
+        if self.user is None:
+            return None
+        return await guild.fetch_member(self.user.id)
 
 
 async def _sync_emojis_with_discord(
@@ -780,6 +796,8 @@ async def _sync_emojis_with_discord(
     finally:
         if not client.is_closed():
             await client.close()
+    if client.sync_error is not None:
+        raise client.sync_error
 
 
 class _EmojiSyncClient(discord.Client):
@@ -795,6 +813,7 @@ class _EmojiSyncClient(discord.Client):
         self.planned = planned
         self.registry = registry
         self.registry_path = registry_path
+        self.sync_error: BaseException | None = None
 
     async def on_ready(self) -> None:
         try:
@@ -803,6 +822,8 @@ class _EmojiSyncClient(discord.Client):
             uploaded_count = sum(1 for item in self.planned if item.action in {"uploaded", "updated"})
             unchanged_count = sum(1 for item in self.planned if item.action == "unchanged")
             print(f"Emoji sync: uploaded_or_updated={uploaded_count} unchanged={unchanged_count}")
+        except Exception as error:
+            self.sync_error = error
         finally:
             await self.close()
 
