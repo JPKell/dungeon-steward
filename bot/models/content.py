@@ -81,6 +81,7 @@ class ContentEquipmentItem(TimestampMixin, Base):
     key: Mapped[str] = mapped_column(String(160), nullable=False)
     name: Mapped[str] = mapped_column(String(160), nullable=False)
     slot: Mapped[str] = mapped_column(String(40), nullable=False)
+    subtype: Mapped[str] = mapped_column(String(40), nullable=False)
     rarity: Mapped[str] = mapped_column(String(40), nullable=False)
     min_level: Mapped[int] = mapped_column(Integer, nullable=False)
     max_level: Mapped[int] = mapped_column(Integer, nullable=False)

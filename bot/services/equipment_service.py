@@ -25,6 +25,7 @@ class EquipmentItem:
     key: str
     name: str
     slot: str
+    subtype: str
     rarity: str
     min_level: int
     max_level: int
@@ -98,12 +99,16 @@ class EquipmentService:
 
     def _load(self) -> list[EquipmentItem]:
         raw = self._document
+
         if raw is None:
             raw = _EQUIPMENT_DOCUMENT
+
         if raw is None:
             raw = json.loads(self.content_path.read_text(encoding="utf-8"))
+        
         if not isinstance(raw, list):
             raise EquipmentContentError("Equipment content must be a list")
+
         seen: set[str] = set()
         items: list[EquipmentItem] = []
         for entry in raw:
@@ -202,6 +207,7 @@ def _item(entry: dict[str, Any], *, description: str | None = None) -> Equipment
         key=_required_str(entry, "key"),
         name=_required_str(entry, "name"),
         slot=_required_str(entry, "slot"),
+        subtype=_required_str(entry, "subtype"),
         rarity=_required_str(entry, "rarity"),
         min_level=_required_int(entry, "min_level"),
         max_level=_required_int(entry, "max_level"),

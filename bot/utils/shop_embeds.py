@@ -4,53 +4,16 @@ import discord
 
 from bot.models import Player
 from bot.services.discord_asset_service import DEFAULT_DISCORD_ASSETS, DiscordAssetService
-from bot.services.discord_emoji_service import DEFAULT_DISCORD_EMOJIS, DiscordEmojiService
 from bot.services.equipment_service import EquipmentItem, EquipmentService
 from bot.services.location_service import LOCATION_SERVICE
 from bot.services.shop_service import PurchasedEquipment, ShopPurchaseQuote, ShopStock
 from bot.utils.embeds import DEEP_NAVY, WARM_GOLD, embed
 from bot.utils.time import discord_timestamp, local_clock_time
+from bot.utils.emoji import rarity_badge_emoji, equipment_emoji
+from bot.utils.helpers import format_gold, format_item_stats
 
-RARITY_BADGES = {
-    "common": "⚪",
-    "uncommon": "🟢",
-    "rare": "🔵",
-    "epic": "🟣",
-    "legendary": "🟡",
-}
 
-RARITY_EMOJI_ASSETS = {
-    "common": "equipment.common",
-    "uncommon": "equipment.uncommon",
-    "rare": "equipment.rare",
-    "epic": "equipment.epic",
-    "legendary": "equipment.legendary",
-}
-
-SLOT_EMOJIS = {
-    "weapon": "⚔️",
-    "shield": "🛡️",
-    "helm": "🪖",
-    "armor": "🧥",
-    "gloves": "🧤",
-    "boots": "🥾",
-    "trinket": "💍",
-}
-
-GOLD_EMOJI = "🪙"
-GOLD_EMOJI_ASSET = "misc.gold"
-GOLD_THUMBNAIL_ASSET = "misc.gold"
 DISCORD_FIELD_VALUE_LIMIT = 1024
-
-EMPTY_EQUIPMENT_EMOJI_ASSETS = {
-    "weapon": "equipment.weapon_blade",
-    "shield": "equipment.shield_ward",
-    "helm": "equipment.helm_helm",
-    "armor": "equipment.armor_cuirass",
-    "gloves": "equipment.gloves_gauntlets",
-    "boots": "equipment.boots_greaves",
-    "trinket": "equipment.trinket_token",
-}
 
 
 def build_shop_embed(
@@ -60,27 +23,29 @@ def build_shop_embed(
     equipment: EquipmentService,
     selected_quote: ShopPurchaseQuote | None = None,
     asset_service: DiscordAssetService = DEFAULT_DISCORD_ASSETS,
-    emoji_service: DiscordEmojiService | None = None,
 ) -> discord.Embed:
-    emoji_service = emoji_service or DEFAULT_DISCORD_EMOJIS
+    ''' Build a Discord embed for the equipment shop that shows the 
+        player's equipped items and items available for purchase. 
+        This does not include the shop items themselves, which are handled separately. '''
+
     response = embed(
-        _shop_title(player, emoji_service),
+        _shop_title(player),
         colour=DEEP_NAVY,
     )
-    for index, value in enumerate(_equipped_summary_fields(player, equipment, emoji_service)):
+    for index, value in enumerate(_equipped_summary_fields(player, equipment)):
         response.add_field(name="Equipped" if index == 0 else "Equipped Continued", value=value, inline=False)
     if selected_quote is not None:
         response.add_field(
             name="____________\nSelected Purchase",
-            value=_selected_purchase_summary(selected_quote, player, emoji_service),
+            value=_selected_purchase_summary(selected_quote, player),
             inline=False,
         )
     asset_service.apply_banner(response, LOCATION_SERVICE.banner_asset_for("equipment_shop"))
-    thumbnail_asset = selected_quote.item.thumbnail_asset if selected_quote is not None else GOLD_THUMBNAIL_ASSET
+    thumbnail_asset = selected_quote.item.thumbnail_asset if selected_quote is not None else "misc.gold"
     asset_service.apply_thumbnail(response, thumbnail_asset)
     response.set_footer(
         text=(
-            "Buying an item equips it immediately and replaces the matching slot.\n"
+            "Buying an item equips it immediately and sells the matching slot.\n"
             "Items you already own are hidden in shop.\n"
             f"Combat Level {stock.combat_level} stock. Refreshes today at {local_clock_time(stock.refreshes_at)}."
         )
@@ -120,62 +85,35 @@ def build_purchase_embed(
 
 def format_item_line(index: int, item: EquipmentItem) -> str:
     return (
-        f"{index}. {format_item_stats(item)} | {rarity_badge(item.rarity)} {item.name}"
+        f"{index}. {format_item_stats(item)} | {rarity_badge_emoji(item.rarity)} {item.name}"
         f" | {format_gold(item.cost)}"
     )
 
-
-def format_item_stats(item: EquipmentItem) -> str:
-    return f"HP {item.hp} | ATK {item.attack} | DEF {item.defense} | SPD {item.speed}"
 
 
 def format_purchase_item_stats(item: EquipmentItem) -> str:
     return f"HP | ATK | DEF | SPD\n{item.hp} | {item.attack} | {item.defense} | {item.speed}"
 
 
-def format_gold(amount: int, emoji_service: DiscordEmojiService | None = None) -> str:
-    return f"{gold_marker(emoji_service)} {amount}"
+def _shop_title(player: Player) -> str:
+    return f"Dungeon Equipment Shop                    {format_gold(player.gold)}"
 
 
-def _shop_title(player: Player, emoji_service: DiscordEmojiService | None = None) -> str:
-    return f"Dungeon Equipment Shop                    {format_gold(player.gold, emoji_service)}"
-
-
-def rarity_badge(rarity: str, emoji_service: DiscordEmojiService | None = None) -> str:
-    emoji_service = emoji_service or DEFAULT_DISCORD_EMOJIS
-    normalized = rarity.lower()
-    return emoji_service.markdown_for(RARITY_EMOJI_ASSETS.get(normalized)) or RARITY_BADGES.get(normalized, "⚪")
-
-
-def _stock_summary(stock: ShopStock) -> str:
-    lines: list[str] = []
-    current_slot: str | None = None
-    for index, item in enumerate(stock.items, start=1):
-        if item.slot != current_slot:
-            if lines:
-                lines.append("")
-            emoji = SLOT_EMOJIS.get(item.slot, "📦")
-            lines.append(f"**{emoji} {item.slot.title()} {emoji}**")
-            current_slot = item.slot
-        lines.append(format_item_line(index, item))
-    return "\n".join(lines)
-
-
-def _equipped_summary_fields(player: Player, equipment: EquipmentService, emoji_service: DiscordEmojiService) -> list[str]:
+def _equipped_summary_fields(player: Player, equipment: EquipmentService) -> list[str]:
     fields: list[str] = []
     current = ""
     for slot in ("weapon", "shield", "helm", "armor", "gloves", "boots", "trinket"):
         item = equipment.get_or_none(getattr(player, slot))
         if item is None:
-            emoji = empty_equipment_marker(slot, emoji_service)
+            emoji = equipment_emoji(slot, "empty")
             block = f"{emoji} Empty"
         else:
-            emoji = equipment_marker(item, emoji_service)
-            rarity = rarity_badge(item.rarity, emoji_service)
+            emoji = equipment_emoji(item.slot, item.subtype)
+            rarity = rarity_badge_emoji(item.rarity)
             trade_value = int(item.cost * 0.1)
             block = (
                 f"{rarity} {emoji} {item.name}\n"
-                f"{format_item_stats(item)} | Trade-in {format_gold(trade_value, emoji_service)}"
+                f"{format_item_stats(item)} | Trade-in {format_gold(trade_value)}"
             )
         candidate = block if not current else f"{current}\n\n{block}"
         if len(candidate) > DISCORD_FIELD_VALUE_LIMIT and current:
@@ -188,37 +126,17 @@ def _equipped_summary_fields(player: Player, equipment: EquipmentService, emoji_
     return fields
 
 
-def _selected_purchase_summary(quote: ShopPurchaseQuote, player: Player, emoji_service: DiscordEmojiService) -> str:
+def _selected_purchase_summary(quote: ShopPurchaseQuote, player: Player) -> str:
     lines = [
         (
-            f"{rarity_badge(quote.item.rarity, emoji_service)} "
-            f"{equipment_marker(quote.item, emoji_service)} {quote.item.name}"
+            f"{rarity_badge_emoji(quote.item.rarity)} "
+            f"{equipment_emoji(quote.item.slot, quote.item.subtype)} {quote.item.name}"
         ),
         format_item_stats(quote.item),
-        f"Purchase Price After Trade-in {format_gold(quote.purchase_cost, emoji_service)}",
+        f"Purchase Price After Trade-in {format_gold(quote.purchase_cost)}",
     ]
     if player.gold < quote.purchase_cost:
-        lines.append(f"Short {format_gold(quote.purchase_cost - player.gold, emoji_service)}")
+        lines.append(f"Short {format_gold(quote.purchase_cost - player.gold)}")
     return "\n".join(lines)
 
 
-def _first_stock_thumbnail(stock: ShopStock) -> str | None:
-    for item in stock.items:
-        if item.thumbnail_asset:
-            return item.thumbnail_asset
-    return None
-
-
-def equipment_marker(item: EquipmentItem, emoji_service: DiscordEmojiService | None = None) -> str:
-    emoji_service = emoji_service or DEFAULT_DISCORD_EMOJIS
-    return emoji_service.markdown_for(item.thumbnail_asset) or SLOT_EMOJIS.get(item.slot, "📦")
-
-
-def empty_equipment_marker(slot: str, emoji_service: DiscordEmojiService | None = None) -> str:
-    emoji_service = emoji_service or DEFAULT_DISCORD_EMOJIS
-    return emoji_service.markdown_for(EMPTY_EQUIPMENT_EMOJI_ASSETS.get(slot)) or SLOT_EMOJIS.get(slot, "📦")
-
-
-def gold_marker(emoji_service: DiscordEmojiService | None = None) -> str:
-    emoji_service = emoji_service or DEFAULT_DISCORD_EMOJIS
-    return emoji_service.markdown_for(GOLD_EMOJI_ASSET) or GOLD_EMOJI

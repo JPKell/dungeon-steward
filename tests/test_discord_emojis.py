@@ -243,6 +243,7 @@ def test_shop_select_option_uses_registered_custom_equipment_emoji(tmp_path) -> 
         key="rusty-axe",
         name="Rusty Axe",
         slot="weapon",
+        subtype="axe",
         rarity="common",
         min_level=1,
         max_level=10,
@@ -391,6 +392,7 @@ def test_dungeon_potion_page_uses_inventory_custom_emoji_line(tmp_path) -> None:
 
     fields = {field.name: field.value for field in response.fields}
     assert fields["Owned Potions"].startswith("<:ds_p_hp_02:123456789> **Ironberry Draught** x3")
+    assert "T2" not in fields["Owned Potions"]
     assert "❤️" not in fields["Owned Potions"]
 
 

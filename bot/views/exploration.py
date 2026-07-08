@@ -53,15 +53,10 @@ from bot.services.shop_service import (
 )
 from bot.utils.defense_embeds import build_defense_report_embed, build_defense_started_embed
 from bot.utils.embeds import DEEP_NAVY, MIDNIGHT_BLUE, WARM_GOLD, embed
+from bot.utils.emoji import equipment_emoji, gold_emoji, rarity_badge_emoji
+from bot.utils.helpers import EM_SPACE, format_gold, format_item_stats, influence_value
 from bot.utils.profile_embeds import build_profile_embed
-from bot.utils.shop_embeds import (
-    GOLD_EMOJI,
-    RARITY_BADGES,
-    SLOT_EMOJIS,
-    build_purchase_embed,
-    build_shop_embed,
-    format_item_stats,
-)
+from bot.utils.shop_embeds import build_purchase_embed, build_shop_embed
 from bot.utils.time import discord_relative_timestamp, human_duration, utc_now
 
 log = logging.getLogger(__name__)
@@ -82,6 +77,7 @@ DEFENSE_CONTINUE_DESTINATIONS = {
     "hall": "Continue to Hall",
     "shop": "Continue to Shop",
 }
+POTION_PAGE_SIZE = 10
 
 
 class ExplorationView(discord.ui.View):
@@ -203,6 +199,8 @@ def build_hall_embed(
     asset_service: DiscordAssetService = DEFAULT_DISCORD_ASSETS,
     emoji_service: DiscordEmojiService = DEFAULT_DISCORD_EMOJIS,
 ) -> discord.Embed:
+    
+    # Description section
     hall = embed(
         "Steward's Hall",
         (
@@ -214,12 +212,18 @@ def build_hall_embed(
         ),
         colour=DEEP_NAVY,
     )
+
+    # Community dungeon stats 
     if dungeon is not None:
         hall.add_field(name="\u200b", value="**Shared community dungeon**", inline=False)
         hall.add_field(name="Level", value=str(dungeon.level))
-        hall.add_field(name="Gold", value=str(dungeon.gold))
+        hall.add_field(name="Gold", value=format_gold(dungeon.gold))
         hall.add_field(name="Stability", value=f"{dungeon.stability}/100")
-        hall.add_field(name="Influence", value=_influence_value(dungeon.hero_influence, dungeon.villain_influence, emoji_service))
+        hall.add_field(name="Influence", value=influence_value(dungeon.hero_influence, dungeon.villain_influence, emoji_service))
+    
+    # Spacer
+    hall.add_field(name="\u200b", value="", inline=False)
+
     if objective is not None:
         objective_description = getattr(objective, "description", "")
         target = max(1, int(objective.target_value))
@@ -245,8 +249,8 @@ def build_hall_embed(
             hall.add_field(name="Contribution Leaders", value="\n".join(lines), inline=False)
 
         if player_qualifies is not None:
-            qualification = "Qualifies" if player_qualifies else "Not yet"
-            reward_text = f" | Est. reward {estimated_reward} gold" if estimated_reward is not None else ""
+            qualification = "Qualifies" if player_qualifies else "Not qualified"
+            reward_text = f" | Est. reward {format_gold(estimated_reward)}" if estimated_reward is not None else ""
             hall.add_field(
                 name="Your Contribution",
                 value=f"{player_contribution}/{target} | {qualification}{reward_text}",
@@ -254,12 +258,6 @@ def build_hall_embed(
             )
     asset_service.apply_banner(hall, LOCATION_SERVICE.banner_asset_for("stewards_hall"))
     return hall
-
-
-def _influence_value(hero_influence: int, villain_influence: int, emoji_service: DiscordEmojiService) -> str:
-    good = emoji_service.markdown_for("misc.good") or "Good"
-    evil = emoji_service.markdown_for("misc.evil") or "Evil"
-    return f"{good} {hero_influence} : {evil} {villain_influence}"
 
 
 class DungeonActionView(discord.ui.View):
@@ -496,15 +494,18 @@ class DungeonActionView(discord.ui.View):
             )
             sync_player_dungeon_progression(player)
             options = _dungeon_select_options(player)
+            active = self.potion_service.active_effects_at(db, player)
             potion_entries = self.potion_service.inventory_entries(db, player)
             db.commit()
-        selector = embed(
-            "Choose Dungeon Level",
-            "Select an unlocked dungeon level, then descend when ready.",
-            colour=DEEP_NAVY,
+        selector = _build_dungeon_level_selector_embed(
+            title="Choose Dungeon Level",
+            description="Select an unlocked dungeon level, then descend when ready.",
+            potion_service=self.potion_service,
+            active=active,
+            potion_entries=potion_entries,
+            potion_page=0,
+            banner_key="dungeon_selection",
         )
-        _add_potion_inventory_fields(selector, potion_service=self.potion_service, entries=potion_entries)
-        DEFAULT_DISCORD_ASSETS.apply_banner(selector, LOCATION_SERVICE.banner_asset_for("dungeon_selection"))
         await interaction.response.edit_message(
             **banner_first_message_payload(selector, attachment_parameter="attachments"),
             view=ExploreLevelSelectView(
@@ -514,6 +515,7 @@ class DungeonActionView(discord.ui.View):
                 shop_service=self.shop_service,
                 owner_user_id=self.owner_user_id,
                 options=options,
+                active=active,
                 potion_entries=potion_entries,
                 is_defending=self.is_defending,
             ),
@@ -597,15 +599,18 @@ class DungeonActionView(discord.ui.View):
             )
             sync_player_dungeon_progression(player)
             options = _dungeon_select_options(player)
+            active = self.potion_service.active_effects_at(db, player)
             potion_entries = self.potion_service.inventory_entries(db, player)
             db.commit()
-        selector = embed(
-            "Choose Defense Level",
-            "Select any unlocked dungeon level. Higher levels pay better and hit harder.",
-            colour=DEEP_NAVY,
+        selector = _build_dungeon_level_selector_embed(
+            title="Choose Defense Level",
+            description="Select any unlocked dungeon level. Higher levels pay better and hit harder.",
+            potion_service=self.potion_service,
+            active=active,
+            potion_entries=potion_entries,
+            potion_page=0,
+            banner_key="defend",
         )
-        _add_potion_inventory_fields(selector, potion_service=self.potion_service, entries=potion_entries)
-        DEFAULT_DISCORD_ASSETS.apply_banner(selector, LOCATION_SERVICE.banner_asset_for("defend"))
         await interaction.response.edit_message(
             **banner_first_message_payload(selector, attachment_parameter="attachments"),
             view=DefenseLevelSelectView(
@@ -615,6 +620,7 @@ class DungeonActionView(discord.ui.View):
                 shop_service=self.shop_service,
                 owner_user_id=self.owner_user_id,
                 options=options,
+                active=active,
                 potion_entries=potion_entries,
                 is_defending=self.is_defending,
             ),
@@ -773,6 +779,7 @@ class DungeonActionView(discord.ui.View):
                     potion_service=self.potion_service,
                     entries=entries,
                     active=active,
+                    page=0,
                 )
                 inventory_view = PotionInventoryView(
                     session_factory=self.session_factory,
@@ -782,6 +789,7 @@ class DungeonActionView(discord.ui.View):
                     owner_user_id=self.owner_user_id,
                     origin=origin,
                     entries=entries,
+                    active=active,
                     is_defending=player.is_defending,
                 )
                 db.commit()
@@ -827,19 +835,9 @@ class DungeonActionView(discord.ui.View):
                 )
                 active = self.potion_service.active_effects_at(db, player)
                 entries = self.potion_service.inventory_entries(db, player)
-                inventory_embed = _build_potion_inventory_embed(
-                    potion_service=self.potion_service,
+                response_embed, response_view = self._potion_consume_response(
                     entries=entries,
                     active=active,
-                )
-                inventory_view = PotionInventoryView(
-                    session_factory=self.session_factory,
-                    exploration_service=self.exploration_service,
-                    defense_service=self.defense_service,
-                    shop_service=self.shop_service,
-                    owner_user_id=self.owner_user_id,
-                    origin=getattr(self, "origin", "hall"),
-                    entries=entries,
                     is_defending=player.is_defending,
                 )
                 db.commit()
@@ -858,6 +856,7 @@ class DungeonActionView(discord.ui.View):
                     entries=entries,
                     active=active,
                     replacement=error,
+                    page=getattr(self, "potion_page", 0),
                 )
                 inventory_view = PotionInventoryView(
                     session_factory=self.session_factory,
@@ -867,8 +866,11 @@ class DungeonActionView(discord.ui.View):
                     owner_user_id=self.owner_user_id,
                     origin=getattr(self, "origin", "hall"),
                     entries=entries,
+                    active=active,
                     is_defending=player.is_defending,
                     confirm_item_key=item_key,
+                    replacement=error,
+                    page=getattr(self, "potion_page", 0),
                 )
             await interaction.edit_original_response(
                 **banner_first_message_payload(inventory_embed, attachment_parameter="attachments"),
@@ -887,9 +889,36 @@ class DungeonActionView(discord.ui.View):
             await interaction.followup.send("The potion cork would not budge. Please try again.", ephemeral=True)
             return
         await interaction.edit_original_response(
-            **banner_first_message_payload(inventory_embed, attachment_parameter="attachments"),
-            view=inventory_view,
+            **banner_first_message_payload(response_embed, attachment_parameter="attachments"),
+            view=response_view,
         )
+
+    def _potion_consume_response(
+        self,
+        *,
+        entries: tuple[PotionInventoryEntry, ...],
+        active: tuple[ActivePotion, ...],
+        is_defending: bool,
+    ) -> tuple[discord.Embed, discord.ui.View]:
+        inventory_embed = _build_potion_inventory_embed(
+            potion_service=self.potion_service,
+            entries=entries,
+            active=active,
+            page=getattr(self, "potion_page", 0),
+        )
+        inventory_view = PotionInventoryView(
+            session_factory=self.session_factory,
+            exploration_service=self.exploration_service,
+            defense_service=self.defense_service,
+            shop_service=self.shop_service,
+            owner_user_id=self.owner_user_id,
+            origin=getattr(self, "origin", "hall"),
+            entries=entries,
+            active=active,
+            is_defending=is_defending,
+            page=getattr(self, "potion_page", 0),
+        )
+        return inventory_embed, inventory_view
 
     def compact_view(
         self,
@@ -987,7 +1016,7 @@ class StatAllocationButton(discord.ui.Button):
 
 
 class PostExplorationView(DungeonActionView):
-    @discord.ui.button(label="Explore", style=discord.ButtonStyle.primary)
+    @discord.ui.button(label="Explore", style=discord.ButtonStyle.primary, row=0)
     async def explore(
         self,
         interaction: discord.Interaction,
@@ -995,7 +1024,7 @@ class PostExplorationView(DungeonActionView):
     ) -> None:
         await self.start_exploration(interaction)
 
-    @discord.ui.button(label="Defend", style=discord.ButtonStyle.success)
+    @discord.ui.button(label="Defend", style=discord.ButtonStyle.success, row=0)
     async def defend(
         self,
         interaction: discord.Interaction,
@@ -1006,7 +1035,7 @@ class PostExplorationView(DungeonActionView):
             return
         await self.show_defense_selector(interaction)
 
-    @discord.ui.button(label="Shop", style=discord.ButtonStyle.secondary)
+    @discord.ui.button(label="Shop", style=discord.ButtonStyle.secondary, row=0)
     async def shop(
         self,
         interaction: discord.Interaction,
@@ -1014,7 +1043,7 @@ class PostExplorationView(DungeonActionView):
     ) -> None:
         await self.show_shop(interaction)
 
-    @discord.ui.button(label="Steward's Hall", style=discord.ButtonStyle.secondary)
+    @discord.ui.button(label="Steward's Hall", style=discord.ButtonStyle.secondary, row=0)
     async def hall(
         self,
         interaction: discord.Interaction,
@@ -1051,7 +1080,7 @@ class DefenseResolvedActionView(DungeonActionView):
         if continue_destination in DEFENSE_CONTINUE_DESTINATIONS:
             self.add_item(DefenseContinueButton(continue_destination, DEFENSE_CONTINUE_DESTINATIONS[continue_destination]))
 
-    @discord.ui.button(label="Explore", style=discord.ButtonStyle.primary)
+    @discord.ui.button(label="Explore", style=discord.ButtonStyle.primary, row=0)
     async def explore(
         self,
         interaction: discord.Interaction,
@@ -1059,7 +1088,7 @@ class DefenseResolvedActionView(DungeonActionView):
     ) -> None:
         await self.start_exploration(interaction)
 
-    @discord.ui.button(label="Defend", style=discord.ButtonStyle.success)
+    @discord.ui.button(label="Defend", style=discord.ButtonStyle.success, row=0)
     async def defend(
         self,
         interaction: discord.Interaction,
@@ -1067,7 +1096,7 @@ class DefenseResolvedActionView(DungeonActionView):
     ) -> None:
         await self.show_defense_selector(interaction)
 
-    @discord.ui.button(label="Steward's Hall", style=discord.ButtonStyle.secondary)
+    @discord.ui.button(label="Steward's Hall", style=discord.ButtonStyle.secondary, row=0)
     async def hall(
         self,
         interaction: discord.Interaction,
@@ -1081,7 +1110,7 @@ class DefenseContinueButton(discord.ui.Button):
         super().__init__(
             label=label,
             style=discord.ButtonStyle.primary,
-            row=1,
+            row=0,
             custom_id=f"defense:continue:{destination}",
         )
         self.destination = destination
@@ -1108,6 +1137,17 @@ class StewardsHallView(DungeonActionView):
         _button: discord.ui.Button,
     ) -> None:
         await self.start_exploration(interaction)
+
+    @discord.ui.button(label="Defend", style=discord.ButtonStyle.success, row=0)
+    async def defend(
+        self,
+        interaction: discord.Interaction,
+        _button: discord.ui.Button,
+    ) -> None:
+        if self.is_defending:
+            await self.stop_defending(interaction)
+            return
+        await self.show_defense_selector(interaction)
 
     @discord.ui.button(label="Profile", style=discord.ButtonStyle.secondary, row=0)
     async def profile(
@@ -1168,17 +1208,6 @@ class StewardsHallView(DungeonActionView):
     ) -> None:
         await self.show_shop(interaction)
 
-    @discord.ui.button(label="Defend", style=discord.ButtonStyle.success, row=1)
-    async def defend(
-        self,
-        interaction: discord.Interaction,
-        _button: discord.ui.Button,
-    ) -> None:
-        if self.is_defending:
-            await self.stop_defending(interaction)
-            return
-        await self.show_defense_selector(interaction)
-
     @discord.ui.button(label="Leaderboard", style=discord.ButtonStyle.secondary, row=1)
     async def leaderboard(
         self,
@@ -1227,8 +1256,8 @@ class StewardsHallView(DungeonActionView):
             name="Commands",
             value=(
                 "/dungeon explore\n/dungeon defend\n/dungeon stop-defending\n"
-                "/dungeon shop\n/dungeon buy\n/dungeon stats\n/dungeon profile\n"
-                "/dungeon status\n/dungeon leaderboard"
+                "/dungeon shop\n/dungeon profile\n"
+                "/dungeon inventory\n/dungeon hall\n/dungeon leaderboard"
             ),
             inline=False,
         )
@@ -1250,7 +1279,9 @@ class DefenseLevelSelectView(DungeonActionView):
         shop_service: ShopService,
         owner_user_id: int,
         options: list[discord.SelectOption],
+        active: tuple[ActivePotion, ...] = (),
         potion_entries: tuple[PotionInventoryEntry, ...] = (),
+        potion_page: int = 0,
         is_defending: bool = False,
         selected_dungeon_level: int | None = None,
     ) -> None:
@@ -1265,11 +1296,14 @@ class DefenseLevelSelectView(DungeonActionView):
         )
         self.origin = "defense"
         self.options = options
+        self.active = active
         self.potion_entries = potion_entries
+        self.potion_page = _clamp_potion_page(potion_page, len(potion_entries))
         self.selected_dungeon_level = selected_dungeon_level
         self.add_item(DefenseLevelSelect(options, selected_dungeon_level=selected_dungeon_level))
         if potion_entries:
-            self.add_item(PotionConsumeSelect(potion_entries[:25], row=1))
+            self.add_item(PotionConsumeSelect(_potion_page_entries(potion_entries, self.potion_page), row=1))
+            _add_potion_page_buttons(self, potion_entries=potion_entries, page=self.potion_page, row=2)
         self.add_item(DefenseDescendButton(disabled=selected_dungeon_level is None))
 
     def select_dungeon_level(self, dungeon_level: int) -> None:
@@ -1281,6 +1315,67 @@ class DefenseLevelSelectView(DungeonActionView):
                 child.placeholder = f"Level {dungeon_level} selected"
             elif isinstance(child, DefenseDescendButton):
                 child.disabled = False
+
+    async def change_potion_page(self, interaction: discord.Interaction, page: int) -> None:
+        next_page = _clamp_potion_page(page, len(self.potion_entries))
+        selector = _build_dungeon_level_selector_embed(
+            title="Choose Defense Level",
+            description="Select any unlocked dungeon level. Higher levels pay better and hit harder.",
+            potion_service=self.potion_service,
+            active=self.active,
+            potion_entries=self.potion_entries,
+            potion_page=next_page,
+            banner_key="defend",
+        )
+        next_view = DefenseLevelSelectView(
+            session_factory=self.session_factory,
+            exploration_service=self.exploration_service,
+            defense_service=self.defense_service,
+            shop_service=self.shop_service,
+            owner_user_id=self.owner_user_id,
+            options=self.options,
+            active=self.active,
+            potion_entries=self.potion_entries,
+            potion_page=next_page,
+            is_defending=self.is_defending,
+            selected_dungeon_level=self.selected_dungeon_level,
+        )
+        await interaction.response.edit_message(
+            **banner_first_message_payload(selector, attachment_parameter="attachments"),
+            view=next_view,
+        )
+
+    def _potion_consume_response(
+        self,
+        *,
+        entries: tuple[PotionInventoryEntry, ...],
+        active: tuple[ActivePotion, ...],
+        is_defending: bool,
+    ) -> tuple[discord.Embed, discord.ui.View]:
+        next_page = _clamp_potion_page(self.potion_page, len(entries))
+        selector = _build_dungeon_level_selector_embed(
+            title="Choose Defense Level",
+            description="Select any unlocked dungeon level. Higher levels pay better and hit harder.",
+            potion_service=self.potion_service,
+            active=active,
+            potion_entries=entries,
+            potion_page=next_page,
+            banner_key="defend",
+        )
+        next_view = DefenseLevelSelectView(
+            session_factory=self.session_factory,
+            exploration_service=self.exploration_service,
+            defense_service=self.defense_service,
+            shop_service=self.shop_service,
+            owner_user_id=self.owner_user_id,
+            options=self.options,
+            active=active,
+            potion_entries=entries,
+            potion_page=next_page,
+            is_defending=is_defending,
+            selected_dungeon_level=self.selected_dungeon_level,
+        )
+        return selector, next_view
 
     async def start_defense(self, interaction: discord.Interaction, dungeon_level: int) -> None:
         if interaction.guild_id is None:
@@ -1382,7 +1477,9 @@ class ExploreLevelSelectView(DungeonActionView):
         shop_service: ShopService,
         owner_user_id: int,
         options: list[discord.SelectOption],
+        active: tuple[ActivePotion, ...] = (),
         potion_entries: tuple[PotionInventoryEntry, ...] = (),
+        potion_page: int = 0,
         is_defending: bool = False,
         selected_dungeon_level: int | None = None,
     ) -> None:
@@ -1397,11 +1494,14 @@ class ExploreLevelSelectView(DungeonActionView):
         )
         self.origin = "explore"
         self.options = options
+        self.active = active
         self.potion_entries = potion_entries
+        self.potion_page = _clamp_potion_page(potion_page, len(potion_entries))
         self.selected_dungeon_level = selected_dungeon_level
         self.add_item(ExploreLevelSelect(options, selected_dungeon_level=selected_dungeon_level))
         if potion_entries:
-            self.add_item(PotionConsumeSelect(potion_entries[:25], row=1))
+            self.add_item(PotionConsumeSelect(_potion_page_entries(potion_entries, self.potion_page), row=1))
+            _add_potion_page_buttons(self, potion_entries=potion_entries, page=self.potion_page, row=2)
         self.add_item(ExploreDescendButton(disabled=selected_dungeon_level is None))
 
     def select_dungeon_level(self, dungeon_level: int) -> None:
@@ -1413,6 +1513,67 @@ class ExploreLevelSelectView(DungeonActionView):
                 child.placeholder = f"Level {dungeon_level} selected"
             elif isinstance(child, ExploreDescendButton):
                 child.disabled = False
+
+    async def change_potion_page(self, interaction: discord.Interaction, page: int) -> None:
+        next_page = _clamp_potion_page(page, len(self.potion_entries))
+        selector = _build_dungeon_level_selector_embed(
+            title="Choose Dungeon Level",
+            description="Select an unlocked dungeon level, then descend when ready.",
+            potion_service=self.potion_service,
+            active=self.active,
+            potion_entries=self.potion_entries,
+            potion_page=next_page,
+            banner_key="dungeon_selection",
+        )
+        next_view = ExploreLevelSelectView(
+            session_factory=self.session_factory,
+            exploration_service=self.exploration_service,
+            defense_service=self.defense_service,
+            shop_service=self.shop_service,
+            owner_user_id=self.owner_user_id,
+            options=self.options,
+            active=self.active,
+            potion_entries=self.potion_entries,
+            potion_page=next_page,
+            is_defending=self.is_defending,
+            selected_dungeon_level=self.selected_dungeon_level,
+        )
+        await interaction.response.edit_message(
+            **banner_first_message_payload(selector, attachment_parameter="attachments"),
+            view=next_view,
+        )
+
+    def _potion_consume_response(
+        self,
+        *,
+        entries: tuple[PotionInventoryEntry, ...],
+        active: tuple[ActivePotion, ...],
+        is_defending: bool,
+    ) -> tuple[discord.Embed, discord.ui.View]:
+        next_page = _clamp_potion_page(self.potion_page, len(entries))
+        selector = _build_dungeon_level_selector_embed(
+            title="Choose Dungeon Level",
+            description="Select an unlocked dungeon level, then descend when ready.",
+            potion_service=self.potion_service,
+            active=active,
+            potion_entries=entries,
+            potion_page=next_page,
+            banner_key="dungeon_selection",
+        )
+        next_view = ExploreLevelSelectView(
+            session_factory=self.session_factory,
+            exploration_service=self.exploration_service,
+            defense_service=self.defense_service,
+            shop_service=self.shop_service,
+            owner_user_id=self.owner_user_id,
+            options=self.options,
+            active=active,
+            potion_entries=entries,
+            potion_page=next_page,
+            is_defending=is_defending,
+            selected_dungeon_level=self.selected_dungeon_level,
+        )
+        return selector, next_view
 
     @discord.ui.button(label="Back", style=discord.ButtonStyle.secondary, row=2)
     async def back(
@@ -1541,8 +1702,11 @@ class PotionInventoryView(DungeonActionView):
         owner_user_id: int,
         origin: str,
         entries: tuple[PotionInventoryEntry, ...],
+        active: tuple[ActivePotion, ...] = (),
         is_defending: bool = False,
         confirm_item_key: str | None = None,
+        replacement: PotionReplacementRequired | None = None,
+        page: int = 0,
     ) -> None:
         super().__init__(
             session_factory=session_factory,
@@ -1553,10 +1717,44 @@ class PotionInventoryView(DungeonActionView):
             is_defending=is_defending,
         )
         self.origin = origin
+        self.entries = entries
+        self.active = active
+        self.replacement = replacement
+        self.confirm_item_key = confirm_item_key
+        self.potion_page = _clamp_potion_page(page, len(entries))
         if entries:
-            self.add_item(PotionConsumeSelect(entries[:25]))
+            self.add_item(PotionConsumeSelect(_potion_page_entries(entries, self.potion_page)))
+            _add_potion_page_buttons(self, potion_entries=entries, page=self.potion_page, row=1)
         if confirm_item_key is not None:
             self.add_item(ConfirmPotionReplacementButton(confirm_item_key))
+
+    async def change_potion_page(self, interaction: discord.Interaction, page: int) -> None:
+        next_page = _clamp_potion_page(page, len(self.entries))
+        inventory_embed = _build_potion_inventory_embed(
+            potion_service=self.potion_service,
+            entries=self.entries,
+            active=self.active,
+            replacement=self.replacement,
+            page=next_page,
+        )
+        next_view = PotionInventoryView(
+            session_factory=self.session_factory,
+            exploration_service=self.exploration_service,
+            defense_service=self.defense_service,
+            shop_service=self.shop_service,
+            owner_user_id=self.owner_user_id,
+            origin=self.origin,
+            entries=self.entries,
+            active=self.active,
+            is_defending=self.is_defending,
+            confirm_item_key=self.confirm_item_key,
+            replacement=self.replacement,
+            page=next_page,
+        )
+        await interaction.response.edit_message(
+            **banner_first_message_payload(inventory_embed, attachment_parameter="attachments"),
+            view=next_view,
+        )
 
     @discord.ui.button(label="Back", style=discord.ButtonStyle.secondary, row=2)
     async def back(
@@ -1614,12 +1812,40 @@ class ConfirmPotionReplacementButton(discord.ui.Button):
         await view.consume_potion(interaction, self.item_key, replace_same_group=True)
 
 
+class PotionPageButton(discord.ui.Button):
+    def __init__(
+        self,
+        *,
+        label: str,
+        delta: int,
+        page: int,
+        total_entries: int,
+        row: int,
+    ) -> None:
+        target_page = page + delta
+        super().__init__(
+            label=label,
+            style=discord.ButtonStyle.secondary,
+            disabled=_clamp_potion_page(target_page, total_entries) == page,
+            row=row,
+        )
+        self.target_page = target_page
+
+    async def callback(self, interaction: discord.Interaction) -> None:
+        view = self.view
+        if not isinstance(view, (PotionInventoryView, DefenseLevelSelectView, ExploreLevelSelectView)):
+            await interaction.response.send_message("This potion page is no longer available.", ephemeral=True)
+            return
+        await view.change_potion_page(interaction, self.target_page)
+
+
 def _build_potion_inventory_embed(
     *,
     potion_service: PotionService,
     entries: tuple[PotionInventoryEntry, ...],
     active: tuple[ActivePotion, ...],
     replacement: PotionReplacementRequired | None = None,
+    page: int = 0,
     asset_service: DiscordAssetService = DEFAULT_DISCORD_ASSETS,
     emoji_service: DiscordEmojiService | None = None,
 ) -> discord.Embed:
@@ -1627,21 +1853,16 @@ def _build_potion_inventory_embed(
     response = embed("Potion Inventory", colour=MIDNIGHT_BLUE)
     asset_service.apply_banner(response, LOCATION_SERVICE.banner_asset_for("inventory"))
     asset_service.apply_thumbnail(response, _potion_thumbnail_asset(entries=entries, active=active, replacement=replacement))
-    if active:
-        active_lines = [
-            (
-                f"{_potion_marker(effect.item, emoji_service)} **{effect.item.name}** - "
-                f"{potion_service.effect_summary(effect.item)} - ends "
-                f"{discord_relative_timestamp(effect.activation.effective_ends_at)}"
-            )
-            for effect in active
-        ]
-        response.add_field(name="Active Effects", value="\n".join(active_lines), inline=False)
-    else:
-        response.add_field(name="Active Effects", value="None", inline=False)
+    _add_active_potion_fields(response, potion_service=potion_service, active=active, emoji_service=emoji_service)
     response.add_field(name="Slots", value=potion_service.active_slot_usage(active), inline=False)
 
-    _add_potion_inventory_fields(response, potion_service=potion_service, entries=entries, emoji_service=emoji_service)
+    _add_potion_inventory_fields(
+        response,
+        potion_service=potion_service,
+        entries=entries,
+        page=page,
+        emoji_service=emoji_service,
+    )
 
     if replacement is not None:
         response.add_field(
@@ -1660,22 +1881,117 @@ def _add_potion_inventory_fields(
     *,
     potion_service: PotionService,
     entries: tuple[PotionInventoryEntry, ...],
+    page: int = 0,
     emoji_service: DiscordEmojiService | None = None,
 ) -> None:
     emoji_service = emoji_service or DEFAULT_DISCORD_EMOJIS
     if entries:
-        owned_lines = [_potion_inventory_line(potion_service, entry, emoji_service) for entry in entries[:25]]
-        for index, chunk in enumerate(_chunk_lines(owned_lines), start=1):
-            name = "Owned Potions" if index == 1 else "Owned Potions Continued"
+        current_page = _clamp_potion_page(page, len(entries))
+        page_entries = _potion_page_entries(entries, current_page)
+        owned_lines = [_potion_inventory_line(potion_service, entry, emoji_service) for entry in page_entries]
+        page_count = _potion_page_count(len(entries))
+        for index, chunk in enumerate(_chunk_lines(owned_lines), start=0):
+            if page_count > 1 and index == 0:
+                name = f"Owned Potions (Page {current_page + 1}/{page_count})"
+            elif index == 0:
+                name = "Owned Potions"
+            else:
+                name = "\u200b"
             response.add_field(name=name, value=chunk, inline=False)
-        if len(entries) > 25:
-            response.add_field(
-                name="More Potions",
-                value=f"Showing 25 of {len(entries)} owned stacks.",
-                inline=False,
-            )
     else:
         response.add_field(name="Owned Potions", value="None", inline=False)
+
+
+def _build_dungeon_level_selector_embed(
+    *,
+    title: str,
+    description: str,
+    potion_service: PotionService,
+    active: tuple[ActivePotion, ...],
+    potion_entries: tuple[PotionInventoryEntry, ...],
+    potion_page: int,
+    banner_key: str,
+) -> discord.Embed:
+    selector = embed(title, description, colour=DEEP_NAVY)
+    _add_active_potion_fields(selector, potion_service=potion_service, active=active)
+    _add_potion_inventory_fields(
+        selector,
+        potion_service=potion_service,
+        entries=potion_entries,
+        page=potion_page,
+    )
+    DEFAULT_DISCORD_ASSETS.apply_banner(selector, LOCATION_SERVICE.banner_asset_for(banner_key))
+    return selector
+
+
+def _add_active_potion_fields(
+    response: discord.Embed,
+    *,
+    potion_service: PotionService,
+    active: tuple[ActivePotion, ...],
+    emoji_service: DiscordEmojiService | None = None,
+) -> None:
+    emoji_service = emoji_service or DEFAULT_DISCORD_EMOJIS
+    if active:
+        active_lines = [
+            (
+                f"{_potion_marker(effect.item, emoji_service)} **{effect.item.name}** \n "
+                f"{EM_SPACE}{EM_SPACE}{potion_service.effect_summary(effect.item)} - ends "
+                f"{discord_relative_timestamp(effect.activation.effective_ends_at)}"
+            )
+            for effect in active
+        ]
+        response.add_field(name="Active Effects", value="\n".join(active_lines), inline=False)
+        return
+    response.add_field(name="Active Effects", value="None", inline=False)
+
+
+def _potion_page_count(total_entries: int) -> int:
+    if total_entries <= 0:
+        return 1
+    return ((total_entries - 1) // POTION_PAGE_SIZE) + 1
+
+
+def _clamp_potion_page(page: int, total_entries: int) -> int:
+    return max(0, min(page, _potion_page_count(total_entries) - 1))
+
+
+def _potion_page_entries(
+    entries: tuple[PotionInventoryEntry, ...],
+    page: int,
+) -> tuple[PotionInventoryEntry, ...]:
+    current_page = _clamp_potion_page(page, len(entries))
+    start = current_page * POTION_PAGE_SIZE
+    return entries[start : start + POTION_PAGE_SIZE]
+
+
+def _add_potion_page_buttons(
+    view: discord.ui.View,
+    *,
+    potion_entries: tuple[PotionInventoryEntry, ...],
+    page: int,
+    row: int,
+) -> None:
+    if len(potion_entries) <= POTION_PAGE_SIZE:
+        return
+    view.add_item(
+        PotionPageButton(
+            label="Previous Potions",
+            delta=-1,
+            page=page,
+            total_entries=len(potion_entries),
+            row=row,
+        )
+    )
+    view.add_item(
+        PotionPageButton(
+            label="Next Potions",
+            delta=1,
+            page=page,
+            total_entries=len(potion_entries),
+            row=row,
+        )
+    )
 
 
 def _potion_thumbnail_asset(
@@ -1719,9 +2035,8 @@ def _potion_inventory_line(
     emoji_service = emoji_service or DEFAULT_DISCORD_EMOJIS
     emoji = _potion_marker(entry.item, emoji_service)
     return (
-        f"{emoji} **{entry.item.name}** x{entry.stack.quantity} - "
-        f"T{entry.item.tier} {entry.item.rarity} - "
-        f"{potion_service.effect_summary(entry.item)} - {human_duration(entry.item.duration_seconds)}"
+        f"{emoji} **{entry.item.name}** x{entry.stack.quantity} \n"
+        f"{EM_SPACE}{EM_SPACE}{potion_service.effect_summary(entry.item)} - {human_duration(entry.item.duration_seconds, abr=True)}"
     )
 
 
@@ -1755,7 +2070,7 @@ def _potion_option_label(entry: PotionInventoryEntry, *, include_fallback_emoji:
 def _potion_option_description(entry: PotionInventoryEntry) -> str:
     effect = PotionService().effect_summary(entry.item)
     return _limit_component_text(
-        f"T{entry.item.tier} {entry.item.rarity} | {effect} | {human_duration(entry.item.duration_seconds)}",
+        f"{effect} | {human_duration(entry.item.duration_seconds)}",
         100,
     )
 
@@ -1819,7 +2134,7 @@ class ShopView(DungeonActionView):
         if selected_stock_number is not None:
             self.add_item(ShopBuySelectedButton(selected_stock_number))
 
-    @discord.ui.button(label="Explore", style=discord.ButtonStyle.primary, row=2)
+    @discord.ui.button(label="Explore", style=discord.ButtonStyle.primary, row=0)
     async def explore(
         self,
         interaction: discord.Interaction,
@@ -1827,7 +2142,7 @@ class ShopView(DungeonActionView):
     ) -> None:
         await self.start_exploration(interaction)
 
-    @discord.ui.button(label="Defend", style=discord.ButtonStyle.success, row=2)
+    @discord.ui.button(label="Defend", style=discord.ButtonStyle.success, row=0)
     async def defend(
         self,
         interaction: discord.Interaction,
@@ -1838,7 +2153,7 @@ class ShopView(DungeonActionView):
             return
         await self.show_defense_selector(interaction)
 
-    @discord.ui.button(label="Back", style=discord.ButtonStyle.secondary, row=2)
+    @discord.ui.button(label="Steward's Hall", style=discord.ButtonStyle.secondary, row=0)
     async def back(
         self,
         interaction: discord.Interaction,
@@ -1854,7 +2169,7 @@ class ShopPurchaseSelect(discord.ui.Select):
             min_values=1,
             max_values=1,
             options=options,
-            row=0,
+            row=1,
         )
 
     async def callback(self, interaction: discord.Interaction) -> None:
@@ -1870,7 +2185,7 @@ class ShopBuySelectedButton(discord.ui.Button):
         super().__init__(
             label="Buy Selected",
             style=discord.ButtonStyle.success,
-            row=1,
+            row=2,
             custom_id=f"shop:buy-selected:{stock_number}",
         )
         self.stock_number = stock_number
@@ -1902,8 +2217,8 @@ def _shop_select_options(
             discord.SelectOption(
                 label=_shop_option_label(item),
                 value=str(index),
-                description=_shop_option_description(quote, emoji_service),
-                emoji=_equipment_select_emoji(item, emoji_service) or SLOT_EMOJIS.get(item.slot, "📦"),
+                description=_shop_option_description(quote),
+                emoji=equipment_emoji(item.slot, item.subtype),
                 default=index == selected_stock_number,
             )
         )
@@ -1922,13 +2237,12 @@ def _shop_option_label(item: EquipmentItem) -> str:
     return _limit_component_text(item.name, 100)
 
 
-def _shop_option_description(quote: ShopPurchaseQuote, emoji_service: DiscordEmojiService) -> str:
-    del emoji_service
-    rarity = RARITY_BADGES.get(quote.item.rarity.lower(), "⚪")
+def _shop_option_description(quote: ShopPurchaseQuote) -> str:
+    rarity = rarity_badge_emoji(quote.item.rarity, custom=False)
     return _limit_component_text(
         (
             f"{rarity} {quote.item.slot.title()} | "
-            f"{format_item_stats(quote.item)} | Price {GOLD_EMOJI} {quote.item.cost}"
+            f"{format_item_stats(quote.item)} | Price {gold_emoji(custom=False)} {quote.item.cost}"
         ),
         100,
     )

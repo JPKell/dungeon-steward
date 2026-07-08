@@ -25,22 +25,15 @@ from bot.services.location_service import LOCATION_SERVICE
 from bot.services.player_service import PlayerService
 from bot.services.potion_service import PotionService
 from bot.services.progression_service import (
-    ALLOCATABLE_STATS,
-    allocate_stat_points,
     get_explore_cooldown_minutes,
-    get_max_defense_minutes,
     sync_combat_progression,
 )
-from bot.services.shop_service import (
-    InsufficientGoldError,
-    InvalidShopSelectionError,
-    ShopService,
-)
+from bot.services.shop_service import ShopService
 from bot.services.weekly_objective_service import WeeklyObjectiveService
 from bot.utils.defense_embeds import build_defense_report_embed, build_defense_started_embed
 from bot.utils.embeds import DEEP_NAVY, MIDNIGHT_BLUE, WARM_GOLD, embed
 from bot.utils.profile_embeds import build_profile_embed
-from bot.utils.shop_embeds import build_purchase_embed, build_shop_embed
+from bot.utils.shop_embeds import build_shop_embed
 from bot.utils.time import human_duration
 from bot.views.exploration import (
     STAT_ALLOCATION_PROFILE,
@@ -343,6 +336,7 @@ class DungeonGroup(app_commands.Group):
                 energy_state=state,
                 stats=stats,
             )
+
             action_is_defending = (
                 player.is_defending
                 if target.id == interaction.user.id
@@ -366,6 +360,18 @@ class DungeonGroup(app_commands.Group):
                 stat_allocation_context=stat_context,
             ),
         )
+
+    @app_commands.command(name="inventory", description="View and use your potion inventory")
+    async def inventory(self, interaction: discord.Interaction) -> None:
+        inventory_view = StewardsHallView(
+            session_factory=self.session_factory,
+            exploration_service=self.exploration,
+            defense_service=self.defense,
+            shop_service=self.shop,
+            owner_user_id=interaction.user.id,
+            is_defending=self._is_defending(interaction.guild_id, interaction.user.id),
+        )
+        await inventory_view.show_inventory(interaction, origin="hall")
 
     @app_commands.command(name="defend", description="Defend a dungeon level from one-minute attacks")
     @app_commands.describe(dungeon_level="Dungeon difficulty from 1 through 20")
@@ -474,164 +480,6 @@ class DungeonGroup(app_commands.Group):
             ephemeral=True,
         )
 
-    @app_commands.command(name="buy", description="Buy and equip an item from this hour's shop")
-    @app_commands.describe(item_number="Shop item number from 1 through 10")
-    async def buy(self, interaction: discord.Interaction, item_number: app_commands.Range[int, 1, 10]) -> None:
-        if interaction.guild_id is None:
-            await interaction.response.send_message("The shop is server-specific.", ephemeral=True)
-            return
-        try:
-            with self.session_factory() as db:
-                purchase = self.shop.purchase(
-                    db,
-                    guild_id=interaction.guild_id,
-                    user_id=interaction.user.id,
-                    display_name=interaction.user.display_name,
-                    stock_number=int(item_number),
-                )
-                db.commit()
-        except InvalidShopSelectionError as error:
-            await interaction.response.send_message(str(error), ephemeral=True)
-            return
-        except InsufficientGoldError as error:
-            await interaction.response.send_message(str(error), ephemeral=True)
-            return
-        except Exception:
-            log.exception("Buy command failed")
-            await interaction.response.send_message("The shop ledger jammed. Please try again.", ephemeral=True)
-            return
-        purchase_embed = build_purchase_embed(purchase)
-        await interaction.response.send_message(
-            **banner_first_message_payload(purchase_embed),
-            view=self._action_view(
-                interaction.user.id,
-                is_defending=self._is_defending(interaction.guild_id, interaction.user.id),
-            ),
-            ephemeral=True,
-        )
-
-    @app_commands.command(name="stats", description="View combat stats or spend stat points")
-    @app_commands.describe(stat="Stat to improve", amount="Number of points to spend")
-    @app_commands.choices(
-        stat=[
-            app_commands.Choice(name="Attack", value="attack"),
-            app_commands.Choice(name="Defense", value="defense"),
-            app_commands.Choice(name="Speed", value="speed"),
-        ]
-    )
-    async def stats(
-        self,
-        interaction: discord.Interaction,
-        stat: app_commands.Choice[str] | None = None,
-        amount: int = 0,
-    ) -> None:
-        if interaction.guild_id is None:
-            await interaction.response.send_message("Stats are server-specific.", ephemeral=True)
-            return
-        selected_stat = stat.value if stat else None
-        if selected_stat is not None and selected_stat not in ALLOCATABLE_STATS:
-            await interaction.response.send_message("Choose attack, defense, or speed.", ephemeral=True)
-            return
-        if selected_stat is not None and amount <= 0:
-            await interaction.response.send_message("Amount must be a positive integer.", ephemeral=True)
-            return
-
-        try:
-            with self.session_factory() as db:
-                player = db.scalar(
-                    select(Player)
-                    .where(
-                        Player.guild_id == interaction.guild_id,
-                        Player.discord_user_id == interaction.user.id,
-                    )
-                    .with_for_update()
-                )
-                if player is None:
-                    player = self.players.get_or_create(
-                        db,
-                        guild_id=interaction.guild_id,
-                        user_id=interaction.user.id,
-                        display_name=interaction.user.display_name,
-                    )
-                if selected_stat is not None:
-                    allocate_stat_points(player, selected_stat, amount)
-                sync_combat_progression(player)
-                stats = get_effective_combat_stats(player)
-                action_is_defending = player.is_defending
-                db.commit()
-        except ValueError as error:
-            await interaction.response.send_message(str(error), ephemeral=True)
-            return
-        except Exception:
-            log.exception("Stats command failed")
-            await interaction.response.send_message("The stat ledger jammed. Please try again.", ephemeral=True)
-            return
-
-        stats_embed = embed("Combat Stats", colour=WARM_GOLD)
-        stats_embed.add_field(name="Combat Level", value=str(player.combat_level))
-        stats_embed.add_field(name="Combat XP", value=f"{player.combat_xp}/{player.combat_xp_to_next_level}")
-        stats_embed.add_field(name="HP", value=f"{player.current_hp}/{stats.max_hp}")
-        stats_embed.add_field(
-            name="Stats",
-            value=f"Attack {stats.attack}\nDefense {stats.defense}\nSpeed {stats.speed}",
-        )
-        stats_embed.add_field(name="Unspent Points", value=str(player.unspent_stat_points))
-        stats_embed.add_field(
-            name="Defense Duration",
-            value=human_duration(get_max_defense_minutes(player.combat_level) * 60),
-        )
-        if selected_stat is not None:
-            stats_embed.description = f"Added {amount} point(s) to {selected_stat}."
-        DEFAULT_DISCORD_ASSETS.apply_banner(stats_embed, LOCATION_SERVICE.banner_asset_for("combat_stats"))
-        await interaction.response.send_message(
-            **banner_first_message_payload(stats_embed),
-            view=self._action_view(
-                interaction.user.id,
-                is_defending=action_is_defending,
-                stat_allocation_context=STAT_ALLOCATION_PROFILE if player.unspent_stat_points > 0 else None,
-            ),
-            ephemeral=True,
-        )
-
-    @app_commands.command(name="status", description="View the shared server dungeon")
-    async def status(self, interaction: discord.Interaction) -> None:
-        if interaction.guild_id is None:
-            await interaction.response.send_message("Dungeon status is server-specific.", ephemeral=True)
-            return
-        if not await self._resolve_expired_defense_before_screen(interaction, continue_destination="hall"):
-            return
-        with self.session_factory() as db:
-            dungeon = self.players.get_or_create_guild(db, guild_id=interaction.guild_id)
-            objective = self.weekly.get_active(db, guild_id=interaction.guild_id)
-            player = self.players.get_or_create(
-                db,
-                guild_id=interaction.guild_id,
-                user_id=interaction.user.id,
-                display_name=interaction.user.display_name,
-            )
-            contributor_count = self.weekly._participant_count(db, objective)
-            player_contribution = self.weekly.player_contribution(db, objective, player_id=player.id)
-            player_qualifies = self.weekly.qualifies_for_reward(objective, player_contribution)
-            estimated_reward = self.weekly.reward_preview(player, objective).gold_awarded
-            contribution_leaders = [(name, value) for name, value in self.weekly.contribution_rows(db, objective, limit=5)]
-            db.commit()
-            hall_embed = build_hall_embed(
-                dungeon=dungeon,
-                objective=objective,
-                contributor_count=contributor_count,
-                player_contribution=player_contribution,
-                player_qualifies=player_qualifies,
-                estimated_reward=estimated_reward,
-                contribution_leaders=contribution_leaders,
-            )
-        await interaction.response.send_message(
-            **banner_first_message_payload(hall_embed),
-            view=self._hall_view(
-                interaction.user.id,
-                is_defending=self._is_defending(interaction.guild_id, interaction.user.id),
-            ),
-        )
-
     @app_commands.command(name="leaderboard", description="Show the server leaderboard")
     @app_commands.choices(
         category=[
@@ -712,8 +560,9 @@ class DungeonGroup(app_commands.Group):
             name="Commands",
             value=(
                 "/dungeon explore\n/dungeon defend\n/dungeon stop-defending\n"
-                "/dungeon shop\n/dungeon buy\n/dungeon stats\n/dungeon profile\n"
-                "/dungeon status\n/dungeon leaderboard"
+                "/dungeon shop\n/dungeon profile\n"
+                "/dungeon inventory\n"
+                "/dungeon hall\n/dungeon leaderboard"
             ),
             inline=False,
         )

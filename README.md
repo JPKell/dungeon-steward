@@ -120,12 +120,10 @@ Player commands:
 - `/dungeon defend dungeon_level:1-20`
 - `/dungeon stop-defending`
 - `/dungeon shop`
-- `/dungeon buy item_number:1-10`
-- `/dungeon stats [stat] [amount]`
 - `/dungeon hall`
+- `/dungeon inventory`
 - `/dungeon profile [member]`
 - `/dungeon energy`
-- `/dungeon status`
 - `/dungeon leaderboard [category]`
 - `/dungeon help`
 
@@ -151,8 +149,6 @@ Exploration XP now advances `explore_level`. Existing player `level` values are 
 Combat progression is independent. Players have `combat_level`, `combat_xp`, `combat_xp_to_next_level`, `current_hp`, `max_hp`, `attack`, `defense`, `speed`, and `unspent_stat_points`. Each Combat Level grants 2 stat points and increases maximum HP.
 
 `/dungeon defend` starts a persistent defense session for a selected dungeon level from 1 through 20. A session resolves when the player stops defending, explores, or reaches their Combat Level duration cap. Resolution simulates one enemy battle per completed minute, carries player HP between battles, awards Combat XP and gold for victories, and sends a separate defense report before any exploration result.
-
-`/dungeon stats` shows combat stats. Passing a stat and amount spends unspent points on attack, defense, or speed.
 
 Equipment slots are present in the player record for weapon, shield, helm, armor, gloves, boots, and trinket. The shop offers 10 items at a time from database-backed equipment content; stock is generated from the current UTC hour rounded down and the player's Combat Level, so players at the same Combat Level see the same stock during the same hour. Shop item costs and stat bonuses can scale by Combat Level through database-backed progression content. Buying an item spends gold and equips it immediately in the matching slot.
 
@@ -213,6 +209,8 @@ python -m scripts.content_db load
 ```
 
 ## Ubuntu Deployment
+
+For the full production checklist, including PostgreSQL, Nginx/DNS/TLS, systemd, Discord asset caching, backups, and update flow, see [docs/PRODUCTION_LAUNCH.md](docs/PRODUCTION_LAUNCH.md).
 
 Assumed path:
 

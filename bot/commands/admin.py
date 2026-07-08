@@ -31,7 +31,8 @@ from bot.services.potion_service import EXPECTED_POTION_GROUPS, POTION_TYPE_EMOJ
 from bot.services.progression_service import calculate_explore_level, grant_combat_xp, sync_combat_progression
 from bot.utils.embeds import embed
 from bot.utils.profile_embeds import build_profile_embed
-from bot.utils.shop_embeds import empty_equipment_marker, equipment_marker, format_item_stats, rarity_badge
+from bot.utils.helpers import format_item_stats 
+from bot.utils.emoji import equipment_emoji, rarity_badge_emoji
 from bot.views.exploration import _build_potion_inventory_embed
 
 log = logging.getLogger(__name__)
@@ -482,8 +483,8 @@ class AdminPlayerInspectView(discord.ui.View):
         )
         for slot in EQUIPMENT_SLOTS:
             item = self.equipment.get_or_none(getattr(player, slot), combat_level=player.combat_level)
-            marker = equipment_marker(item, self.emoji_service) if item is not None else empty_equipment_marker(slot, self.emoji_service)
-            rarity = f"{rarity_badge(item.rarity, self.emoji_service)} " if item is not None else ""
+            marker = equipment_emoji(item.slot, item.subtype) if item is not None else equipment_emoji(slot, "empty")
+            rarity = f"{rarity_badge_emoji(item.rarity)} " if item is not None else ""
             response.add_field(
                 name=f"{rarity}{marker} {_equipment_inspect_name(slot, item)}",
                 value=_equipment_inspect_value(item, self.emoji_service),
@@ -741,7 +742,7 @@ class AdminGrantBrowserView(discord.ui.View):
     def _line_for(self, index: int, item: EquipmentItem | PotionItem) -> str:
         if isinstance(item, EquipmentItem):
             return (
-                f"{index}. {rarity_badge(item.rarity, self.emoji_service)} {item.name} | {item.slot} | "
+                f"{index}. {rarity_badge_emoji(item.rarity)} {item.name} | {item.slot} | "
                 f"L{item.min_level}-{item.max_level} | {format_item_stats(item)}"
             )
         emoji = _potion_emoji_markdown(item, self.emoji_service) or POTION_TYPE_EMOJIS.get(item.effect_group, "")

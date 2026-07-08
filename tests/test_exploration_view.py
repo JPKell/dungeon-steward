@@ -9,7 +9,7 @@ import pytest
 
 from bot.models import Player
 from bot.services.equipment_service import EquipmentItem
-from bot.services.potion_service import PotionInventoryEntry, PotionService
+from bot.services.potion_service import ActivePotion, PotionInventoryEntry, PotionService
 from bot.services.shop_service import ShopService, ShopStock
 from bot.views.exploration import (
     STAT_ALLOCATION_PROFILE,
@@ -21,6 +21,7 @@ from bot.views.exploration import (
     PotionInventoryView,
     ShopView,
     StewardsHallView,
+    _add_potion_inventory_fields,
     _dungeon_select_options,
     _stat_allocation_summary_embed,
     build_hall_embed,
@@ -65,6 +66,10 @@ class DummyExplorationService:
 class DummySession:
     def commit(self) -> None:
         pass
+
+
+def _button_rows(view: discord.ui.View) -> list[tuple[str | None, int | None]]:
+    return [(button.label, button.row) for button in view.children if isinstance(button, discord.ui.Button)]
 
 
 class DummySessionContext:
@@ -128,6 +133,9 @@ class SelectorPlayers:
 
 
 class EmptyPotionService:
+    def active_effects_at(self, *_args, **_kwargs) -> tuple:
+        return ()
+
     def inventory_entries(self, *_args, **_kwargs) -> tuple:
         return ()
 
@@ -212,6 +220,15 @@ def test_action_view_can_include_stat_allocation_buttons() -> None:
         "DEF +1",
         "SPD +1",
     ]
+    assert _button_rows(view) == [
+        ("Explore", 0),
+        ("Defend", 0),
+        ("Shop", 0),
+        ("Steward's Hall", 0),
+        ("ATK +1", 2),
+        ("DEF +1", 2),
+        ("SPD +1", 2),
+    ]
 
 
 def test_defending_action_view_keeps_return_button_by_default() -> None:
@@ -229,6 +246,12 @@ def test_defending_action_view_keeps_return_button_by_default() -> None:
     assert "Return from Dungeon" in labels
     assert "Defend" not in labels
     assert labels == ["Explore", "Return from Dungeon", "Shop", "Steward's Hall"]
+    assert _button_rows(view) == [
+        ("Explore", 0),
+        ("Return from Dungeon", 0),
+        ("Shop", 0),
+        ("Steward's Hall", 0),
+    ]
 
 
 def test_defending_result_view_can_suppress_return_button() -> None:
@@ -247,6 +270,11 @@ def test_defending_result_view_can_suppress_return_button() -> None:
     assert "Return from Dungeon" not in labels
     assert "Defend" not in labels
     assert labels == ["Explore", "Shop", "Steward's Hall"]
+    assert _button_rows(view) == [
+        ("Explore", 0),
+        ("Shop", 0),
+        ("Steward's Hall", 0),
+    ]
 
 
 @pytest.mark.asyncio
@@ -284,6 +312,7 @@ async def test_resolving_defense_before_explore_stops_before_starting_exploratio
     report_view = sent_messages[0]["view"]
     labels = [button.label for button in report_view.children if isinstance(button, discord.ui.Button)]
     assert labels == ["Explore", "Defend", "Steward's Hall"]
+    assert _button_rows(report_view) == [("Explore", 0), ("Defend", 0), ("Steward's Hall", 0)]
 
 
 @pytest.mark.asyncio
@@ -381,6 +410,12 @@ async def test_expired_defense_blocks_shop_with_continue_button() -> None:
     report_view = response.edits[0]["view"]
     labels = [button.label for button in report_view.children if isinstance(button, discord.ui.Button)]
     assert labels == ["Explore", "Defend", "Steward's Hall", "Continue to Shop"]
+    assert _button_rows(report_view) == [
+        ("Explore", 0),
+        ("Defend", 0),
+        ("Steward's Hall", 0),
+        ("Continue to Shop", 0),
+    ]
 
 
 @pytest.mark.asyncio
@@ -416,6 +451,12 @@ async def test_expired_defense_blocks_hall_with_continue_button() -> None:
     report_view = response.edits[0]["view"]
     labels = [button.label for button in report_view.children if isinstance(button, discord.ui.Button)]
     assert labels == ["Explore", "Defend", "Steward's Hall", "Continue to Hall"]
+    assert _button_rows(report_view) == [
+        ("Explore", 0),
+        ("Defend", 0),
+        ("Steward's Hall", 0),
+        ("Continue to Hall", 0),
+    ]
 
 
 def test_dungeon_level_selectors_do_not_include_return_buttons() -> None:
@@ -613,9 +654,11 @@ def test_hall_embed_uses_community_dungeon_details_without_action_list() -> None
     assert hall.fields[0].name == "\u200b"
     assert hall.fields[0].value == "**Shared community dungeon**"
     assert fields["Level"] == "4"
-    assert fields["Gold"] == "1200"
+    assert fields["Gold"].endswith(" 1200")
     assert fields["Stability"] == "82/100"
-    assert fields["Influence"] == "<:good:3> 7 : <:evil:4> 3"
+    assert "ds_m_good" in fields["Influence"]
+    assert "7 : 3" in fields["Influence"]
+    assert "ds_m_evil" in fields["Influence"]
     assert fields["Weekly Objective: Map the Moving Halls"].splitlines()[0] == "Complete 100 explorations."
     assert fields["Weekly Objective: Map the Moving Halls"].splitlines()[1].startswith("Progress: 17/100 (17%) | Ends <t:")
     assert "Weekly Objective" not in fields
@@ -626,9 +669,9 @@ def test_hall_embed_uses_community_dungeon_details_without_action_list() -> None
         "Gold",
         "Stability",
         "Influence",
+        "\u200b",
         "Weekly Objective: Map the Moving Halls",
         "Mode",
-        "Contributors",
     ]
 
 
@@ -668,6 +711,15 @@ def test_hall_keeps_inventory_button_but_defense_selector_uses_potion_dropdown()
     assert "Inventory" in hall_labels
     assert "Energy" not in hall_labels
     assert "Dungeon" not in hall_labels
+    assert _button_rows(hall) == [
+        ("Explore", 0),
+        ("Defend", 0),
+        ("Profile", 0),
+        ("Inventory", 0),
+        ("Shop", 0),
+        ("Leaderboard", 1),
+        ("Help", 1),
+    ]
     assert "Inventory" not in [button.label for button in defense.children if isinstance(button, discord.ui.Button)]
 
 
@@ -696,11 +748,13 @@ def test_dungeon_level_selector_lists_owned_potions_with_emoji_and_quantity() ->
     assert len(selects) == 2
     assert potion_select.placeholder == "Consume a potion"
     assert potion_select.options[0].label.endswith("Ironberry Draught x3")
+    assert "T2" not in (potion_select.options[0].description or "")
+    assert "rare" not in (potion_select.options[0].description or "")
     if potion_select.options[0].emoji is not None:
         assert "❤️" not in potion_select.options[0].label
 
 
-def test_potion_inventory_select_is_capped_to_owned_items() -> None:
+def test_potion_inventory_select_is_limited_to_current_page() -> None:
     service = PotionService()
     entries = tuple(
         PotionInventoryEntry(stack=SimpleNamespace(quantity=1), item=item)
@@ -717,8 +771,135 @@ def test_potion_inventory_select_is_capped_to_owned_items() -> None:
         entries=entries,
     )
     select = next(child for child in view.children if isinstance(child, discord.ui.Select))
+    buttons = [child for child in view.children if isinstance(child, discord.ui.Button)]
 
-    assert len(select.options) == 25
+    assert len(select.options) == 10
+    assert [option.value for option in select.options] == [entry.item.key for entry in entries[:10]]
+    assert [button.label for button in buttons if "Potions" in (button.label or "")] == [
+        "Previous Potions",
+        "Next Potions",
+    ]
+
+
+@pytest.mark.asyncio
+async def test_potion_page_buttons_update_inventory_selector() -> None:
+    service = PotionService()
+    entries = tuple(
+        PotionInventoryEntry(stack=SimpleNamespace(quantity=1), item=item)
+        for item in service.content.items[:12]
+    )
+    view = PotionInventoryView(
+        session_factory=DummySessionFactory(),
+        exploration_service=DummyExplorationService(),
+        defense_service=DummyDefenseService(),
+        shop_service=DummyShopService(),
+        owner_user_id=1,
+        origin="hall",
+        entries=entries,
+    )
+    next_button = next(
+        child
+        for child in view.children
+        if isinstance(child, discord.ui.Button) and child.label == "Next Potions"
+    )
+    response = DummyResponse()
+
+    await next_button.callback(SimpleNamespace(response=response))
+
+    next_view = response.edits[0]["view"]
+    next_select = next(child for child in next_view.children if isinstance(child, discord.ui.Select))
+    assert next_view.potion_page == 1
+    assert [option.value for option in next_select.options] == [entry.item.key for entry in entries[10:12]]
+
+
+@pytest.mark.asyncio
+async def test_potion_page_buttons_update_dungeon_selector_and_embed() -> None:
+    service = PotionService()
+    entries = tuple(
+        PotionInventoryEntry(stack=SimpleNamespace(quantity=1), item=item)
+        for item in service.content.items[:12]
+    )
+    view = DefenseLevelSelectView(
+        session_factory=DummySessionFactory(),
+        exploration_service=DummyExplorationService(),
+        defense_service=DummyDefenseService(),
+        shop_service=DummyShopService(),
+        owner_user_id=1,
+        options=[discord.SelectOption(label="Level 1", value="1")],
+        potion_entries=entries,
+    )
+    next_button = next(
+        child
+        for child in view.children
+        if isinstance(child, discord.ui.Button) and child.label == "Next Potions"
+    )
+    response = DummyResponse()
+
+    await next_button.callback(SimpleNamespace(response=response))
+
+    next_view = response.edits[0]["view"]
+    potion_select = [child for child in next_view.children if isinstance(child, discord.ui.Select)][1]
+    fields = {field.name: field.value for field in response.edits[0]["embed"].fields}
+    assert next_view.potion_page == 1
+    assert [option.value for option in potion_select.options] == [entry.item.key for entry in entries[10:12]]
+    assert "Owned Potions (Page 2/2)" in fields
+
+
+def test_potion_inventory_continuation_chunks_do_not_show_second_header() -> None:
+    service = PotionService()
+    entries = tuple(
+        PotionInventoryEntry(stack=SimpleNamespace(quantity=1), item=item)
+        for item in service.content.items[:10]
+    )
+    response = discord.Embed(title="Potion Inventory")
+
+    _add_potion_inventory_fields(response, potion_service=service, entries=entries)
+
+    assert "Owned Potions Continued" not in [field.name for field in response.fields]
+    assert all(" - rare - " not in field.value for field in response.fields)
+
+
+def test_dungeon_selector_stays_open_after_potion_consume_response() -> None:
+    service = PotionService()
+    before_entries = tuple(
+        PotionInventoryEntry(stack=SimpleNamespace(quantity=1), item=item)
+        for item in service.content.items[:12]
+    )
+    after_entries = before_entries[1:]
+    active = (
+        ActivePotion(
+            activation=SimpleNamespace(effective_ends_at=datetime(2026, 7, 3, 16, 0, tzinfo=UTC)),
+            item=after_entries[0].item,
+        ),
+    )
+    view = ExploreLevelSelectView(
+        session_factory=DummySessionFactory(),
+        exploration_service=DummyExplorationService(),
+        defense_service=DummyDefenseService(),
+        shop_service=DummyShopService(),
+        owner_user_id=1,
+        options=[discord.SelectOption(label="Level 1", value="1")],
+        potion_entries=before_entries,
+        potion_page=1,
+        selected_dungeon_level=1,
+    )
+
+    response_embed, response_view = view._potion_consume_response(
+        entries=after_entries,
+        active=active,
+        is_defending=False,
+    )
+
+    potion_select = [child for child in response_view.children if isinstance(child, discord.ui.Select)][1]
+    fields = {field.name: field.value for field in response_embed.fields}
+    assert response_embed.title == "Choose Dungeon Level"
+    assert isinstance(response_view, ExploreLevelSelectView)
+    assert response_view.active == active
+    assert response_view.selected_dungeon_level == 1
+    assert response_view.potion_page == 1
+    assert after_entries[0].item.name in fields["Active Effects"]
+    assert "ends <t:" in fields["Active Effects"]
+    assert [option.value for option in potion_select.options] == [entry.item.key for entry in after_entries[10:]]
 
 
 def test_shop_view_uses_dropdown_and_confirm_button() -> None:
@@ -726,6 +907,7 @@ def test_shop_view_uses_dropdown_and_confirm_button() -> None:
         key="rusty-axe",
         name="Rusty Axe",
         slot="weapon",
+        subtype="axe",
         rarity="common",
         min_level=1,
         max_level=10,
@@ -759,12 +941,13 @@ def test_shop_view_uses_dropdown_and_confirm_button() -> None:
     assert len(select.options) == 1
     assert select.placeholder == "Browse Shop"
     assert "⚪ Weapon" in (select.options[0].description or "")
-    assert "Price 🪙 60" in (select.options[0].description or "")
+    assert "Price 💰 60" in (select.options[0].description or "")
     assert "<:" not in (select.options[0].description or "")
     assert all(button.label not in {str(number) for number in range(1, 11)} for button in buttons)
     assert "Explore" in [button.label for button in buttons]
     assert "Defend" in [button.label for button in buttons]
-    assert next(button for button in buttons if button.label == "Back").row == 2
+    assert _button_rows(view) == [("Explore", 0), ("Defend", 0), ("Steward's Hall", 0)]
+    assert select.row == 1
     assert "Buy Selected" not in [button.label for button in buttons]
 
     selected_view = ShopView(
@@ -782,6 +965,8 @@ def test_shop_view_uses_dropdown_and_confirm_button() -> None:
     selected_select = next(child for child in selected_view.children if isinstance(child, discord.ui.Select))
 
     assert "Buy Selected" in [button.label for button in selected_buttons]
+    assert next(button for button in selected_buttons if button.label == "Buy Selected").row == 2
+    assert _button_rows(selected_view) == [("Explore", 0), ("Defend", 0), ("Steward's Hall", 0), ("Buy Selected", 2)]
     assert selected_select.options[0].default
 
     defending_view = ShopView(
@@ -799,6 +984,7 @@ def test_shop_view_uses_dropdown_and_confirm_button() -> None:
     assert "Explore" in defending_labels
     assert "Return from Dungeon" in defending_labels
     assert "Defend" not in defending_labels
+    assert _button_rows(defending_view) == [("Explore", 0), ("Return from Dungeon", 0), ("Steward's Hall", 0)]
 
 
 def test_shop_view_hides_owned_equipment_from_dropdown() -> None:
@@ -806,6 +992,7 @@ def test_shop_view_hides_owned_equipment_from_dropdown() -> None:
         key="heroic-blade",
         name="Heroic Blade",
         slot="weapon",
+        subtype="blade",
         rarity="legendary",
         min_level=1,
         max_level=10,
@@ -819,6 +1006,7 @@ def test_shop_view_hides_owned_equipment_from_dropdown() -> None:
         key="rusty-axe",
         name="Rusty Axe",
         slot="weapon",
+        subtype="axe",
         rarity="common",
         min_level=1,
         max_level=10,

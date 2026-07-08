@@ -17,7 +17,7 @@ def is_before_or_equal(left: datetime, right: datetime) -> bool:
     return ensure_utc(left) <= ensure_utc(right)
 
 
-def human_duration(seconds: int) -> str:
+def human_duration(seconds: int, abr: bool = False) -> str:
     seconds = max(0, int(seconds))
     if seconds == 0:
         return "now"
@@ -25,9 +25,15 @@ def human_duration(seconds: int) -> str:
     minutes = rem // 60
     parts: list[str] = []
     if hours:
-        parts.append(f"{hours} hour{'s' if hours != 1 else ''}")
+        if abr:
+            parts.append(f"{hours}h")
+        else:
+            parts.append(f"{hours} hour{'s' if hours != 1 else ''}")
     if minutes or not parts:
-        parts.append(f"{minutes} minute{'s' if minutes != 1 else ''}")
+        if abr:
+            parts.append(f"{minutes}m")
+        else:    
+            parts.append(f"{minutes} minute{'s' if minutes != 1 else ''}")
     return " ".join(parts)
 
 
