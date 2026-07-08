@@ -141,7 +141,6 @@ class PotionInventoryEntry:
 class PotionUseResult:
     item: PotionItem
     activation: PotionActivation
-    replaced_activation: PotionActivation | None
     idempotent: bool = False
 
 
@@ -235,7 +234,6 @@ class PotionService:
         *,
         idempotency_token: str,
         now: datetime | None = None,
-        replace_same_group: bool = False,
     ) -> PotionUseResult:
         if not idempotency_token:
             raise ValueError("Potion consumption requires an idempotency token")
@@ -250,7 +248,6 @@ class PotionService:
             return PotionUseResult(
                 item=self.content.get(existing.item_key),
                 activation=existing,
-                replaced_activation=None,
                 idempotent=True,
             )
 
@@ -269,13 +266,10 @@ class PotionService:
         active = self.active_effects_at(session, player, now)
         active_by_group = {effect.effect_group: effect for effect in active}
         replaced = active_by_group.get(item.effect_group)
-        if replaced is not None and not replace_same_group:
+        if replaced is not None:
             raise PotionReplacementRequired(requested=item, active=replaced)
         if replaced is None and len(active_by_group) >= self.content.activation_rules.max_simultaneous_effect_groups:
             raise PotionActiveSlotLimitError(active)
-
-        if replaced is not None:
-            replaced.activation.effective_ends_at = now
 
         stack.quantity -= 1
         expires_at = now + timedelta(seconds=item.duration_seconds)
@@ -291,7 +285,7 @@ class PotionService:
         )
         session.add(activation)
         session.flush()
-        return PotionUseResult(item=item, activation=activation, replaced_activation=replaced.activation if replaced else None)
+        return PotionUseResult(item=item, activation=activation)
 
     def inventory_entries(self, session: Session, player: Player) -> tuple[PotionInventoryEntry, ...]:
         stacks = session.scalars(

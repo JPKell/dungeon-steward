@@ -85,7 +85,7 @@ def test_potion_consumption_is_idempotent_and_respects_boundaries(db, now):
     assert service.active_effects_at(db, player, now + timedelta(seconds=result.item.duration_seconds)) == ()
 
 
-def test_same_group_replacement_truncates_history(db, now):
+def test_same_group_potion_must_expire_before_another_can_be_consumed(db, now):
     service = PotionService()
     player = make_player(db, now=now)
     service.add_drop(db, player, "potion_xp_01")
@@ -96,21 +96,14 @@ def test_same_group_replacement_truncates_history(db, now):
     with pytest.raises(PotionReplacementRequired):
         service.consume(db, player, "potion_xp_02", idempotency_token="second", now=replace_at)
 
-    second = service.consume(
-        db,
-        player,
-        "potion_xp_02",
-        idempotency_token="second",
-        now=replace_at,
-        replace_same_group=True,
-    )
+    assert first.activation.effective_ends_at == first.activation.original_expires_at
+    assert db.scalar(select(PotionInventoryStack.quantity).where(PotionInventoryStack.item_key == "potion_xp_02")) == 1
+    assert [effect.item.key for effect in service.active_effects_at(db, player, replace_at)] == ["potion_xp_01"]
 
-    assert first.activation.effective_ends_at == replace_at
-    assert second.replaced_activation is first.activation
-    assert [effect.item.key for effect in service.active_effects_at(db, player, replace_at)] == ["potion_xp_02"]
-    assert [effect.item.key for effect in service.active_effects_at(db, player, replace_at - timedelta(seconds=1))] == [
-        "potion_xp_01"
-    ]
+    after_expiration = now + timedelta(seconds=first.item.duration_seconds)
+    service.consume(db, player, "potion_xp_02", idempotency_token="second", now=after_expiration)
+
+    assert [effect.item.key for effect in service.active_effects_at(db, player, after_expiration)] == ["potion_xp_02"]
 
 
 def test_three_active_group_limit_blocks_fourth_group(db, now):

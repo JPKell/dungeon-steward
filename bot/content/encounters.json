@@ -20641,7 +20641,7 @@
         "xp_max": 26,
         "stability_effect": 2,
         "discovery_key": "candle_crowned_torch_moth",
-        "hero_effect": 1
+        "hero_effect": 2
       },
       {
         "key": "recruit",
@@ -20782,7 +20782,7 @@
         "xp_max": 25,
         "stability_effect": 2,
         "discovery_key": "golden_toed_dust_sprite",
-        "hero_effect": 1
+        "hero_effect": 3
       },
       {
         "key": "recruit",
@@ -23315,7 +23315,7 @@
         "gold_max": 15,
         "xp_min": 12,
         "xp_max": 20,
-        "villain_effect": 1,
+        "hero_effect": 1,
         "stability_effect": 2
       },
       {
