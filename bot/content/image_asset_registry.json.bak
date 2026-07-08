@@ -1,0 +1,18 @@
+{
+  "assets": {
+    "location.stewards_hall": {
+      "attachment_id": "1524529177884229692",
+      "cdn_url": "https://cdn.discordapp.com/attachments/1523201435506966598/1524529177884229692/stewards_hall.webp",
+      "channel_id": "1523201435506966598",
+      "filename": "stewards_hall.webp",
+      "height": 244,
+      "message_id": "1524529178144149684",
+      "sha256": "8f2e13aa48c12c59766a6096c36cbac643bd1a963b2f5d9137e0c0321c2e13fd",
+      "size_bytes": 18800,
+      "type": "location_banner",
+      "uploaded_at": "2026-07-08T21:34:40.594125+00:00",
+      "width": 1200
+    }
+  },
+  "version": 1
+}
