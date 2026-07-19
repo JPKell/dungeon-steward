@@ -39,7 +39,7 @@
     "level": 3,
     "enemy_level_min": 3,
     "enemy_level_max": 6,
-    "stat_modifier": 0.96,
+    "stat_modifier": 0.98,
     "reward_modifier": 1.16,
     "target_day": 7,
     "exploration_gold_modifier": 1.11,
